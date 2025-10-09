@@ -125,3 +125,12 @@ hs_err_pid*
 /.idea/.name
 /.idea/codeStyles/**
 
+logs
+target
+/.bsp
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
