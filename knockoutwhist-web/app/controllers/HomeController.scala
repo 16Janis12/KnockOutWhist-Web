@@ -3,6 +3,7 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import de.knockoutwhist.KnockOutWhist
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -10,8 +11,6 @@ import play.api.mvc._
  */
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
-
-
 
   /**
    * Create an Action to render an HTML page.
@@ -21,6 +20,6 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+    Ok(views.html.main.render("KnockoutWhist", views.html.index.render()))
   }
 }
