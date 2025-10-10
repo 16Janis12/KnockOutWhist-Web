@@ -28,10 +28,11 @@ lazy val commonSettings = Seq(
 
 lazy val knockoutwhist = project.in(file("knockoutwhist"))
   .settings(
-    commonSettings
+    commonSettings,
+    mainClass := Some("de.knockoutwhist.KnockOutWhist")
   )
 
-lazy val knockoutwhistWeb = project.in(file("knockoutwhist-web"))
+lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
   .enablePlugins(PlayScala)
   .dependsOn(knockoutwhist % "compile->compile;test->test")
   .settings(
@@ -40,7 +41,7 @@ lazy val knockoutwhistWeb = project.in(file("knockoutwhist-web"))
   )
 
 lazy val root = (project in file("."))
-  .aggregate(knockoutwhist, knockoutwhistWeb)
+  .aggregate(knockoutwhist, knockoutwhistweb)
   .settings(
-    name := "KnockOutWhistRoot"
+    name := "KnockOutWhistWeb"
   )

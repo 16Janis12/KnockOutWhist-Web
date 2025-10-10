@@ -12,6 +12,8 @@ import de.knockoutwhist.KnockOutWhist
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
+  private var initial = false
+
   /**
    * Create an Action to render an HTML page.
    *
@@ -19,7 +21,14 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.main.render("KnockoutWhist", views.html.index.render()))
+  def index() = {
+    if (!initial) {
+      initial = true
+      KnockOutWhist.main(new Array[String](_length = 0))
+    }
+    Action { implicit request: Request[AnyContent] => {
+      Ok(views.html.main.render("KnockoutWhist", views.html.index.apply()))
+    }
+    }
   }
 }
