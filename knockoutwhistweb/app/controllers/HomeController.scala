@@ -21,14 +21,21 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index() = {
+  def index(): Action[AnyContent] = {
     if (!initial) {
       initial = true
       KnockOutWhist.main(new Array[String](_length = 0))
     }
     Action { implicit request: Request[AnyContent] => {
-      Ok(views.html.main.render("KnockoutWhist", views.html.index.apply()))
+      Ok(views.html.main.apply("KnockoutWhist")(views.html.))
     }
     }
   }
+  
+  def ingame(): Action[AnyContent] = {
+    Action { implicit request: Request[AnyContent] => {
+      Ok(views.html.tui.apply())
+    }
+  }
+  
 }
