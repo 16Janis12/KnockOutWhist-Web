@@ -135,5 +135,5 @@ target
 /.settings
 /RUNNING_PID
 /knockoutwhist/
-/knockoutwhist-web/.g8/
-/knockoutwhist-web/.bsp/
+/knockoutwhistweb/.g8/
+/knockoutwhistweb/.bsp/
