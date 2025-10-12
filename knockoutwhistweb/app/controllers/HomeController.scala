@@ -1,11 +1,13 @@
 package controllers
 
-import javax.inject.*
+import com.google.inject.{Guice, Injector}
+import de.knockoutwhist.KnockOutWhist
+import de.knockoutwhist.components.Configuration
+import di.KnockOutWebConfigurationModule
 import play.api.*
 import play.api.mvc.*
-import de.knockoutwhist.KnockOutWhist
-import de.knockoutwhist.control.ControlHandler
-import de.knockoutwhist.ui.tui.TUIMain
+
+import javax.inject.*
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -15,6 +17,7 @@ import de.knockoutwhist.ui.tui.TUIMain
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   private var initial = false
+  private val injector: Injector = Guice.createInjector(KnockOutWebConfigurationModule())
 
   /**
    * Create an Action to render an HTML page.
@@ -26,8 +29,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   def index(): Action[AnyContent] = {
     if (!initial) {
       initial = true
-      ControlHandler.addListener(WebUI)
-      KnockOutWhist.main(new Array[String](_length = 0))
+      KnockOutWhist.entry(injector.getInstance(classOf[Configuration]))
     }
     Action { implicit request =>
       Ok(views.html.index.apply())
@@ -36,11 +38,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def ingame(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.tui.apply(WebUI.latestOutput))
+      Ok(views.html.tui.apply(WebUIMain.latestOutput))
     }
   }
-
-  def showTUI(): Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.tui.render(WebUI.latestOutput))
-  }
+  
 }

@@ -1,5 +1,10 @@
-@(renderTUI: String)
+@(toRender: String)
 
-@main("Welcome to Play") {
-<h1>@renderTUI</h1>
+@main("Tui") {
+    <div id="tui">
+        @for(line <- toRender.split('\n')) {
+            <p>@line</p>
+        }
+    </div>
 }
+

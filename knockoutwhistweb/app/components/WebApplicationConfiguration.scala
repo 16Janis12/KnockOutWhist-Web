@@ -1,9 +1,13 @@
 package components
 
+import controllers.WebUIMain
 import de.knockoutwhist.components.DefaultConfiguration
+import de.knockoutwhist.ui.UI
+import de.knockoutwhist.utils.events.EventListener
 
-//class WebApplicationConfiguration extends DefaultConfiguration {
-  
-  
+class WebApplicationConfiguration extends DefaultConfiguration {
 
-//}
+  override def uis: Set[UI] = super.uis + WebUIMain
+  override def listener: Set[EventListener] = super.listener + WebUIMain
+
+}
