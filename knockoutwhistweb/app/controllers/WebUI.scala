@@ -31,7 +31,7 @@ import java.io.{BufferedReader, InputStreamReader}
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.annotation.tailrec
 import scala.util.{Failure, Success, Try}
-
+ 
 object WebUI extends CustomThread with EventListener with UI {
 
   override def initial: Boolean = {
