@@ -1,9 +1,11 @@
 package controllers
 
-import javax.inject._
-import play.api._
-import play.api.mvc._
+import javax.inject.*
+import play.api.*
+import play.api.mvc.*
 import de.knockoutwhist.KnockOutWhist
+import de.knockoutwhist.control.ControlHandler
+import de.knockoutwhist.ui.tui.TUIMain
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -24,18 +26,21 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   def index(): Action[AnyContent] = {
     if (!initial) {
       initial = true
+      ControlHandler.addListener(WebUI)
       KnockOutWhist.main(new Array[String](_length = 0))
     }
-    Action { implicit request: Request[AnyContent] => {
-      Ok(views.html.main.apply("KnockoutWhist")(views.html.))
-    }
+    Action { implicit request =>
+      Ok(views.html.index.apply())
     }
   }
-  
+
   def ingame(): Action[AnyContent] = {
-    Action { implicit request: Request[AnyContent] => {
-      Ok(views.html.tui.apply())
+    Action { implicit request =>
+      Ok(views.html.tui.apply(WebUI.latestOutput))
     }
   }
-  
+
+  def showTUI(): Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.tui.render(WebUI.latestOutput))
+  }
 }
