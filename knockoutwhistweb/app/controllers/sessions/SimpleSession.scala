@@ -1,136 +1,56 @@
-package controllers
+package controllers.sessions
 
-import de.knockoutwhist.cards.{Card, CardValue, Hand, Suit}
-import de.knockoutwhist.events.*
+import de.knockoutwhist.cards.Card
 import de.knockoutwhist.events.ERROR_STATUS.*
 import de.knockoutwhist.events.GLOBAL_STATUS.*
 import de.knockoutwhist.events.PLAYER_STATUS.*
-import de.knockoutwhist.events.ROUND_STATUS.{PLAYERS_OUT, SHOW_START_ROUND, WON_ROUND}
+import de.knockoutwhist.events.ROUND_STATUS.*
+import de.knockoutwhist.events.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerStatus, ShowRoundStatus}
 import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
 import de.knockoutwhist.events.round.ShowCurrentTrickEvent
-import de.knockoutwhist.events.ui.{GameState, GameStateUpdateEvent}
 import de.knockoutwhist.player.AbstractPlayer
-import de.knockoutwhist.ui.UI
-import de.knockoutwhist.utils.CustomThread
-import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
+import de.knockoutwhist.ui.tui.TUIMain.TUICards.{renderCardAsString, renderHandEvent}
+import de.knockoutwhist.utils.events.SimpleEvent
 
-object WebUIMain extends CustomThread with EventListener with UI {
+import java.util.UUID
 
-  setName("WebUI")
-  
-  var init = false
-  private var internState: GameState = GameState.NO_SET
-
-  var latestOutput: String = ""
-
-  override def instance: CustomThread = WebUIMain
-
-  override def listen(event: SimpleEvent): Unit = {
-    runLater {
-      event match {
-        case event: RenderHandEvent =>
-          renderhandmethod(event)
-        case event: ShowTieCardsEvent =>
-          showtiecardseventmethod(event)
-        case event: ShowGlobalStatus =>
-          showglobalstatusmethod(event)
-        case event: ShowPlayerStatus =>
-          showplayerstatusmethod(event)
-        case event: ShowRoundStatus =>
-          showroundstatusmethod(event)
-        case event: ShowErrorStatus =>
-          showerrstatmet(event)
-        case event: ShowCurrentTrickEvent =>
-          showcurtrevmet(event)
-        case event: GameStateUpdateEvent =>
-          if (internState != event.gameState) {
-            internState = event.gameState
-            if (event.gameState == GameState.MAIN_MENU) {
-              mainMenu()
-            }
-            Some(true)
-          }
-        case _ => None
-      }
+case class SimpleSession(id: UUID, private var output: String) extends PlayerSession {
+  def get(): String = {
+    output
+  }
+  override def updatePlayer(event: SimpleEvent): Unit = {
+    event match {
+      case event: RenderHandEvent =>
+        renderHand(event)
+      case event: ShowTieCardsEvent =>
+        showtiecardseventmethod(event)
+      case event: ShowGlobalStatus =>
+        showglobalstatusmethod(event)
+      case event: ShowPlayerStatus =>
+        showplayerstatusmethod(event)
+      case event: ShowRoundStatus =>
+        showroundstatusmethod(event)
+      case event: ShowErrorStatus =>
+        showerrstatmet(event)
+      case event: ShowCurrentTrickEvent =>
+        showcurtrevmet(event)
     }
   }
   
-  
-  object TUICards {
-    def renderCardAsString(card: Card): Vector[String] = {
-      val lines = "│         │"
-      if (card.cardValue == CardValue.Ten) {
-        return Vector(
-          s"┌─────────┐",
-          s"│${cardColour(card.suit)}${Console.BOLD}${card.cardValue.cardType()}${Console.RESET}       │",
-          lines,
-          s"│    ${cardColour(card.suit)}${Console.BOLD}${card.suit.cardType()}${Console.RESET}    │",
-          lines,
-          s"│       ${cardColour(card.suit)}${Console.BOLD}${card.cardValue.cardType()}${Console.RESET}│",
-          s"└─────────┘"
-        )
-      }
-      Vector(
-        s"┌─────────┐",
-        s"│${cardColour(card.suit)}${Console.BOLD}${card.cardValue.cardType()}${Console.RESET}        │",
-        lines,
-        s"│    ${cardColour(card.suit)}${Console.BOLD}${card.suit.cardType()}${Console.RESET}    │",
-        lines,
-        s"│        ${cardColour(card.suit)}${Console.BOLD}${card.cardValue.cardType()}${Console.RESET}│",
-        s"└─────────┘"
-      )
-    }
-    
-    private def cardColour(suit: Suit): String = suit match {
-      case Suit.Hearts | Suit.Diamonds => Console.RED
-      case Suit.Clubs | Suit.Spades => Console.BLACK
-    }
-    
-    def renderHandEvent(hand: Hand, showNumbers: Boolean): Vector[String] = {
-      val cardStrings = hand.cards.map(TUICards.renderCardAsString)
-      var zipped = cardStrings.transpose
-      if (showNumbers) zipped = {
-        List.tabulate(hand.cards.length) { i =>
-          s"     ${i + 1}     "
-        }
-      } :: zipped
-      zipped.map(_.mkString(" ")).toVector
-    }
-  }
-  private object TUIUtil {
-    def clearConsole() = {
-      latestOutput = ""
-    }
+  private def clear(): Unit = {
+    output = ""
   }
 
-  override def initial: Boolean = {
-    if (init) {
-      return false
-    }
-    init = true
-    start()
-    true
+  private def renderHand(event: RenderHandEvent): Unit = {
+    renderHandEvent(event.hand, event.showNumbers).foreach(addToOutput)
   }
 
-  private def mainMenu(): Unit = {
-    TUIUtil.clearConsole()
-    println("Welcome to Knockout Whist!")
-    println()
-    println("Please select an option:")
-    println("1. Start a new match")
-    println("2. Exit")
-  }
-
-  private def renderhandmethod(event: RenderHandEvent): Option[Boolean] = {
-    TUICards.renderHandEvent(event.hand, event.showNumbers).foreach(println)
-    Some(true)
-  }
   private def showtiecardseventmethod(event: ShowTieCardsEvent): Option[Boolean] = {
     val a: Array[String] = Array("", "", "", "", "", "", "", "")
     for ((player, card) <- event.card) {
       val playerNameLength = player.name.length
       a(0) += " " + player.name + ":" + (" " * (playerNameLength - 1))
-      val rendered = TUICards.renderCardAsString(card)
+      val rendered = renderCardAsString(card)
       a(1) += " " + rendered(0)
       a(2) += " " + rendered(1)
       a(3) += " " + rendered(2)
@@ -139,9 +59,10 @@ object WebUIMain extends CustomThread with EventListener with UI {
       a(6) += " " + rendered(5)
       a(7) += " " + rendered(6)
     }
-    a.foreach(println)
+    a.foreach(addToOutput)
     Some(true)
   }
+
   private def showglobalstatusmethod(event: ShowGlobalStatus): Option[Boolean] = {
     event.status match {
       case SHOW_TIE =>
@@ -158,9 +79,9 @@ object WebUIMain extends CustomThread with EventListener with UI {
         println("It's a tie again! Let's cut again.")
         Some(true)
       case SHOW_START_MATCH =>
-        TUIUtil.clearConsole()
+        clear()
         println("Starting a new match...")
-        latestOutput += "\n\n"
+        output += "\n\n"
         Some(true)
       case SHOW_TYPE_PLAYERS =>
         println("Please enter the names of the players, separated by a comma.")
@@ -169,18 +90,16 @@ object WebUIMain extends CustomThread with EventListener with UI {
         if (event.objects.length != 1 || !event.objects.head.isInstanceOf[AbstractPlayer]) {
           None
         } else {
-          TUIUtil.clearConsole()
+          clear()
           println(s"The match is over. The winner is ${event.objects.head.asInstanceOf[AbstractPlayer]}")
           Some(true)
         }
     }
   }
+
   private def showplayerstatusmethod(event: ShowPlayerStatus): Option[Boolean] = {
     val player = event.player
     event.status match {
-      case SHOW_TURN =>
-        println("It's your turn, " + player.name + ".")
-        Some(true)
       case SHOW_PLAY_CARD =>
         println("Which card do you want to play?")
         Some(true)
@@ -218,16 +137,24 @@ object WebUIMain extends CustomThread with EventListener with UI {
         Some(true)
       case SHOW_WON_PLAYER_TRICK =>
         println(s"${event.player.name} won the trick.")
-        latestOutput = "\n\n"
+        output = "\n\n"
         Some(true)
     }
   }
+
   private def showroundstatusmethod(event: ShowRoundStatus): Option[Boolean] = {
     event.status match {
+      case SHOW_TURN =>
+        if (event.objects.length != 1 || !event.objects.head.isInstanceOf[AbstractPlayer]) {
+          None
+        } else {
+          println(s"It's ${event.objects.head.asInstanceOf[AbstractPlayer].name} turn.")
+          Some(true)
+        }
       case SHOW_START_ROUND =>
-        TUIUtil.clearConsole()
+        clear()
         println(s"Starting a new round. The trump suit is ${event.currentRound.trumpSuit}.")
-        latestOutput = "\n\n"
+        output = "\n\n"
         Some(true)
       case WON_ROUND =>
         if (event.objects.length != 1 || !event.objects.head.isInstanceOf[AbstractPlayer]) {
@@ -244,6 +171,7 @@ object WebUIMain extends CustomThread with EventListener with UI {
         Some(true)
     }
   }
+
   private def showerrstatmet(event: ShowErrorStatus): Option[Boolean] = {
     event.status match {
       case INVALID_NUMBER =>
@@ -275,7 +203,7 @@ object WebUIMain extends CustomThread with EventListener with UI {
   }
 
   private def showcurtrevmet(event: ShowCurrentTrickEvent): Option[Boolean] = {
-    TUIUtil.clearConsole()
+    clear()
     val sb = new StringBuilder()
     sb.append("Current Trick:\n")
     sb.append("Trump-Suit: " + event.round.trumpSuit + "\n")
@@ -289,16 +217,18 @@ object WebUIMain extends CustomThread with EventListener with UI {
     Some(true)
   }
 
+  private def addToOutput(str: String): Unit = {
+    output += str + "\n"
+  }
+
   private def println(s: String): Unit = {
-    latestOutput += s + "\n"
-    System.out.println(s)
+    output += s + "\n"
   }
 
   private def println(): Unit = {
-    latestOutput += "\n"
-    System.out.println()
+    output += "\n"
   }
-
+  
 
 
 }

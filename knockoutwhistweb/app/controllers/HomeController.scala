@@ -1,5 +1,6 @@
 package controllers
 
+import controllers.sessions.SimpleSession
 import com.google.inject.{Guice, Injector}
 import de.knockoutwhist.KnockOutWhist
 import de.knockoutwhist.components.Configuration
@@ -7,7 +8,9 @@ import di.KnockOutWebConfigurationModule
 import play.api.*
 import play.api.mvc.*
 
+import java.util.UUID
 import javax.inject.*
+
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -36,9 +39,23 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     }
   }
 
-  def ingame(): Action[AnyContent] = {
+  def sessions(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.tui.apply(WebUIMain.latestOutput))
+      Ok(views.html.tui.apply(PodGameManager.listSessions().map(f => f.toString + "\n").mkString("")))
+    }
+  }
+
+  def ingame(id: String): Action[AnyContent] = {
+    val uuid: UUID = UUID.fromString(id)
+    if (PodGameManager.identify(uuid).isEmpty) {
+      Action { implicit request =>
+        NotFound(views.html.tui.apply("Player not found"))
+      }
+    } else {
+      val session = PodGameManager.identify(uuid).get
+      Action { implicit request =>
+        Ok(views.html.tui.apply(session.asInstanceOf[SimpleSession].get()))
+      }
     }
   }
   

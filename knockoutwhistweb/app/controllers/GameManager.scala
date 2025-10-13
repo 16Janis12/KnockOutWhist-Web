@@ -1,8 +1,0 @@
-package controllers
-
-object GameManager {
-  
-  
-  
-
-}
