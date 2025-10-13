@@ -1,6 +1,6 @@
 package controllers.sessions
 
-import de.knockoutwhist.cards.Card
+import de.knockoutwhist.cards.{Card, CardValue, Hand}
 import de.knockoutwhist.events.ERROR_STATUS.*
 import de.knockoutwhist.events.GLOBAL_STATUS.*
 import de.knockoutwhist.events.PLAYER_STATUS.*
@@ -9,7 +9,6 @@ import de.knockoutwhist.events.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerSta
 import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
 import de.knockoutwhist.events.round.ShowCurrentTrickEvent
 import de.knockoutwhist.player.AbstractPlayer
-import de.knockoutwhist.ui.tui.TUIMain.TUICards.{renderCardAsString, renderHandEvent}
 import de.knockoutwhist.utils.events.SimpleEvent
 
 import java.util.UUID
@@ -42,7 +41,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
   }
 
   private def renderHand(event: RenderHandEvent): Unit = {
-    renderHandEvent(event.hand, event.showNumbers).foreach(addToOutput)
+    WebUICards.renderHandEvent(event.hand, event.showNumbers).foreach(addToOutput)
   }
 
   private def showtiecardseventmethod(event: ShowTieCardsEvent): Option[Boolean] = {
@@ -50,7 +49,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
     for ((player, card) <- event.card) {
       val playerNameLength = player.name.length
       a(0) += " " + player.name + ":" + (" " * (playerNameLength - 1))
-      val rendered = renderCardAsString(card)
+      val rendered = WebUICards.renderCardAsString(card)
       a(1) += " " + rendered(0)
       a(2) += " " + rendered(1)
       a(3) += " " + rendered(2)
@@ -228,7 +227,42 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
   private def println(): Unit = {
     output += "\n"
   }
-  
 
+  object WebUICards {
+    def renderCardAsString(card: Card): Vector[String] = {
+      val lines = "│         │"
+      if (card.cardValue == CardValue.Ten) {
+        return Vector(
+          s"┌─────────┐",
+          s"│${card.cardValue.cardType()}       │",
+          lines,
+          s"│    ${card.suit.cardType()}    │",
+          lines,
+          s"│       ${card.cardValue.cardType()}│",
+          s"└─────────┘"
+        )
+      }
+      Vector(
+        s"┌─────────┐",
+        s"│${card.cardValue.cardType()}        │",
+        lines,
+        s"│    ${card.suit.cardType()}    │",
+        lines,
+        s"│        ${card.cardValue.cardType()}│",
+        s"└─────────┘"
+      )
+    }
+
+    def renderHandEvent(hand: Hand, showNumbers: Boolean): Vector[String] = {
+      val cardStrings = hand.cards.map(renderCardAsString)
+      var zipped = cardStrings.transpose
+      if (showNumbers) zipped = {
+        List.tabulate(hand.cards.length) { i =>
+          s"     ${i + 1}     "
+        }
+      } :: zipped
+      zipped.map(_.mkString(" ")).toVector
+    }
+  }
 
 }
