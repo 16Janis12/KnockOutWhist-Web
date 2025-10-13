@@ -3,7 +3,7 @@
 @main("Tui") {
     <div id="tui">
         @for(line <- toRender.split('\n')) {
-            <p>@line</p>
+            <a href="@routes.Relative.ingame(line)">@line</a>
         }
     </div>
 }

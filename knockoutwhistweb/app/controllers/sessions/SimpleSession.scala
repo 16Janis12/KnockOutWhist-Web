@@ -10,6 +10,8 @@ import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
 import de.knockoutwhist.events.round.ShowCurrentTrickEvent
 import de.knockoutwhist.player.AbstractPlayer
 import de.knockoutwhist.utils.events.SimpleEvent
+import scalafx.scene.image.Image
+import util.WebUIUtils
 
 import java.util.UUID
 
@@ -17,6 +19,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
   def get(): String = {
     output
   }
+
   override def updatePlayer(event: SimpleEvent): Unit = {
     event match {
       case event: RenderHandEvent =>
@@ -35,13 +38,13 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
         showcurtrevmet(event)
     }
   }
-  
+
   private def clear(): Unit = {
     output = ""
   }
 
   private def renderHand(event: RenderHandEvent): Unit = {
-    WebUICards.renderHandEvent(event.hand, event.showNumbers).foreach(addToOutput)
+    output += WebUICards.renderHandEvent(event.hand, event.showNumbers).map(_.toString).mkString
   }
 
   private def showtiecardseventmethod(event: ShowTieCardsEvent): Option[Boolean] = {
@@ -49,14 +52,14 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
     for ((player, card) <- event.card) {
       val playerNameLength = player.name.length
       a(0) += " " + player.name + ":" + (" " * (playerNameLength - 1))
-      val rendered = WebUICards.renderCardAsString(card)
-      a(1) += " " + rendered(0)
-      a(2) += " " + rendered(1)
-      a(3) += " " + rendered(2)
-      a(4) += " " + rendered(3)
-      a(5) += " " + rendered(4)
-      a(6) += " " + rendered(5)
-      a(7) += " " + rendered(6)
+      val rendered = WebUIUtils.cardtoImage(card)
+      //a(1) += " " + rendered(0)
+      //a(2) += " " + rendered(1)
+      //a(3) += " " + rendered(2)
+      //a(4) += " " + rendered(3)
+      //a(5) += " " + rendered(4)
+      //a(6) += " " + rendered(5)
+      //a(7) += " " + rendered(6)
     }
     a.foreach(addToOutput)
     Some(true)
@@ -253,16 +256,16 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
       )
     }
 
-    def renderHandEvent(hand: Hand, showNumbers: Boolean): Vector[String] = {
-      val cardStrings = hand.cards.map(renderCardAsString)
-      var zipped = cardStrings.transpose
-      if (showNumbers) zipped = {
-        List.tabulate(hand.cards.length) { i =>
-          s"     ${i + 1}     "
-        }
-      } :: zipped
-      zipped.map(_.mkString(" ")).toVector
+    def renderHandEvent(hand: Hand, showNumbers: Boolean): List[Image] = {
+      hand.cards.map(WebUIUtils.cardtoImage)
+      //var zipped = cardStrings.transpose
+      //if (showNumbers) zipped = {
+      // List.tabulate(hand.cards.length) { i =>
+      //    s"     ${i + 1}     "
+      //  }
+      // } :: zipped
+      // zipped.map(_.mkString(" ")).toVector
+      // }
     }
   }
-
 }

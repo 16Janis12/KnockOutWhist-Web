@@ -1,7 +1,7 @@
 package components
 
-import controllers.WebUI
 import de.knockoutwhist.components.DefaultConfiguration
+import controllers.WebUI
 import de.knockoutwhist.ui.UI
 import de.knockoutwhist.utils.events.EventListener
 
