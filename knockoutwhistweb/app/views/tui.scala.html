@@ -1,9 +1,9 @@
-@(toRender: String)
+@(toRender: List[Html])
 
 @main("Tui") {
     <div id="tui">
-        @for(line <- toRender.split('\n')) {
-            <a href="@routes.Relative.ingame(line)">@line</a>
+        @for(line <- toRender) {
+            @line
         }
     </div>
 }

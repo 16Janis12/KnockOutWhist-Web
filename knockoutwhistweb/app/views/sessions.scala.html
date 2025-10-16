@@ -1,0 +1,10 @@
+@(toRender: List[String])
+
+@main("Sessions") {
+    <div id="sessions">
+        @for(line <- toRender) {
+            <a href="@routes.HomeController.ingame(line)">@line</a><br>
+        }
+    </div>
+}
+

@@ -3,10 +3,11 @@ package util
 import de.knockoutwhist.cards.Card
 import de.knockoutwhist.cards.CardValue.{Ace, Eight, Five, Four, Jack, King, Nine, Queen, Seven, Six, Ten, Three, Two}
 import de.knockoutwhist.cards.Suit.{Clubs, Diamonds, Hearts, Spades}
+import play.twirl.api.Html
 import scalafx.scene.image.Image
 
 object WebUIUtils {
-  def cardtoImage(card: Card): Image = {
+  def cardtoImage(card: Card): Html = {
     val s = card.suit match {
       case Spades => "S"
       case Hearts => "H"
@@ -28,6 +29,6 @@ object WebUIUtils {
       case Three => "3"
       case Two => "2"
     }
-    new Image(f"public/images/cards/$cv$s.png")
+    views.html.output.card.apply(f"images/cards/$cv$s.png")(card.toString)
   }
 }

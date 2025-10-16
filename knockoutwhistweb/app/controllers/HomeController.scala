@@ -7,6 +7,7 @@ import de.knockoutwhist.components.Configuration
 import di.KnockOutWebConfigurationModule
 import play.api.*
 import play.api.mvc.*
+import play.twirl.api.Html
 
 import java.util.UUID
 import javax.inject.*
@@ -35,13 +36,13 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       KnockOutWhist.entry(injector.getInstance(classOf[Configuration]))
     }
     Action { implicit request =>
-      Ok(views.html.index.apply())
+      Redirect("/sessions")
     }
   }
 
   def sessions(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.tui.apply(PodGameManager.listSessions().map(f => f.toString + "\n").mkString("")))
+      Ok(views.html.sessions.apply(PodGameManager.listSessions().map(f => f.toString)))
     }
   }
 
@@ -49,7 +50,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     val uuid: UUID = UUID.fromString(id)
     if (PodGameManager.identify(uuid).isEmpty) {
       Action { implicit request =>
-        NotFound(views.html.tui.apply("Player not found"))
+        NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
       }
     } else {
       val session = PodGameManager.identify(uuid).get

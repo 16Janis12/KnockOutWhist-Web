@@ -10,13 +10,14 @@ import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
 import de.knockoutwhist.events.round.ShowCurrentTrickEvent
 import de.knockoutwhist.player.AbstractPlayer
 import de.knockoutwhist.utils.events.SimpleEvent
+import play.twirl.api.Html
 import scalafx.scene.image.Image
 import util.WebUIUtils
 
 import java.util.UUID
 
-case class SimpleSession(id: UUID, private var output: String) extends PlayerSession {
-  def get(): String = {
+case class SimpleSession(id: UUID, private var output: List[Html]) extends PlayerSession {
+  def get(): List[Html] = {
     output
   }
 
@@ -40,28 +41,23 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
   }
 
   private def clear(): Unit = {
-    output = ""
+    output = List()
   }
 
   private def renderHand(event: RenderHandEvent): Unit = {
-    output += WebUICards.renderHandEvent(event.hand, event.showNumbers).map(_.toString).mkString
+    output = output :++ WebUICards.renderHandEvent(event.hand)
+    output = output :+ Html("<br>")
   }
 
   private def showtiecardseventmethod(event: ShowTieCardsEvent): Option[Boolean] = {
-    val a: Array[String] = Array("", "", "", "", "", "", "", "")
+    var l = List[Html]()
     for ((player, card) <- event.card) {
-      val playerNameLength = player.name.length
-      a(0) += " " + player.name + ":" + (" " * (playerNameLength - 1))
-      val rendered = WebUIUtils.cardtoImage(card)
-      //a(1) += " " + rendered(0)
-      //a(2) += " " + rendered(1)
-      //a(3) += " " + rendered(2)
-      //a(4) += " " + rendered(3)
-      //a(5) += " " + rendered(4)
-      //a(6) += " " + rendered(5)
-      //a(7) += " " + rendered(6)
+      l = l :+ Html(s"<p>${player.name}:</p>")
+      l = l :+ WebUIUtils.cardtoImage(card)
+      l = l :+ Html("<br>")
     }
-    a.foreach(addToOutput)
+    output = output :++ l
+    output = output :+ Html("<br>")
     Some(true)
   }
 
@@ -83,7 +79,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
       case SHOW_START_MATCH =>
         clear()
         println("Starting a new match...")
-        output += "\n\n"
+        output = output :+ Html("<br><br>")
         Some(true)
       case SHOW_TYPE_PLAYERS =>
         println("Please enter the names of the players, separated by a comma.")
@@ -139,7 +135,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
         Some(true)
       case SHOW_WON_PLAYER_TRICK =>
         println(s"${event.player.name} won the trick.")
-        output = "\n\n"
+        output = output :+ Html("<br><br>")
         Some(true)
     }
   }
@@ -156,7 +152,7 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
       case SHOW_START_ROUND =>
         clear()
         println(s"Starting a new round. The trump suit is ${event.currentRound.trumpSuit}.")
-        output = "\n\n"
+        output = output :+ Html("<br><br>")
         Some(true)
       case WON_ROUND =>
         if (event.objects.length != 1 || !event.objects.head.isInstanceOf[AbstractPlayer]) {
@@ -219,16 +215,17 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
     Some(true)
   }
 
-  private def addToOutput(str: String): Unit = {
-    output += str + "\n"
-  }
-
   private def println(s: String): Unit = {
-    output += s + "\n"
+    var html = List[Html]()
+    for (line <- s.split("\n")) {
+      html = html :+ Html(line)
+      html = html :+ Html("<br>")
+    }
+    output = output :++ html
   }
 
   private def println(): Unit = {
-    output += "\n"
+    output = output :+ Html("<br>")
   }
 
   object WebUICards {
@@ -256,16 +253,8 @@ case class SimpleSession(id: UUID, private var output: String) extends PlayerSes
       )
     }
 
-    def renderHandEvent(hand: Hand, showNumbers: Boolean): List[Image] = {
+    def renderHandEvent(hand: Hand): List[Html] = {
       hand.cards.map(WebUIUtils.cardtoImage)
-      //var zipped = cardStrings.transpose
-      //if (showNumbers) zipped = {
-      // List.tabulate(hand.cards.length) { i =>
-      //    s"     ${i + 1}     "
-      //  }
-      // } :: zipped
-      // zipped.map(_.mkString(" ")).toVector
-      // }
     }
   }
 }

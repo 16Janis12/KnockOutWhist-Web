@@ -39,7 +39,7 @@ object WebUI extends CustomThread with EventListener with UI {
           if (event.status == TECHNICAL_MATCH_STARTED) {
             val matchImpl = event.objects.head.asInstanceOf[Match]
             for (player <- matchImpl.totalplayers) {
-              PodGameManager.addSession(SimpleSession(player.id, ""))
+              PodGameManager.addSession(SimpleSession(player.id, List()))
             }
           } else {
             PodGameManager.transmitAll(event)
