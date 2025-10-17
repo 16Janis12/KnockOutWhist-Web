@@ -1,0 +1,3 @@
+[submodule "knockoutwhist"]
+	path = knockoutwhist
+	url = https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist.git
