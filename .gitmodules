@@ -1,3 +1,4 @@
 [submodule "knockoutwhist"]
 	path = knockoutwhist
+	branch = webapplication
 	url = https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist.git
