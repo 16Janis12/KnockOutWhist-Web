@@ -3,14 +3,15 @@ package controllers
 import controllers.sessions.SimpleSession
 import de.knockoutwhist.cards.{Card, CardValue, Hand, Suit}
 import de.knockoutwhist.events.*
-import de.knockoutwhist.events.ERROR_STATUS.*
-import de.knockoutwhist.events.GLOBAL_STATUS.*
-import de.knockoutwhist.events.PLAYER_STATUS.*
-import de.knockoutwhist.events.ROUND_STATUS.{PLAYERS_OUT, SHOW_START_ROUND, WON_ROUND}
-import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
-import de.knockoutwhist.events.round.ShowCurrentTrickEvent
-import de.knockoutwhist.events.ui.GameState.{INGAME, MAIN_MENU}
-import de.knockoutwhist.events.ui.{GameState, GameStateUpdateEvent}
+import de.knockoutwhist.events.old.ERROR_STATUS.*
+import de.knockoutwhist.events.old.GLOBAL_STATUS.*
+import de.knockoutwhist.events.old.PLAYER_STATUS.*
+import de.knockoutwhist.events.old.ROUND_STATUS.{PLAYERS_OUT, SHOW_START_ROUND, WON_ROUND}
+import de.knockoutwhist.events.old.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerStatus, ShowRoundStatus}
+import de.knockoutwhist.events.old.cards.{RenderHandEvent, ShowTieCardsEvent}
+import de.knockoutwhist.events.old.round.ShowCurrentTrickEvent
+import de.knockoutwhist.events.old.ui.{GameState, GameStateUpdateEvent}
+import de.knockoutwhist.events.old.ui.GameState.{INGAME, MAIN_MENU}
 import de.knockoutwhist.player.AbstractPlayer
 import de.knockoutwhist.rounds.Match
 import de.knockoutwhist.ui.UI

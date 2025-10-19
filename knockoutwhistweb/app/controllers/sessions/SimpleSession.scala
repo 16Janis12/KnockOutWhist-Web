@@ -1,13 +1,13 @@
 package controllers.sessions
 
 import de.knockoutwhist.cards.{Card, CardValue, Hand}
-import de.knockoutwhist.events.ERROR_STATUS.*
-import de.knockoutwhist.events.GLOBAL_STATUS.*
-import de.knockoutwhist.events.PLAYER_STATUS.*
-import de.knockoutwhist.events.ROUND_STATUS.*
-import de.knockoutwhist.events.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerStatus, ShowRoundStatus}
-import de.knockoutwhist.events.cards.{RenderHandEvent, ShowTieCardsEvent}
-import de.knockoutwhist.events.round.ShowCurrentTrickEvent
+import de.knockoutwhist.events.old.ERROR_STATUS.*
+import de.knockoutwhist.events.old.GLOBAL_STATUS.*
+import de.knockoutwhist.events.old.PLAYER_STATUS.*
+import de.knockoutwhist.events.old.ROUND_STATUS.*
+import de.knockoutwhist.events.old.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerStatus, ShowRoundStatus}
+import de.knockoutwhist.events.old.cards.{RenderHandEvent, ShowTieCardsEvent}
+import de.knockoutwhist.events.old.round.ShowCurrentTrickEvent
 import de.knockoutwhist.player.AbstractPlayer
 import de.knockoutwhist.utils.events.SimpleEvent
 import play.twirl.api.Html
