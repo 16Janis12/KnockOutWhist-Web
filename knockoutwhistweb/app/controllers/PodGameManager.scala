@@ -8,18 +8,22 @@ import scala.collection.mutable
 
 object PodGameManager {
   
-  private val sessions: mutable.Map[UUID, PlayerSession] = mutable.Map()
   
-  def addSession(session: PlayerSession): Unit = {
-    sessions.put(session.id, session)
+  private val gamesession: mutable.Map[UUID, Gamesession] = mutable.Map()
+  
+  def addGame(session: PlayerSession, gamesession: Gamesession): Unit = {
+    gamesession.put(session.id, gamesession)
   }
-  
+  def createGame(player: String): Unit = {
+    val game = Gamesession(UUID.randomUUID())
+    
+  }
   def clearSessions(): Unit = {
-    sessions.clear()
+    gamesession.clear()
   }
   
   def identify(id: UUID): Option[PlayerSession] = {
-    sessions.get(id)
+    gamesession.get(id)
   }
   
   def transmit(id: UUID, event: SimpleEvent): Unit = {
@@ -27,7 +31,7 @@ object PodGameManager {
   }
   
   def transmitAll(event: SimpleEvent): Unit = {
-    sessions.foreach(session => session._2.updatePlayer(event))
+    gamesession.foreach(session => session._2.updatePlayer(event))
   }
   
   def listSessions(): List[UUID] = {

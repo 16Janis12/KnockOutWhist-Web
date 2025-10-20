@@ -1,0 +1,9 @@
+@(toRender: List[Any])
+
+@main("Match") {
+<div id="match">
+    @for(line <- toRender) {
+    @line
+    }
+</div>
+}

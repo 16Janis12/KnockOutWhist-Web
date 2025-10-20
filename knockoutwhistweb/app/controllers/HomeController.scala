@@ -1,9 +1,11 @@
 package controllers
 
 import controllers.sessions.SimpleSession
+import controllers.sessions.AdvancedSession
 import com.google.inject.{Guice, Injector}
 import de.knockoutwhist.KnockOutWhist
 import de.knockoutwhist.components.Configuration
+import de.knockoutwhist.rounds.Match
 import di.KnockOutWebConfigurationModule
 import play.api.*
 import play.api.mvc.*
@@ -53,9 +55,11 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
         NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
       }
     } else {
-      val session = PodGameManager.identify(uuid).get
+      val gamesession = PodGameManager.identify(uuid).get
+      val player = session.asInstanceOf[AdvancedSession].player
+      val logic = 
       Action { implicit request =>
-        Ok(views.html.tui.apply(session.asInstanceOf[SimpleSession].get()))
+        Ok(views.html.matchy.apply(player, ))
       }
     }
   }
