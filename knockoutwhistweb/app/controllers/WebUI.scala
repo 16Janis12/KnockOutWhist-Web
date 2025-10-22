@@ -2,16 +2,10 @@ package controllers
 
 import controllers.sessions.SimpleSession
 import de.knockoutwhist.cards.{Card, CardValue, Hand, Suit}
+import de.knockoutwhist.control.GameState.MainMenu
 import de.knockoutwhist.events.*
-import de.knockoutwhist.events.old.ERROR_STATUS.*
-import de.knockoutwhist.events.old.GLOBAL_STATUS.*
-import de.knockoutwhist.events.old.PLAYER_STATUS.*
-import de.knockoutwhist.events.old.ROUND_STATUS.{PLAYERS_OUT, SHOW_START_ROUND, WON_ROUND}
-import de.knockoutwhist.events.old.{ShowErrorStatus, ShowGlobalStatus, ShowPlayerStatus, ShowRoundStatus}
-import de.knockoutwhist.events.old.cards.{RenderHandEvent, ShowTieCardsEvent}
-import de.knockoutwhist.events.old.round.ShowCurrentTrickEvent
-import de.knockoutwhist.events.old.ui.{GameState, GameStateUpdateEvent}
-import de.knockoutwhist.events.old.ui.GameState.{INGAME, MAIN_MENU}
+import de.knockoutwhist.events.global.GameStateChangeEvent
+import de.knockoutwhist.events.player.PlayerEvent
 import de.knockoutwhist.player.AbstractPlayer
 import de.knockoutwhist.rounds.Match
 import de.knockoutwhist.ui.UI
@@ -23,7 +17,6 @@ object WebUI extends CustomThread with EventListener with UI {
   setName("WebUI")
   
   var init = false
-  private var internState: GameState = GameState.NO_SET
 
   var latestOutput: String = ""
 
@@ -32,36 +25,15 @@ object WebUI extends CustomThread with EventListener with UI {
   override def listen(event: SimpleEvent): Unit = {
     runLater {
       event match {
-        case event: RenderHandEvent =>
-          PodGameManager.transmit(event.player.id, event)
-        case event: ShowTieCardsEvent =>
-          PodGameManager.transmitAll(event)
-        case event: ShowGlobalStatus =>
-          if (event.status == TECHNICAL_MATCH_STARTED) {
-            val matchImpl = event.objects.head.asInstanceOf[Match]
-            for (player <- matchImpl.totalplayers) {
-              PodGameManager.addSession(SimpleSession(player.id, List()))
-            }
-          } else {
-            PodGameManager.transmitAll(event)
+        case event: PlayerEvent =>
+          PodGameManager.transmit(event.playerId, event)
+        case event: GameStateChangeEvent =>
+          if (event.newState == MainMenu) {
+            PodGameManager.clearSessions()
           }
-        case event: ShowPlayerStatus =>
-          PodGameManager.transmit(event.player.id, event)
-        case event: ShowRoundStatus =>
+          Some(true)
+        case _ => 
           PodGameManager.transmitAll(event)
-        case event: ShowErrorStatus =>
-          PodGameManager.transmitAll(event)
-        case event: ShowCurrentTrickEvent =>
-          PodGameManager.transmitAll(event)
-        case event: GameStateUpdateEvent =>
-          if (internState != event.gameState) {
-            internState = event.gameState
-            if (event.gameState == MAIN_MENU) {
-              PodGameManager.clearSessions()
-            }
-            Some(true)
-          }
-        case _ => None
       }
     }
   }
