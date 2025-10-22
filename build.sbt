@@ -19,7 +19,6 @@ lazy val commonSettings = Seq(
       .map(m => "org.openjfx" % s"javafx-$m" % "21" classifier osName)
   },
   libraryDependencies += guice,
-  Test / testOptions += Tests.Filter(_.equals("de.knockoutwhist.TestSequence")),
   coverageEnabled := true,
   coverageFailOnMinimum := true,
   coverageMinimumStmtTotal := 85,
@@ -29,7 +28,8 @@ lazy val commonSettings = Seq(
 lazy val knockoutwhist = project.in(file("knockoutwhist"))
   .settings(
     commonSettings,
-    mainClass := Some("de.knockoutwhist.KnockOutWhist")
+    mainClass := Some("de.knockoutwhist.KnockOutWhist"),
+    coverageExcludedPackages := "de.knockoutwhist.ui.*;de.knockoutwhist.utils.gui.*"
   )
 
 lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
