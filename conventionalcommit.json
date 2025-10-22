@@ -1,0 +1,116 @@
+{
+  "$schema": "https://github.com/lppedd/idea-conventional-commit/raw/master/src/main/resources/defaults/conventionalcommit.schema.json",
+  "types": {
+    "refactor": {
+      "description": "Changes which neither fix a bug nor add a feature"
+    },
+    "fix": {
+      "description": "Changes which patch a bug"
+    },
+    "feat": {
+      "description": "Changes which introduce a new feature"
+    },
+    "build": {
+      "description": "Changes which affect the build system or external dependencies.<br>Example scopes: gulp, broccoli, npm",
+      "scopes": {
+        "npm": {},
+        "gulp": {},
+        "broccoli": {}
+      }
+    },
+    "chore": {
+      "description": "Changes which are not user-facing"
+    },
+    "style": {
+      "description": "Changes which do not affect code logic, such as whitespaces, formatting, missing semicolons"
+    },
+    "test": {
+      "description": "Changes which add missing tests or fix existing ones"
+    },
+    "docs": {
+      "description": "Changes which affect documentation"
+    },
+    "perf": {
+      "description": "Changes which improve performance"
+    },
+    "ci": {
+      "description": "Changes which affect CI configuration files and scripts.<br>Example scopes: travis, circle, browser-stack, sauce-labs"
+    },
+    "revert": {
+      "description": "Changes which revert a previous commit"
+    }
+  },
+  "commonScopes": {
+    "api": {
+      "description": "Changes related to the API"
+    },
+    "auth": {
+      "description": "Changes related to authentication"
+    },
+    "config": {
+      "description": "Changes related to configuration"
+    },
+    "db": {
+      "description": "Changes related to the database"
+    },
+    "docs": {
+      "description": "Changes related to documentation"
+    },
+    "ui": {
+      "description": "Changes related to the user interface"
+    },
+    "ux": {
+      "description": "Changes related to the user experience"
+    },
+    "build": {
+      "description": "Changes related to the build system"
+    },
+    "ci": {
+      "description": "Changes related to continuous integration"
+    },
+    "deps": {
+      "description": "Changes related to dependencies"
+    },
+    "promotion": {
+      "description": "Kargo promotion changes"
+    },
+    "base": {
+      "description": "Changes related to the core functionality"
+    },
+    "release": {
+      "description": "A release commit"
+    }
+  },
+  "footerTypes": {
+    "BREAKING-CHANGE": {
+      "description": "The commit introduces breaking changes"
+    },
+    "Closes": {
+      "description": "The commit closes issues or pull requests"
+    },
+    "Implements": {
+      "description": "The commit implements new features"
+    },
+    "Author": {
+      "description": "The commit's author"
+    },
+    "Co-authored-by": {
+      "description": "The specified person co-authored the commit's changes"
+    },
+    "Signed-off-by": {
+      "description": "Certifies the committer has the rights to submit the work under the project's license or agrees to some contributor representation, such as a Developer Certificate of Origin"
+    },
+    "Reviewed-by": {
+      "description": "The specified person reviewed and is completely satisfied with the commit's changes"
+    },
+    "Tested-by": {
+      "description": "The specified person applied the commit's changes and found them to have the desired effect"
+    },
+    "Acked-by": {
+      "description": "The specified person liked the commit's changes"
+    },
+    "Refs": {
+      "description": "The commit references another commit by its hash ID.<br>For multiple hash IDs, use a comma as separator"
+    }
+  }
+}
