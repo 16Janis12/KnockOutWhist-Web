@@ -1,0 +1,27 @@
+@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic)
+
+@main("Tie") {
+<div id="tie">
+    <h1>Knockout Whist</h1>
+    <p>The last Round was tied between
+    @for(players <- logic.playerTieLogic.getTiedPlayers) {
+        @players
+    }
+    </p>
+    @if(player.equals(logic.playerTieLogic.currentTiePlayer())) {
+        <p>Pick a card between 1 and @logic.playerTieLogic.highestAllowedNumber()! The resulting card will be your card for the cut.</p>
+    } else {
+        <p>@logic.playerTieLogic.currentTiePlayer() is currently picking his number for the cut.</p>
+        <p>Currently picked Cards:</p>
+        <div id="cardsplayed">
+            @for((player, card) <- logic.playerTieLogic.getSelectedCard) {
+            <div id="playedcardplayer">
+                <p>@player</p>
+                @util.WebUIUtils.cardtoImage(card)
+            </div>
+            }
+        </div>
+    }
+
+</div>
+}

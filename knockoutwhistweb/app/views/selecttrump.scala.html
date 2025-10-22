@@ -1,0 +1,27 @@
+@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic)
+
+@main("Selecting Trumpsuit...") {
+<div id="selecttrumpsuit">
+    @if(player.equals(logic.getCurrentMatch.get.roundlist.last.winner.get)) {
+        <h1>Knockout Whist</h1>
+        <p>You (@player.toString) have won the last round! Select a trumpsuit for the next round!</p>
+        <p>Available trumpsuits are displayed below:</p>
+        <div id="playercards">
+            @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Spades))
+            @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Clubs))
+            @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Hearts))
+            @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Diamonds))
+        </div>
+        <p>Your cards</p>
+
+        <div id="playercards">
+            @for(card <- player.currentHand().get.cards) {
+            @util.WebUIUtils.cardtoImage(card)
+            }
+        </div>
+    } else {
+    <h1>Knockout Whist</h1>
+    <p>@player.toString is choosing a trumpsuit. Starting new round when @player.toString picked a trumpsuit...</p>
+    }
+</div>
+}

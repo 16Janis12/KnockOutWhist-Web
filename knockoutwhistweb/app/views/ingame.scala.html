@@ -1,0 +1,50 @@
+@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic)
+
+@main("Ingame") {
+<div id="ingame">
+    <h1>Knockout Whist</h1>
+    <div id="nextPlayers">
+        <p>Next Player:</p>
+        <p>@logic.getPlayerQueue.get.duplicate().nextPlayer()</p>
+    </div>
+    <div id="firstCard">
+        <div id="trumpsuit">
+            <p>Trumpsuit: </p>
+            <p>@logic.getCurrentRound.get.trumpSuit</p>
+        </div>
+        <div id="firstCardObject">
+            <p>First Card</p>
+            @if(logic.getCurrentTrick.get.firstCard != None) {
+                @util.WebUIUtils.cardtoImage(logic.getCurrentTrick.get.firstCard.get)
+            } else {
+                @views.html.output.card.apply("images/cards/1B.png")("Blank Card")
+            }
+        </div>
+    </div>
+
+    <p>@logic.getCurrentPlayer.get has to play a card!</p>
+    @if(!logic.getCurrentTrick.get.cards.isEmpty) {
+        <p>Cards played</p>
+    } else {
+        <p id="invisible">Cards played</p>
+    }
+
+    <div id="cardsplayed">
+        @for((cardplayed, player) <- logic.getCurrentTrick.get.cards) {
+        <div id="playedcardplayer">
+            <p>@player</p>
+            @util.WebUIUtils.cardtoImage(cardplayed)
+        </div>
+        }
+    </div>
+
+    <p>Your cards</p>
+    <div id="playercards">
+        @for(card <- player.currentHand().get.cards) {
+            @util.WebUIUtils.cardtoImage(card)
+        }
+    </div>
+
+
+</div>
+}
