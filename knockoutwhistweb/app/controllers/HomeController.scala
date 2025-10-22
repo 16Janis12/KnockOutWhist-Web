@@ -1,11 +1,13 @@
 package controllers
 
-import controllers.sessions.SimpleSession
+import controllers.sessions.AdvancedSession
 import com.google.inject.{Guice, Injector}
 import de.knockoutwhist.KnockOutWhist
 import de.knockoutwhist.components.Configuration
+import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
+import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
-import play.api.*
+import play.api.{controllers, *}
 import play.api.mvc.*
 import play.twirl.api.Html
 
@@ -49,15 +51,39 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   def ingame(id: String): Action[AnyContent] = {
     val uuid: UUID = UUID.fromString(id)
     if (PodGameManager.identify(uuid).isEmpty) {
-      Action { implicit request =>
+      return Action { implicit request =>
         NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
       }
     } else {
       val session = PodGameManager.identify(uuid).get
-      Action { implicit request =>
-        Ok(views.html.tui.apply(session.asInstanceOf[SimpleSession].get()))
+      val player = session.asInstanceOf[AdvancedSession].player
+      val logic = WebUI.logic.get.asInstanceOf[BaseGameLogic]
+      if (logic.getCurrentState == Lobby) {
+
+      } else if (logic.getCurrentState == InGame) {
+        return Action { implicit request =>
+          Ok(views.html.ingame.apply(player, logic))
+        }
+      } else if (logic.getCurrentState == SelectTrump) {
+        return Action { implicit request =>
+          Ok(views.html.selecttrump.apply(player, logic))
+        }
+      } else if (logic.getCurrentState == TieBreak) {
+        return Action { implicit request =>
+          Ok(views.html.tie.apply(player, logic))
+        }
       }
     }
+    Action { implicit request =>
+      InternalServerError("Oops")
+    }
+    //if (logic.getCurrentState == Lobby) {
+    //Action { implicit request =>
+    //Ok(views.html.tui.apply(player, logic))
+    //}
+    //} else {
+    //Action { implicit request =>
+    //Ok(views.html.tui.apply(player, logic))
+    //}
   }
-  
 }
