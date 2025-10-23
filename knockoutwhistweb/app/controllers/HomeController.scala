@@ -41,7 +41,11 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       Redirect("/sessions")
     }
   }
-
+  def rules(): Action[AnyContent] = {
+    Action { implicit request =>
+      Ok(views.html.rules.apply())
+    }
+  }
   def sessions(): Action[AnyContent] = {
     Action { implicit request =>
       Ok(views.html.sessions.apply(PodGameManager.listSessions()))
