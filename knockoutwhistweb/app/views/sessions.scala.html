@@ -1,11 +1,11 @@
-@(toRender: List[String])
+@(sessions: List[controllers.sessions.PlayerSession])
 
 @main("Sessions") {
     <div id="sessions">
         <h1>Knockout Whist sessions</h1>
         <p>Please select your session to jump inside the game!</p>
-        @for(line <- toRender) {
-            <a href="@routes.HomeController.ingame(line)">@line</a><br>
+        @for(session <- sessions) {
+            <a href="@routes.HomeController.ingame(session.id.toString)">@session.name</a><br>
         }
     </div>
 }

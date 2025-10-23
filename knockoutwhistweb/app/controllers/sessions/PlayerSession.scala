@@ -7,6 +7,7 @@ import java.util.UUID
 trait PlayerSession {
   
   def id: UUID
+  def name: String
   def updatePlayer(event: SimpleEvent): Unit
   
 }

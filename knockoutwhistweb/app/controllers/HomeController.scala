@@ -44,7 +44,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def sessions(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.sessions.apply(PodGameManager.listSessions().map(f => f.toString)))
+      Ok(views.html.sessions.apply(PodGameManager.listSessions()))
     }
   }
 

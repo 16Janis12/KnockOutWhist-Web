@@ -30,8 +30,8 @@ object PodGameManager {
     sessions.foreach(session => session._2.updatePlayer(event))
   }
   
-  def listSessions(): List[UUID] = {
-    sessions.keys.toList
+  def listSessions(): List[PlayerSession] = {
+    sessions.values.toList
   }
 
 }
