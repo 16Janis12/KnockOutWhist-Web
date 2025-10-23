@@ -14,7 +14,7 @@
         </div>
         <div id="firstCardObject">
             <p>First Card</p>
-            @if(logic.getCurrentTrick.get.firstCard != None) {
+            @if(logic.getCurrentTrick.get.firstCard.isDefined) {
                 @util.WebUIUtils.cardtoImage(logic.getCurrentTrick.get.firstCard.get)
             } else {
                 @views.html.output.card.apply("images/cards/1B.png")("Blank Card")
@@ -23,7 +23,7 @@
     </div>
 
     <p>@logic.getCurrentPlayer.get has to play a card!</p>
-    @if(!logic.getCurrentTrick.get.cards.isEmpty) {
+    @if(logic.getCurrentTrick.get.cards.nonEmpty) {
         <p>Cards played</p>
     } else {
         <p id="invisible">Cards played</p>
