@@ -1,14 +1,14 @@
 package controllers
 
-import controllers.sessions.AdvancedSession
 import com.google.inject.{Guice, Injector}
+import controllers.sessions.AdvancedSession
 import de.knockoutwhist.KnockOutWhist
 import de.knockoutwhist.components.Configuration
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
-import play.api.{controllers, *}
 import play.api.mvc.*
+import play.api.*
 import play.twirl.api.Html
 
 import java.util.UUID
