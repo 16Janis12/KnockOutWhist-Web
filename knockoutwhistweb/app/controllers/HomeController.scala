@@ -7,6 +7,8 @@ import de.knockoutwhist.components.Configuration
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
+import logic.PodGameManager
+import model.sessions.AdvancedSession
 import play.api.mvc.*
 import play.api.*
 import play.twirl.api.Html
@@ -81,13 +83,5 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
     Action { implicit request =>
       InternalServerError("Oops")
     }
-    //if (logic.getCurrentState == Lobby) {
-    //Action { implicit request =>
-    //Ok(views.html.tui.apply(player, logic))
-    //}
-    //} else {
-    //Action { implicit request =>
-    //Ok(views.html.tui.apply(player, logic))
-    //}
   }
 }

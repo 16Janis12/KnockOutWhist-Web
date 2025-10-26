@@ -1,7 +1,7 @@
-package controllers
+package logic
 
-import controllers.sessions.PlayerSession
 import de.knockoutwhist.utils.events.SimpleEvent
+import model.sessions.PlayerSession
 
 import java.util.UUID
 import scala.collection.mutable

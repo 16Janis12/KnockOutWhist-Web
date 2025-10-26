@@ -1,6 +1,5 @@
 package controllers
 
-import controllers.sessions.AdvancedSession
 import de.knockoutwhist.cards.{Card, CardValue, Hand, Suit}
 import de.knockoutwhist.control.GameLogic
 import de.knockoutwhist.control.GameState.{InGame, Lobby}
@@ -12,6 +11,8 @@ import de.knockoutwhist.rounds.Match
 import de.knockoutwhist.ui.UI
 import de.knockoutwhist.utils.CustomThread
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
+import logic.PodGameManager
+import model.sessions.AdvancedSession
 
 object WebUI extends CustomThread with EventListener with UI {
 

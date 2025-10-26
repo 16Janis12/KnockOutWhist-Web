@@ -1,4 +1,4 @@
-package controllers.sessions
+package model.sessions
 
 import de.knockoutwhist.utils.events.SimpleEvent
 
