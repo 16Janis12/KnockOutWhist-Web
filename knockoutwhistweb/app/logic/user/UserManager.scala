@@ -1,15 +1,10 @@
 package logic.user
 
-import com.google.inject.ImplementedBy
-import logic.user.impl.StubUserManager
-import model.users.User
-
-@ImplementedBy(classOf[StubUserManager])
 trait UserManager {
 
   def addUser(name: String, password: String): Boolean
-  def authenticate(name: String, password: String): Option[User]
-  def userExists(name: String): Option[User]
+  def authenticate(name: String, password: String): Boolean
+  def userExists(name: String): Boolean
   def removeUser(name: String): Boolean
 
 }
