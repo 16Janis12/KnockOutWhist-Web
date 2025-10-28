@@ -38,7 +38,9 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
   .settings(
     commonSettings,
     libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test,
-    libraryDependencies += "de.mkammerer" % "argon2-jvm" % "2.12"
+    libraryDependencies += "de.mkammerer" % "argon2-jvm" % "2.12",
+//    libraryDependencies += "com.auth0" % "java-jwt" % "4.5.0",
+    libraryDependencies += "com.github.ben-manes.caffeine" % "caffeine" % "3.2.2"
   )
 
 lazy val root = (project in file("."))

@@ -1,7 +1,6 @@
 package controllers
 
 import com.google.inject.{Guice, Injector}
-import controllers.sessions.AdvancedSession
 import de.knockoutwhist.KnockOutWhist
 import de.knockoutwhist.components.Configuration
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
