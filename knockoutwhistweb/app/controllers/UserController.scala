@@ -8,7 +8,7 @@ import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
 import logic.PodGameManager
 import logic.user.{SessionManager, UserManager}
-import model.sessions.AdvancedSession
+import model.sessions.SimpleSession
 import play.api.*
 import play.api.mvc.*
 import play.twirl.api.Html

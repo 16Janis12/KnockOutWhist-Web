@@ -7,7 +7,7 @@ import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
 import logic.PodGameManager
-import model.sessions.AdvancedSession
+import model.sessions.SimpleSession
 import play.api.mvc.*
 import play.api.*
 import play.twirl.api.Html
@@ -61,8 +61,8 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
       }
     } else {
       val session = PodGameManager.identify(uuid).get
-      val player = session.asInstanceOf[AdvancedSession].player
-      val logic = WebUI.logic.get.asInstanceOf[BaseGameLogic]
+      val player = session.asInstanceOf[SimpleSession].player
+      val logic = null
       if (logic.getCurrentState == Lobby) {
 
       } else if (logic.getCurrentState == InGame) {
