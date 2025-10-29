@@ -13,7 +13,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /rules                      controllers.HomeController.rules()
 
-
+GET     /mainmenu                   controllers.UserController.mainMenu()
 GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.login_Post()
 GET     /logout                     controllers.UserController.logout()

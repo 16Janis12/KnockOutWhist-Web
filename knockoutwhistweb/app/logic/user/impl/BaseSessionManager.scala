@@ -1,18 +1,27 @@
 package logic.user.impl
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.Config
 import logic.user.SessionManager
 import model.users.User
+import services.JwtKeyProvider
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class BaseSessionManager @Inject()(val config: Config) extends SessionManager {
+class BaseSessionManager @Inject()(val keyProvider: JwtKeyProvider, val config: Config) extends SessionManager {
+
+  private val algorithm = Algorithm.RSA512(keyProvider.publicKey, keyProvider.privateKey)
   
   override def createSession(user: User): String = {
-    //TODO create JWT token instead of random string
     //Write session identifier to cache and DB
-    val sessionId = java.util.UUID.randomUUID().toString
+    val sessionId = JWT.create()
+      .withIssuer(config.getString("auth.issuer"))
+      .withAudience(config.getString("auth.audience"))
+      .withSubject(user.internalId.toString)
+      .sign(algorithm)
+    //TODO write to DB
     sessionId
   }
 

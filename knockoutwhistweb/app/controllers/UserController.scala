@@ -24,13 +24,31 @@ import javax.inject.*
 @Singleton
 class UserController @Inject()(val controllerComponents: ControllerComponents, val sessionManager: SessionManager, val userManager: UserManager) extends BaseController {
 
+  def mainMenu() : Action[AnyContent] = {
+    Action { implicit request =>
+      val session = request.cookies.get("sessionId")
+      if (session.isDefined) {
+        val possibleUser = sessionManager.getUserBySession(session.get.value)
+        if (possibleUser.isDefined) {
+          Ok("Main Menu for user: " + possibleUser.get.name)
+        } else
+        {
+          println("Invalid session, redirecting to login")
+          Redirect("/login")
+        }
+      } else {
+        Redirect("/login")
+      }
+    }
+  }
+
   def login(): Action[AnyContent] = {
     Action { implicit request =>
       val session = request.cookies.get("sessionId")
       if (session.isDefined) {
         val possibleUser = sessionManager.getUserBySession(session.get.value)
         if (possibleUser.isDefined) {
-          Redirect("/main-menu")
+          Redirect("/mainmenu")
         } else
         {
           Ok(views.html.login())
@@ -54,6 +72,7 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, v
             Cookie("sessionId", sessionManager.createSession(possibleUser.get))
           )
         } else {
+          println("Failed login attempt for user: " + username)
           Unauthorized("Invalid username or password")
         }
       } else {
