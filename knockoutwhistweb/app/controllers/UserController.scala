@@ -62,6 +62,7 @@ class UserController @Inject()(val controllerComponents: ControllerComponents, v
   def login_Post(): Action[AnyContent] = {
     Action { implicit request =>
       val postData = request.body.asFormUrlEncoded
+      println(request.body.asText)
       if (postData.isDefined) {
         // Extract username and password from form data
         val username = postData.get.get("username").flatMap(_.headOption).getOrElse("")

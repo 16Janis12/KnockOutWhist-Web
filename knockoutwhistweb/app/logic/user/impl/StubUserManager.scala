@@ -40,6 +40,10 @@ class StubUserManager @Inject()(val config: Config) extends UserManager {
     user.get(name)
   }
 
+  override def userExistsById(id: Long): Option[User] = {
+    user.values.find(_.internalId == id)
+  }
+
   override def removeUser(name: String): Boolean = {
     throw new NotImplementedError("StubUserManager.removeUser is not implemented")
   }

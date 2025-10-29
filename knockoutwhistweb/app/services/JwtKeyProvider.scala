@@ -1,8 +1,8 @@
 package services
 
 import java.nio.file.{Files, Paths}
-import java.security.{KeyFactory, PrivateKey, PublicKey}
-import java.security.spec.X509EncodedKeySpec
+import java.security.{KeyFactory, KeyPair, PrivateKey, PublicKey}
+import java.security.spec.{PKCS8EncodedKeySpec, RSAPublicKeySpec, X509EncodedKeySpec}
 import java.util.Base64
 import javax.inject.*
 import play.api.Configuration
@@ -25,7 +25,7 @@ class JwtKeyProvider @Inject()(config: Configuration) {
 
   private def loadPrivateKeyFromPem(pem: String): RSAPrivateKey = {
     val decoded = Base64.getDecoder.decode(cleanPem(pem))
-    val spec = new X509EncodedKeySpec(decoded)
+    val spec = new PKCS8EncodedKeySpec(decoded)
     KeyFactory.getInstance("RSA").generatePrivate(spec).asInstanceOf[RSAPrivateKey]
   }
 

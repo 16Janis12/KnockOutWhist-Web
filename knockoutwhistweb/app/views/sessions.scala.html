@@ -2,7 +2,7 @@
 @(sessions: List[PlayerSession])
 
 @main("Sessions") {
-    <div id="sessions">
+    <div id="sessions" class="game-field-background">
         <h1>Knockout Whist sessions</h1>
         <p>Please select your session to jump inside the game!</p>
         @for(session <- sessions) {
