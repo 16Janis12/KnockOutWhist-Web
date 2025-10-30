@@ -55,32 +55,35 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
 
   def ingame(id: String): Action[AnyContent] = {
     val uuid: UUID = UUID.fromString(id)
-    if (PodGameManager.identify(uuid).isEmpty) {
-      return Action { implicit request =>
-        NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
-      }
-    } else {
-      val session = PodGameManager.identify(uuid).get
-      val player = session.asInstanceOf[SimpleSession].player
-      val logic = null
-      if (logic.getCurrentState == Lobby) {
-
-      } else if (logic.getCurrentState == InGame) {
-        return Action { implicit request =>
-          Ok(views.html.ingame.apply(player, logic))
-        }
-      } else if (logic.getCurrentState == SelectTrump) {
-        return Action { implicit request =>
-          Ok(views.html.selecttrump.apply(player, logic))
-        }
-      } else if (logic.getCurrentState == TieBreak) {
-        return Action { implicit request =>
-          Ok(views.html.tie.apply(player, logic))
-        }
-      }
-    }
     Action { implicit request =>
-      InternalServerError("Oops")
+      NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
     }
+//    if (PodGameManager.identify(uuid).isEmpty) {
+//      return Action { implicit request =>
+//        NotFound(views.html.tui.apply(List(Html(s"<p>Session with id $id not found!</p>"))))
+//      }
+//    } else {
+//      val session = PodGameManager.identify(uuid).get
+//      val player = session.asInstanceOf[SimpleSession].player
+//      val logic = BaseGameLogic(null)
+//      if (logic.getCurrentState == Lobby) {
+//
+//      } else if (logic.getCurrentState == InGame) {
+//        return Action { implicit request =>
+//          Ok(views.html.ingame.apply(player, logic))
+//        }
+//      } else if (logic.getCurrentState == SelectTrump) {
+//        return Action { implicit request =>
+//          Ok(views.html.selecttrump.apply(player, logic))
+//        }
+//      } else if (logic.getCurrentState == TieBreak) {
+//        return Action { implicit request =>
+//          Ok(views.html.tie.apply(player, logic))
+//        }
+//      }
+//    }
+//    Action { implicit request =>
+//      InternalServerError("Oops")
+//    }
   }
 }
