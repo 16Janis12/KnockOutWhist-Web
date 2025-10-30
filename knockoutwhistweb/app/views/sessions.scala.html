@@ -3,9 +3,9 @@
 @main("Sessions") {
     <div id="sessions">
         <h1>Knockout Whist sessions</h1>
-        <p>Please select your session to jump inside the game!</p>
+        <p id="textanimation">Please select your session to jump inside the game!</p>
         @for(session <- sessions) {
-            <a href="@routes.HomeController.ingame(session.id.toString)">@session.name</a><br>
+            <a id="textanimation" href="@routes.HomeController.ingame(session.id.toString)">@session.name</a><br>
         }
     </div>
 }
