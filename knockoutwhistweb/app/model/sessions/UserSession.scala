@@ -5,18 +5,21 @@ import de.knockoutwhist.utils.events.SimpleEvent
 import model.users.User
 
 import java.util.UUID
+import java.util.concurrent.locks.{Lock, ReentrantLock}
 
 class UserSession(user: User, val host: Boolean) extends PlayerSession {
-  var canInteract: Boolean = false
+  var canInteract: Option[InteractionType] = None
+  val lock: Lock = ReentrantLock()
 
   override def updatePlayer(event: SimpleEvent): Unit = {
     event match {
       case event: RequestTrumpSuitEvent =>
-        canInteract = true
+        canInteract = Some(InteractionType.TrumpSuit)
       case event: RequestTieChoiceEvent =>
-        canInteract = true
+        canInteract = Some(InteractionType.TieChoice)
       case event: RequestCardEvent =>
-        canInteract = true
+        if (event.player.isInDogLife) canInteract = Some(InteractionType.DogCard)
+        else canInteract = Some(InteractionType.Card)
       case _ =>
     }
   }
