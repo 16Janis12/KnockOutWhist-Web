@@ -6,7 +6,7 @@ import de.knockoutwhist.components.Configuration
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
-import logic.PodGameManager
+import logic.PodManager
 import logic.user.{SessionManager, UserManager}
 import model.sessions.SimpleSession
 import play.api.*

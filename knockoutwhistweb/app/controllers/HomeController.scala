@@ -6,7 +6,7 @@ import de.knockoutwhist.components.Configuration
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic
 import di.KnockOutWebConfigurationModule
-import logic.PodGameManager
+import logic.PodManager
 import model.sessions.SimpleSession
 import play.api.mvc.*
 import play.api.*
@@ -44,12 +44,12 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
   def rules(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.rules.apply())
+      Ok(views.html.rules())
     }
   }
   def sessions(): Action[AnyContent] = {
     Action { implicit request =>
-      Ok(views.html.sessions.apply(PodGameManager.listSessions()))
+      Ok(views.html.rules())
     }
   }
 
