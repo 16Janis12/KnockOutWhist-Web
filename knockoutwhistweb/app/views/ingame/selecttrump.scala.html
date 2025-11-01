@@ -1,7 +1,7 @@
-@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic)
+@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.GameLogic)
 
 @main("Selecting Trumpsuit...") {
-<div id="selecttrumpsuit">
+<div id="selecttrumpsuit" class="game-field game-field-background">
     @if(player.equals(logic.getCurrentMatch.get.roundlist.last.winner.get)) {
         <h1>Knockout Whist</h1>
         <p>You (@player.toString) have won the last round! Select a trumpsuit for the next round!</p>

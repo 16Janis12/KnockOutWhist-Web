@@ -29,6 +29,6 @@ object WebUIUtils {
       case Three => "3"
       case Two => "2"
     }
-    views.html.output.card.apply(f"images/cards/$cv$s.png")(card.toString)
+    views.html.render.card.apply(f"images/cards/$cv$s.png")(card.toString)
   }
 }

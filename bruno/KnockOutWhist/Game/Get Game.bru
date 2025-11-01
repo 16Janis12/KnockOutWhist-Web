@@ -1,0 +1,20 @@
+meta {
+  name: Get Game
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/game/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: uZDNZA
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -3,12 +3,28 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
 
-GET     /                           controllers.HomeController.index()
-GET     /sessions                     controllers.HomeController.sessions() 
-GET    /ingame/:id                  controllers.HomeController.ingame(id: String) 
-# Map static resources from the /public folder to the /assets URL path
+# Primary routes
+GET     /                           controllers.MainMenuController.index()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /rules                      controllers.HomeController.rules()
+# Main menu routes
+GET     /mainmenu                   controllers.MainMenuController.mainMenu()
+GET     /rules                      controllers.MainMenuController.rules()
+
+POST    /createGame                 controllers.MainMenuController.createGame()
+
+# User authentication routes
+GET     /login                      controllers.UserController.login()
+POST    /login                      controllers.UserController.login_Post()
+
+GET     /logout                     controllers.UserController.logout()
+
+# In-game routes
+GET    /game/:id                    controllers.IngameController.game(id: String)
+POST   /game/:id/join               controllers.IngameController.joinGame(id: String)
+
+POST   /game/:id/start              controllers.IngameController.startGame(id: String)
+
+
+POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)

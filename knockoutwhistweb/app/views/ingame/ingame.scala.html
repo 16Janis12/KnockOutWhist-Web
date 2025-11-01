@@ -1,7 +1,7 @@
-@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.controllerBaseImpl.BaseGameLogic)
+@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.GameLogic)
 
 @main("Ingame") {
-<div id="ingame">
+<div id="ingame" class="game-field game-field-background">
     <h1>Knockout Whist</h1>
     <div id="nextPlayers">
         <p>Next Player:</p>
@@ -17,7 +17,7 @@
             @if(logic.getCurrentTrick.get.firstCard.isDefined) {
                 @util.WebUIUtils.cardtoImage(logic.getCurrentTrick.get.firstCard.get)
             } else {
-                @views.html.output.card.apply("images/cards/1B.png")("Blank Card")
+                @views.html.render.card.apply("../../../public/images/cards/1B.png")("Blank Card")
             }
         </div>
     </div>

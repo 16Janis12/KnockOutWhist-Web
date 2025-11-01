@@ -1,5 +1,6 @@
 @import "light-mode.less";
 @import "dark-mode.less";
+@import "login.less";
 
 @background-image: var(--background-image);
 @color: var(--color);
@@ -7,14 +8,16 @@
   0% { transform: translateX(-100vw); }
   100% { transform: translateX(0); }
 }
-body {
+.game-field-background {
     background-image: @background-image;
     background-size: 100vw 100vh;
+    background-repeat: no-repeat;
 }
 
-html, body {
-    height: 100vh;
-    margin: 0;
+.game-field {
+    position: fixed;
+    inset: 0;
+    overflow: auto;
 }
 #sessions {
     display: flex;
@@ -31,8 +34,9 @@ html, body {
         animation: slideIn 0.5s ease-out forwards;
         animation-fill-mode: backwards;
         animation-delay: 1s;
-    }
-#sessions a, h1, p {
+}
+
+#sessions a, #sessions h1, #sessions p {
     color: @color;
     font-size: 40px;
     font-family: Arial, serif;
@@ -43,6 +47,11 @@ html, body {
     align-items: center;
     justify-content: flex-end;
     height: 100%;
+}
+#ingame a, #ingame h1, #ingame p {
+    color: @color;
+    font-size: 40px;
+    font-family: Arial, serif;
 }
 #playercards {
     display: flex;
