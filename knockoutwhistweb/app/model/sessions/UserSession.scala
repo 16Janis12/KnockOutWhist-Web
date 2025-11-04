@@ -28,4 +28,8 @@ class UserSession(user: User, val host: Boolean) extends PlayerSession {
 
   override def name: String = user.name
   
+  def resetCanInteract(): Unit = {
+    canInteract = None
+  }
+  
 }

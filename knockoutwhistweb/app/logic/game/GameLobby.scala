@@ -70,6 +70,9 @@ class GameLobby private(
     if (!sessionOpt.get.host) {
       throw new NotHostException("Only the host can start the game!")
     }
+    if (logic.getCurrentState != Lobby) {
+      throw new IllegalStateException("The game has already started!")
+    }
     val playerNamesList = ListBuffer[AbstractPlayer]()
     users.values.foreach { player =>
       playerNamesList += PlayerFactory.createPlayer(player.name, player.id, HUMAN)
@@ -108,6 +111,7 @@ class GameLobby private(
     if (!PlayerUtil.canPlayCard(card, getRound, getTrick, player)) {
       throw new CantPlayCardException("You can't play this card!")
     }
+    userSession.resetCanInteract()
     logic.playerInputLogic.receivedCard(card)
   }
 
@@ -129,6 +133,7 @@ class GameLobby private(
     }
     val hand = getHand(player)
     val card = hand.cards(cardIndex)
+    userSession.resetCanInteract()
     logic.playerInputLogic.receivedDog(Some(card))
   }
 
@@ -141,6 +146,7 @@ class GameLobby private(
     val player = getPlayerInteractable(userSession, InteractionType.TrumpSuit)
     val trumpSuits = Suit.values.toList
     val selectedTrump = trumpSuits(trumpIndex)
+    userSession.resetCanInteract()
     logic.playerInputLogic.receivedTrumpSuit(selectedTrump)
   }
 
@@ -151,6 +157,7 @@ class GameLobby private(
    */
   def selectTie(userSession: UserSession, tieNumber: Int): Unit = {
     val player = getPlayerInteractable(userSession, InteractionType.TieChoice)
+    userSession.resetCanInteract()
     logic.playerTieLogic.receivedTieBreakerCard(tieNumber)
   }
 

@@ -111,7 +111,10 @@ class IngameController @Inject()(
         cardIdOpt match {
           case Some(cardId) =>
             val result = Try {
-              g.playCard(g.getUserSession(request.user.id), cardId.toInt)
+              val session = g.getUserSession(request.user.id)
+              session.lock.lock()
+              g.playCard(session, cardId.toInt)
+              session.lock.unlock()
             }
             if (result.isSuccess) {
               NoContent
@@ -146,9 +149,15 @@ class IngameController @Inject()(
         val result = Try {
           cardIdOpt match {
             case Some(cardId) if cardId == "skip" =>
-              g.playDogCard(g.getUserSession(request.user.id), -1)
+              val session = g.getUserSession(request.user.id)
+              session.lock.lock()
+              g.playDogCard(session, -1)
+              session.lock.unlock()
             case Some(cardId) =>
-              g.playDogCard(g.getUserSession(request.user.id), cardId.toInt)
+              val session = g.getUserSession(request.user.id)
+              session.lock.lock()
+              g.playDogCard(session, cardId.toInt)
+              session.lock.unlock()
             case None =>
               throw new IllegalArgumentException("cardId parameter is missing")
           }
@@ -184,7 +193,10 @@ class IngameController @Inject()(
         trumpOpt match {
           case Some(trump) =>
             val result = Try {
-              g.selectTrump(g.getUserSession(request.user.id), trump.toInt)
+              val session = g.getUserSession(request.user.id)
+              session.lock.lock()
+              g.selectTrump(session, trump.toInt)
+              session.lock.unlock()
             }
             if (result.isSuccess) {
               NoContent
@@ -216,7 +228,10 @@ class IngameController @Inject()(
         tieOpt match {
           case Some(tie) =>
             val result = Try {
+              val session = g.getUserSession(request.user.id)
+              session.lock.lock()
               g.selectTie(g.getUserSession(request.user.id), tie.toInt)
+              session.lock.unlock()
             }
             if (result.isSuccess) {
               NoContent

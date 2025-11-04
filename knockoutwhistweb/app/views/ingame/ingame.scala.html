@@ -17,7 +17,7 @@
             @if(logic.getCurrentTrick.get.firstCard.isDefined) {
                 @util.WebUIUtils.cardtoImage(logic.getCurrentTrick.get.firstCard.get)
             } else {
-                @views.html.render.card.apply("../../../public/images/cards/1B.png")("Blank Card")
+                @views.html.render.card.apply("images/cards/1B.png")("Blank Card")
             }
         </div>
     </div>

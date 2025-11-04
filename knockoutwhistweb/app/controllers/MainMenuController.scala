@@ -21,7 +21,7 @@ class MainMenuController @Inject()(
 
   // Pass the request-handling function directly to authAction (no nested Action)
   def mainMenu(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Ok("Main Menu for user: " + request.user.name)
+    Ok(views.html.mainmenu.navbar(Some(request.user)))
   }
 
   def index(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
@@ -35,6 +35,22 @@ class MainMenuController @Inject()(
       maxPlayers = 4
     )
     Redirect(routes.IngameController.game(gameLobby.id))
+  }
+  
+  def joinGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val postData = request.body.asFormUrlEncoded
+    if (postData.isDefined) {
+      val gameId = postData.get.get("gameId").flatMap(_.headOption).getOrElse("")
+      val game = podManager.getGame(gameId)
+      game match {
+        case Some(g) =>
+          Redirect(routes.IngameController.joinGame(gameId))
+        case None =>
+          NotFound("Game not found")
+      }
+    } else {
+      BadRequest("Invalid form submission")
+    }
   }
 
   def rules(): Action[AnyContent] = {

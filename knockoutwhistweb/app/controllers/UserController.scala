@@ -64,7 +64,7 @@ class UserController @Inject()(
     if (sessionCookie.isDefined) {
       sessionManager.invalidateSession(sessionCookie.get.value)
     }
-    NoContent.discardingCookies(DiscardingCookie("sessionId"))
+    Redirect(routes.UserController.login()).discardingCookies(DiscardingCookie("sessionId"))
   }
 
 }

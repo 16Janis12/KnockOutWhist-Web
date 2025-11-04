@@ -13,6 +13,7 @@ GET     /mainmenu                   controllers.MainMenuController.mainMenu()
 GET     /rules                      controllers.MainMenuController.rules()
 
 POST    /createGame                 controllers.MainMenuController.createGame()
+POST    /joinGame                   controllers.MainMenuController.joinGame()
 
 # User authentication routes
 GET     /login                      controllers.UserController.login()
@@ -22,9 +23,7 @@ GET     /logout                     controllers.UserController.logout()
 
 # In-game routes
 GET    /game/:id                    controllers.IngameController.game(id: String)
-POST   /game/:id/join               controllers.IngameController.joinGame(id: String)
-
+GET    /game/:id/join               controllers.IngameController.joinGame(id: String)
 POST   /game/:id/start              controllers.IngameController.startGame(id: String)
-
 
 POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)
