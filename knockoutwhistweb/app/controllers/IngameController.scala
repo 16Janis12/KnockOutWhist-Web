@@ -4,6 +4,7 @@ import auth.{AuthAction, AuthenticatedRequest}
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import exceptions.{CantPlayCardException, GameFullException, NotEnoughPlayersException, NotHostException, NotInThisGameException}
 import logic.PodManager
+import model.sessions.{PlayerSession, UserSession}
 import play.api.*
 import play.api.mvc.*
 
@@ -110,12 +111,14 @@ class IngameController @Inject()(
         val cardIdOpt = request.body.asFormUrlEncoded.flatMap(_.get("cardId").flatMap(_.headOption))
         cardIdOpt match {
           case Some(cardId) =>
+            var optSession: Option[UserSession] = None
             val result = Try {
               val session = g.getUserSession(request.user.id)
+              optSession = Some(session)
               session.lock.lock()
               g.playCard(session, cardId.toInt)
-              session.lock.unlock()
             }
+            optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {
               NoContent
             } else {
@@ -146,22 +149,24 @@ class IngameController @Inject()(
     game match {
       case Some(g) => {
         val cardIdOpt = request.body.asFormUrlEncoded.flatMap(_.get("cardId").flatMap(_.headOption))
+        var optSession: Option[UserSession] = None
         val result = Try {
           cardIdOpt match {
             case Some(cardId) if cardId == "skip" =>
               val session = g.getUserSession(request.user.id)
+              optSession = Some(session)
               session.lock.lock()
               g.playDogCard(session, -1)
-              session.lock.unlock()
             case Some(cardId) =>
               val session = g.getUserSession(request.user.id)
+              optSession = Some(session)
               session.lock.lock()
               g.playDogCard(session, cardId.toInt)
-              session.lock.unlock()
             case None =>
               throw new IllegalArgumentException("cardId parameter is missing")
           }
         }
+        optSession.foreach(_.lock.unlock())
         if (result.isSuccess) {
           NoContent
         } else {
@@ -192,12 +197,14 @@ class IngameController @Inject()(
         val trumpOpt = request.body.asFormUrlEncoded.flatMap(_.get("trump").flatMap(_.headOption))
         trumpOpt match {
           case Some(trump) =>
+            var optSession: Option[UserSession] = None
             val result = Try {
               val session = g.getUserSession(request.user.id)
+              optSession = Some(session)
               session.lock.lock()
               g.selectTrump(session, trump.toInt)
-              session.lock.unlock()
             }
+            optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {
               NoContent
             } else {
@@ -227,12 +234,14 @@ class IngameController @Inject()(
         val tieOpt = request.body.asFormUrlEncoded.flatMap(_.get("tie").flatMap(_.headOption))
         tieOpt match {
           case Some(tie) =>
+            var optSession: Option[UserSession] = None
             val result = Try {
               val session = g.getUserSession(request.user.id)
+              optSession = Some(session)
               session.lock.lock()
               g.selectTie(g.getUserSession(request.user.id), tie.toInt)
-              session.lock.unlock()
             }
+            optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {
               NoContent
             } else {
