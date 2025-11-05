@@ -9,7 +9,7 @@ import java.util.concurrent.locks.{Lock, ReentrantLock}
 
 class UserSession(user: User, val host: Boolean) extends PlayerSession {
   var canInteract: Option[InteractionType] = None
-  val lock: Lock = ReentrantLock()
+  val lock: ReentrantLock = ReentrantLock()
 
   override def updatePlayer(event: SimpleEvent): Unit = {
     event match {

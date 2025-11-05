@@ -185,7 +185,7 @@ class GameLobby private(
   }
   
   private def getPlayerInteractable(userSession: UserSession, iType: InteractionType): AbstractPlayer = {
-    if (!Thread.holdsLock(userSession.lock)) {
+    if (!userSession.lock.isHeldByCurrentThread) {
       throw new IllegalStateException("The user session is not locked!")
     }
     if (userSession.canInteract.isEmpty || userSession.canInteract.get != iType) {
