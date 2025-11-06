@@ -2,6 +2,19 @@
 @import "dark-mode.less";
 @import "login.less";
 
+/* Provide default (light) variables so the site works even if light-mode.less fails */
+:root {
+  --background-image: url('/assets/images/img.png');
+  --color: #212529; /* Bootstrap body text default */
+
+  /* Bootstrap variable overrides for light mode */
+  --bs-body-color: var(--color) !important;
+  --bs-link-color: #0d6efd !important;
+  --bs-link-hover-color: #0a58ca !important;
+  --bs-border-color: rgba(0, 0, 0, 0.125) !important;
+  --bs-heading-color: var(--color) !important;
+}
+
 @background-image: var(--background-image);
 @color: var(--color);
 @keyframes slideIn {
@@ -10,8 +23,33 @@
 }
 .game-field-background {
     background-image: @background-image;
-    background-size: 100vw 100vh;
+    background-size: cover;
+    background-position: center center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.navbar-header{
+    text-align:center;
+}
+
+.navbar-toggle {
+    float: none;
+    margin-right:0;
+}
+
+/* Ensure body text color follows theme variable and works with Bootstrap */
+body {
+    color: @color;
+}
+
+.footer {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: @color;
+    padding: 0.5rem 0;
+    flex-grow: 1; /* fill remaining vertical space as visual footer background */
 }
 
 .game-field {
@@ -19,6 +57,7 @@
     inset: 0;
     overflow: auto;
 }
+
 #sessions {
     display: flex;
     flex-direction: column;
@@ -70,7 +109,21 @@
         &:nth-child(7) { animation-delay: 3.5s; }
     }
 }
+#card-slide {
+    div {
+        animation: slideIn 0.5s ease-out forwards;
+        animation-fill-mode: backwards;
+        &:nth-child(1) { animation-delay: 0.5s; }
+        &:nth-child(2) { animation-delay: 1s; }
+        &:nth-child(3) { animation-delay: 1.5s; }
+        &:nth-child(4) { animation-delay: 2s; }
+        &:nth-child(5) { animation-delay: 2.5s; }
+        &:nth-child(6) { animation-delay: 3s; }
+        &:nth-child(7) { animation-delay: 3.5s; }
+    }
 
+
+}
 
 #cardsplayed {
     display: flex;

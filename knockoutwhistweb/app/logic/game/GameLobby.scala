@@ -88,12 +88,12 @@ class GameLobby private(
    * Remove the user from the game lobby.
    * @param user the user who wants to leave the game.
    */
-  def leaveGame(user: User): Unit = {
-    val sessionOpt = users.get(user.id)
+  def leaveGame(userId: UUID): Unit = {
+    val sessionOpt = users.get(userId)
     if (sessionOpt.isEmpty) {
       throw new NotInThisGameException("You are not in this game!")
     }
-    users.remove(user.id)
+    users.remove(userId)
   }
 
   /**
@@ -174,6 +174,14 @@ class GameLobby private(
 
   def getPlayerByUser(user: User): AbstractPlayer = {
     getPlayerBySession(getUserSession(user.id))
+  }
+
+  def getPlayers: mutable.Map[UUID, UserSession] = {
+    users.clone()
+  }
+
+  def getLogic: GameLogic = {
+    logic
   }
 
   private def getPlayerBySession(userSession: UserSession): AbstractPlayer = {

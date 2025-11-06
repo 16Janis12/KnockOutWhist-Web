@@ -22,6 +22,12 @@ class StubUserManager @Inject()(val config: Config) extends UserManager {
       id = java.util.UUID.fromString("223e4567-e89b-12d3-a456-426614174000"),
       name = "Leon",
       passwordHash = UserHash.hashPW("password123")
+    ),
+    "Jakob" -> User(
+      internalId = 2L,
+      id = java.util.UUID.fromString("323e4567-e89b-12d3-a456-426614174000"),
+      name = "Jakob",
+      passwordHash = UserHash.hashPW("password123")
     )
   )
 

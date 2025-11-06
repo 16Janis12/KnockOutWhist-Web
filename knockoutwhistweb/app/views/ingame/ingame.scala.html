@@ -1,50 +1,71 @@
-@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.GameLogic)
+@import de.knockoutwhist.control.controllerBaseImpl.sublogic.util.TrickUtil
+
+@(player: de.knockoutwhist.player.AbstractPlayer, gamelobby: logic.game.GameLobby)
 
 @main("Ingame") {
-<div id="ingame" class="game-field game-field-background">
-    <h1>Knockout Whist</h1>
-    <div id="nextPlayers">
-        <p>Next Player:</p>
-        <p>@logic.getPlayerQueue.get.duplicate().nextPlayer()</p>
-    </div>
-    <div id="firstCard">
-        <div id="trumpsuit">
-            <p>Trumpsuit: </p>
-            <p>@logic.getCurrentRound.get.trumpSuit</p>
+    <div class="container py-5">
+
+            <!-- Header Row -->
+        <div class="row mb-4 text-center">
+            <div class="col-md-4 text-start">
+                <h4 class="fw-semibold mb-1">Current Player</h4>
+                <p class="fs-5 text-primary">@gamelobby.getLogic.getCurrentPlayer.get.name</p>
+                @if(!TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
+                    <h4 class="fw-semibold mb-1">Next Player</h4>
+                    @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
+                        <p class="fs-5 text-primary">@nextplayer</p>
+                    }
+                }
+            </div>
+
+                <!-- Middle column without "Cards Played" -->
+            <div class="col-md-4 text-center">
+                    <!-- You can leave this empty or add something else here if needed -->
+            </div>
+
+            <div class="col-md-4 text-end">
+                <h4 class="fw-semibold mb-1">Trumpsuit</h4>
+                <p class="fs-5 text-primary">@gamelobby.getLogic.getCurrentRound.get.trumpSuit</p>
+
+                <h5 class="fw-semibold mt-4 mb-1">First Card</h5>
+                <div class="d-inline-block border rounded shadow-sm p-1 bg-light">
+                @if(gamelobby.getLogic.getCurrentTrick.get.firstCard.isDefined) {
+                    @util.WebUIUtils.cardtoImage(gamelobby.getLogic.getCurrentTrick.get.firstCard.get) width="80px"/>
+                } else {
+                    @views.html.render.card.apply("images/cards/1B.png")("Blank Card") width="80px"/>
+                }
+                </div>
+            </div>
         </div>
-        <div id="firstCardObject">
-            <p>First Card</p>
-            @if(logic.getCurrentTrick.get.firstCard.isDefined) {
-                @util.WebUIUtils.cardtoImage(logic.getCurrentTrick.get.firstCard.get)
-            } else {
-                @views.html.render.card.apply("images/cards/1B.png")("Blank Card")
+
+            <!-- Cards Played -->
+        <div class="row justify-content-center g-3 mb-5">
+        @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
+            <div class="col-auto">
+                <div class="card text-center shadow-sm border-0" style="width: 7rem;">
+                    <div class="p-2">
+                        @util.WebUIUtils.cardtoImage(cardplayed) width="100%"/>
+                    </div>
+                    <div class="card-body p-2 bg-light">
+                        <small class="fw-semibold text-secondary">@player</small>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+
+            <!-- Player Hand at the BOTTOM -->
+        <div class="row justify-content-center g-2 mt-4" id="card-slide">
+            @for(i <- player.currentHand().get.cards.indices) {
+                <div class="col-auto">
+                    <form action="@(routes.IngameController.playCard(gamelobby.id))" method="post" class="m-0 p-0">
+                        <input type="hidden" name="cardId" value="@i" />
+                        <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none">
+                            @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px"/>
+                        </button>
+                    </form>
+                </div>
             }
         </div>
     </div>
-
-    <p>@logic.getCurrentPlayer.get has to play a card!</p>
-    @if(logic.getCurrentTrick.get.cards.nonEmpty) {
-        <p>Cards played</p>
-    } else {
-        <p id="invisible">Cards played</p>
-    }
-
-    <div id="cardsplayed">
-        @for((cardplayed, player) <- logic.getCurrentTrick.get.cards) {
-        <div id="playedcardplayer">
-            <p>@player</p>
-            @util.WebUIUtils.cardtoImage(cardplayed)
-        </div>
-        }
-    </div>
-
-    <p>Your cards</p>
-    <div id="playercards">
-        @for(card <- player.currentHand().get.cards) {
-            @util.WebUIUtils.cardtoImage(card)
-        }
-    </div>
-
-
-</div>
 }

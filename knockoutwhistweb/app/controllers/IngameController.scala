@@ -8,6 +8,7 @@ import model.sessions.{PlayerSession, UserSession}
 import play.api.*
 import play.api.mvc.*
 
+import java.util.UUID
 import javax.inject.*
 import scala.util.Try
 
@@ -28,11 +29,11 @@ class IngameController @Inject()(
     game match {
       case Some(g) =>
         g.logic.getCurrentState match {
-          case Lobby => Ok("Lobby: " + gameId)
+          case Lobby => Ok(views.html.lobby.lobby(Some(request.user), g))
           case InGame =>
             Ok(views.html.ingame.ingame(
               g.getPlayerByUser(request.user),
-              g.logic
+              g
             ))
           case SelectTrump =>
             Ok(views.html.ingame.selecttrump(
@@ -63,7 +64,7 @@ class IngameController @Inject()(
       }
     }
     if (result.isSuccess) {
-      NoContent
+      Redirect(routes.IngameController.game(gameId))
     } else {
       val throwable = result.failed.get
       throwable match {
@@ -77,6 +78,16 @@ class IngameController @Inject()(
           InternalServerError(throwable.getMessage)
       }
     }
+  }
+  def kickPlayer(gameId: String, playerToKick: UUID): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val game = podManager.getGame(gameId)
+    game.get.leaveGame(playerToKick)
+    Redirect(routes.IngameController.game(gameId))
+  }
+  def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val game = podManager.getGame(gameId)
+    game.get.leaveGame(request.user.id)
+    Redirect(routes.MainMenuController.mainMenu())
   }
   def joinGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)

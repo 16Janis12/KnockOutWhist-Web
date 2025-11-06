@@ -1,63 +1,76 @@
-@()
+@(user: Option[model.users.User])
 
 @main("Rules") {
-<div id="rules" class="game-field game-field-background">
-    <table>
-        <caption>Rules Overview and Equipment</caption>
-        <thead>
-        <tr>
-            <th>Section</th>
-            <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Players</td>
-            <td>Two to seven players. The aim is to be the last player left in the game.</td>
-        </tr>
-        <tr>
-            <td>Aim</td>
-            <td>To be the last player left in at the end of the game, with the object in each hand being to win a majority of tricks.</td>
-        </tr>
-        <tr>
-            <td>Equipment</td>
-            <td>A standard 52-card pack is used.</td>
-        </tr>
-        <tr>
-            <td>Card Ranks</td>
-            <td>In each suit, cards rank from highest to lowest: A K Q J 10 9 8 7 6 5 4 3 2.</td>
-        </tr>
-        <tr>
-            <td>Deal (First Hand)</td>
-            <td>The dealer deals seven cards to each player. One card is turned up to determine the trump suit for the round.</td>
-        </tr>
-        <tr>
-            <td>Deal (Subsequent Hands)</td>
-            <td>The deal rotates clockwise. The player who took the most tricks in the previous hand selects the trump suit. If there's a tie for the highest number of tricks, players cut cards to decide who calls trumps. One fewer card is dealt in each successive hand until the final hand consists of one card each.</td>
-        </tr>
-        <tr>
-            <td>Play</td>
-            <td>The player to the dealer's left (eldest hand) leads the first trick. Any card can be led. Other players must follow suit if possible. A player with no cards of the suit led may play any card.</td>
-        </tr>
-        <tr>
-            <td>Winning a Trick</td>
-            <td>The highest card of the suit led wins, unless a trump is played, in which case the highest trump wins. The winner of the trick leads the next.</td>
-        </tr>
-        <tr>
-            <td>Leading Trumps</td>
-            <td>Some rules disallow leading trumps before the suit has been 'broken' (a trump has been played to the lead of another suit). Leading trumps is always permissible if a player holds only trumps.</td>
-        </tr>
-        <tr>
-            <td>Knockout</td>
-            <td>At the end of each hand, any player who took no tricks is knocked out and takes no further part in the game.</td>
-        </tr>
-        <tr>
-            <td>Winning the Game</td>
-            <td>The game is won when a player takes all the tricks in a round, as all other players are knocked out, leaving only one player remaining.</td>
-        </tr>
-        </tbody>
-            <td>Dog Life</td>
-            <td>The first player who takes no tricks is awarded a "dog's life". In the next hand, that player is dealt one card and can decide which trick to play it to. Each time a trick is played the "dog" may either play the card or knock on the table and wait to play it later. If the dog wins a trick, the player to the left leads to the next and the dog re-enters the game properly in the next hand. If the dog fails, they are knocked out.</td>
-    </table>
+    @navbar(user)
+<div id="rules">
+    <div class="container my-4">
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header text-white text-center">
+            <h4 class="mb-0 text-body">Game Rules Overview</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Section</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Players</td>
+                            <td>Two to seven players. The aim is to be the last player left in the game.</td>
+                        </tr>
+                        <tr>
+                            <td>Aim</td>
+                            <td>To be the last player left at the end of the game, with the object in each hand being to win a majority of tricks.</td>
+                        </tr>
+                        <tr>
+                            <td>Equipment</td>
+                            <td>A standard 52-card pack is used.</td>
+                        </tr>
+                        <tr>
+                            <td>Card Ranks</td>
+                            <td>In each suit, cards rank from highest to lowest: A K Q J 10 9 8 7 6 5 4 3 2.</td>
+                        </tr>
+                        <tr>
+                            <td>Deal (First Hand)</td>
+                            <td>The dealer deals seven cards to each player. One card is turned up to determine the trump suit for the round.</td>
+                        </tr>
+                        <tr>
+                            <td>Deal (Subsequent Hands)</td>
+                            <td>The deal rotates clockwise. The player who took the most tricks in the previous hand selects the trump suit. If there's a tie, players cut cards to decide who calls trumps. One fewer card is dealt in each successive hand until the final hand consists of one card each.</td>
+                        </tr>
+                        <tr>
+                            <td>Play</td>
+                            <td>The player to the dealer's left (eldest hand) leads the first trick. Any card can be led. Other players must follow suit if possible. A player with no cards of the suit led may play any card.</td>
+                        </tr>
+                        <tr>
+                            <td>Winning a Trick</td>
+                            <td>The highest card of the suit led wins, unless a trump is played, in which case the highest trump wins. The winner of the trick leads the next.</td>
+                        </tr>
+                        <tr>
+                            <td>Leading Trumps</td>
+                            <td>Some rules disallow leading trumps before the suit has been 'broken' (a trump has been played to the lead of another suit). Leading trumps is always permissible if a player holds only trumps.</td>
+                        </tr>
+                        <tr>
+                            <td>Knockout</td>
+                            <td>At the end of each hand, any player who took no tricks is knocked out and takes no further part in the game.</td>
+                        </tr>
+                        <tr>
+                            <td>Winning the Game</td>
+                            <td>The game is won when a player takes all the tricks in a round, as all other players are knocked out, leaving only one player remaining.</td>
+                        </tr>
+                        <tr>
+                            <td>Dog Life</td>
+                            <td>The first player who takes no tricks is awarded a "dog's life". In the next hand, that player is dealt one card and can decide which trick to play it to. Each time a trick is played the "dog" may either play the card or knock on the table and wait to play it later. If the dog wins a trick, the player to the left leads the next and the dog re-enters the game properly in the next hand. If the dog fails, they are knocked out.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 }

@@ -24,6 +24,7 @@ GET     /logout                     controllers.UserController.logout()
 # In-game routes
 GET    /game/:id                    controllers.IngameController.game(id: String)
 GET    /game/:id/join               controllers.IngameController.joinGame(id: String)
-POST   /game/:id/start              controllers.IngameController.startGame(id: String)
-
+GET    /game/:id/start              controllers.IngameController.startGame(id: String)
+POST    /game/:id/kickPlayer         controllers.IngameController.kickPlayer(id: String, playerId: java.util.UUID)
+GET     /game/:id/leaveGame         controllers.IngameController.leaveGame(id: String)
 POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)
