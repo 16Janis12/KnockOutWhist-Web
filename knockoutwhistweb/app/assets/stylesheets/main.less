@@ -15,6 +15,7 @@
   --bs-heading-color: var(--color) !important;
 }
 
+@highlightcolor: var(--highlightscolor);
 @background-image: var(--background-image);
 @color: var(--color);
 @keyframes slideIn {
@@ -36,6 +37,18 @@
 .navbar-toggle {
     float: none;
     margin-right:0;
+}
+.handcard :hover {
+  box-shadow: 3px 3px 3px @highlightcolor;
+}
+
+.bottom-div {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
 }
 
 /* Ensure body text color follows theme variable and works with Bootstrap */

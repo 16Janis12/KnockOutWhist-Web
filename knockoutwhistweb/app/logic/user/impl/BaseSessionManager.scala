@@ -13,6 +13,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
+import scala.util.Try
 
 @Singleton
 class BaseSessionManager @Inject()(val keyProvider: JwtKeyProvider, val userManager: StubUserManager, val config: Config) extends SessionManager {
@@ -44,15 +45,21 @@ class BaseSessionManager @Inject()(val keyProvider: JwtKeyProvider, val userMana
   }
 
   override def getUserBySession(sessionId: String): Option[User] = {
-    //TODO verify JWT token instead of looking up in cache
     val cachedUser = cache.getIfPresent(sessionId)
     if (cachedUser != null) {
       Some(cachedUser)
     } else {
-      val decoded = verifier.verify(sessionId)
-      val user = userManager.userExistsById(decoded.getClaim("id").asLong())
-      user.foreach(u => cache.put(sessionId, u))
-      user
+      val result = Try {
+        val decoded = verifier.verify(sessionId)
+        val user = userManager.userExistsById(decoded.getClaim("id").asLong())
+        user.foreach(u => cache.put(sessionId, u))
+        user
+      }
+      if (result.isSuccess) {
+        result.get
+      } else {
+        None
+      }
     }
   }
 

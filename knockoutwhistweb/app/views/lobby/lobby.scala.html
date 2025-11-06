@@ -29,11 +29,11 @@
                         <div class="card-body">
                             @if(playersession.id == user.get.id) {
                                 <h5 class="card-title">@playersession.name (You)</h5>
-                                <p class="card-text">Your text could be here!</p>
+@*                                <p class="card-text">Your text could be here!</p>*@
                                 <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>
                             } else {
                                 <h5 class="card-title">@playersession.name</h5>
-                                <p class="card-text">Your text could be here!</p>
+@*                                <p class="card-text">Your text could be here!</p>*@
                                 <form action="@(routes.IngameController.kickPlayer(gamelobby.id, playersession.id))" method="post">
                                     <button type="submit" class="btn btn-danger">Remove</button>
                                 </form>

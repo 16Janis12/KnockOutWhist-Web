@@ -3,11 +3,10 @@
 @(player: de.knockoutwhist.player.AbstractPlayer, gamelobby: logic.game.GameLobby)
 
 @main("Ingame") {
-    <div class="container py-5">
+    <div class="py-5 ms-4 me-4">
 
-            <!-- Header Row -->
-        <div class="row mb-4 text-center">
-            <div class="col-md-4 text-start">
+        <div class="row ms-4 me-4">
+            <div class="col-4 mt-5 text-start">
                 <h4 class="fw-semibold mb-1">Current Player</h4>
                 <p class="fs-5 text-primary">@gamelobby.getLogic.getCurrentPlayer.get.name</p>
                 @if(!TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
@@ -18,9 +17,19 @@
                 }
             </div>
 
-                <!-- Middle column without "Cards Played" -->
-            <div class="col-md-4 text-center">
-                    <!-- You can leave this empty or add something else here if needed -->
+            <div class="d-flex col-md-4 text-center justify-content-center g-3 mb-5">
+                @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
+                    <div class="col-auto">
+                        <div class="card text-center shadow-sm border-0 bg-transparent" style="width: 7rem; backdrop-filter: blur(4px);">
+                            <div class="p-2">
+                                @util.WebUIUtils.cardtoImage(cardplayed) width="100%"/>
+                            </div>
+                            <div class="card-body p-2 bg-transparent">
+                                <small class="fw-semibold text-secondary">@player</small>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
 
             <div class="col-md-4 text-end">
@@ -38,34 +47,24 @@
             </div>
         </div>
 
-            <!-- Cards Played -->
-        <div class="row justify-content-center g-3 mb-5">
-        @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
-            <div class="col-auto">
-                <div class="card text-center shadow-sm border-0" style="width: 7rem;">
-                    <div class="p-2">
-                        @util.WebUIUtils.cardtoImage(cardplayed) width="100%"/>
-                    </div>
-                    <div class="card-body p-2 bg-light">
-                        <small class="fw-semibold text-secondary">@player</small>
-                    </div>
-                </div>
-            </div>
-        }
+
+        <div class="row">
+
         </div>
 
-            <!-- Player Hand at the BOTTOM -->
-        <div class="row justify-content-center g-2 mt-4" id="card-slide">
-            @for(i <- player.currentHand().get.cards.indices) {
-                <div class="col-auto">
-                    <form action="@(routes.IngameController.playCard(gamelobby.id))" method="post" class="m-0 p-0">
-                        <input type="hidden" name="cardId" value="@i" />
-                        <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none">
-                            @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px"/>
-                        </button>
-                    </form>
-                </div>
-            }
+        <div class="row justify-content-center g-2 mt-4 bottom-div" style="backdrop-filter: blur(4px);">
+            <div class="row justify-content-center" id="card-slide">
+                @for(i <- player.currentHand().get.cards.indices) {
+                    <div class="col-auto handcard" style="border-radius: 6px">
+                        <form action="@(routes.IngameController.playCard(gamelobby.id))" method="post" class="m-0 p-0" style="border-radius: 6px">
+                            <input type="hidden" name="cardId" value="@i" />
+                            <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none" style="border-radius: 6px">
+                                @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 }

@@ -6,3 +6,5 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.3.0")
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.1")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.2")
+addSbtPlugin("nl.gn0s1s" % "sbt-dotenv" % "3.2.0")
+
