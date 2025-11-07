@@ -19,7 +19,6 @@ lazy val commonSettings = Seq(
       .map(m => "org.openjfx" % s"javafx-$m" % "21" classifier osName)
   },
   libraryDependencies += guice,
-  coverageEnabled := true,
   coverageFailOnMinimum := true,
   coverageMinimumStmtTotal := 85,
   coverageMinimumBranchTotal := 100

@@ -14,8 +14,8 @@ class AuthAction @Inject()(val sessionManager: SessionManager, val parser: BodyP
   extends ActionBuilder[AuthenticatedRequest, AnyContent] {
 
   override def executionContext: ExecutionContext = ec
-  
-  private def getUserFromSession(request: RequestHeader): Option[User] = {
+
+  protected def getUserFromSession(request: RequestHeader): Option[User] = {
     val session = request.cookies.get("sessionId")
     if (session.isDefined)
       return sessionManager.getUserBySession(session.get.value)
