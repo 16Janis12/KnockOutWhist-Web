@@ -90,3 +90,8 @@
 ### Bug Fixes
 
 * removed trailing ([64a7a63](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/64a7a63ab3dff59e66f62328e3b5865bb177fcde))
+##  (2025-11-07)
+
+### Bug Fixes
+
+* traling ([54e3215](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/54e321512777f6722864694eb677eab0e8418a9f))
