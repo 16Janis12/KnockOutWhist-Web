@@ -80,3 +80,8 @@
 ### Bug Fixes
 
 * ensure proper CMD syntax in Dockerfile ([#48](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/48)) ([5c6d3ac](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/5c6d3ac436f6d23a36f58b6835c9bd50feddc789))
+##  (2025-11-07)
+
+### Bug Fixes
+
+* changelog syntax ([2e54880](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2e548803020c99f62644283fcf3570048261173a))
