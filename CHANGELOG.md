@@ -74,3 +74,13 @@
 * ci: bump version to v1.0.0 [skip ci] ([91d7f6c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/91d7f6ca003edb368aba76b7a82c8b42d22bdbfe))
 * version bumb ([2e10059](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2e10059a6756befe6f8e70c94fd34b865693efb8))
 * version bump ([7879d1a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/7879d1ab6ee8f227c19b69b467a28dd7b479ff73))
+
+---
+
+### Release: v1.0.3
+
+##  (2025-11-07)
+
+### Bug Fixes
+
+* ensure proper CMD syntax in Dockerfile ([#48](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/48)) ([5c6d3ac](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/5c6d3ac436f6d23a36f58b6835c9bd50feddc789))
