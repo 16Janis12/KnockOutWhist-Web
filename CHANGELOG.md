@@ -85,3 +85,8 @@
 ### Bug Fixes
 
 * changelog syntax ([2e54880](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2e548803020c99f62644283fcf3570048261173a))
+##  (2025-11-07)
+
+### Bug Fixes
+
+* removed trailing ([64a7a63](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/64a7a63ab3dff59e66f62328e3b5865bb177fcde))
