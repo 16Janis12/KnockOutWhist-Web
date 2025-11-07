@@ -75,10 +75,6 @@
 * version bumb ([2e10059](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2e10059a6756befe6f8e70c94fd34b865693efb8))
 * version bump ([7879d1a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/7879d1ab6ee8f227c19b69b467a28dd7b479ff73))
 
----
-
-### Release: v1.0.3
-
 ##  (2025-11-07)
 
 ### Bug Fixes
