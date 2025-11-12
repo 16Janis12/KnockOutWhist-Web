@@ -14,7 +14,7 @@
   --bs-border-color: rgba(0, 0, 0, 0.125) !important;
   --bs-heading-color: var(--color) !important;
 }
-
+@background-color: var(--background-color);
 @highlightcolor: var(--highlightscolor);
 @background-image: var(--background-image);
 @color: var(--color);
@@ -24,10 +24,14 @@
 }
 .game-field-background {
     background-image: @background-image;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+.lobby-background {
+    background-color: @background-color;
+    width: 100%;
+    height: 100vh;
 }
 
 .navbar-header{
@@ -45,8 +49,11 @@
 .bottom-div {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1400px;
   width: 100%;
+  margin: 0;
   text-align: center;
   padding: 10px;
 }
@@ -205,4 +212,20 @@ body {
     color: @color;
     font-size: 1.5em;
     font-family: Arial, serif;
+}
+.score-table {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.score-header {
+    font-weight: bold;
+    color: #000000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+.score-row {
+    color: #000000;
 }

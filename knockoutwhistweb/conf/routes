@@ -3,7 +3,8 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-
+# For the javascript routing
+GET     /assets/js/routes           controllers.JavaScriptRoutingController.javascriptRoutes()
 # Primary routes
 GET     /                           controllers.MainMenuController.index()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
@@ -25,6 +26,6 @@ GET     /logout                     controllers.UserController.logout()
 GET    /game/:id                    controllers.IngameController.game(id: String)
 GET    /game/:id/join               controllers.IngameController.joinGame(id: String)
 GET    /game/:id/start              controllers.IngameController.startGame(id: String)
-POST    /game/:id/kickPlayer         controllers.IngameController.kickPlayer(id: String, playerId: java.util.UUID)
+POST    /game/:id/kickPlayer         controllers.IngameController.kickPlayer(id: String, playerId: String)
 GET     /game/:id/leaveGame         controllers.IngameController.leaveGame(id: String)
 POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)

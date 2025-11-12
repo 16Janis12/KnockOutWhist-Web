@@ -78,3 +78,186 @@
             })
     })
 })()
+
+function createGameJS() {
+    let lobbyName = document.getElementById("lobbyname").value;
+    if (lobbyName === "") {
+        lobbyName = "DefaultLobby"
+    }
+    const playerAmount = document.getElementById("playeramount").value;
+    const jsonObj = {
+        lobbyname: lobbyName,
+        playeramount: playerAmount
+    }
+    sendGameCreationRequest(jsonObj);
+}
+
+function sendGameCreationRequest(dataObject) {
+    const route = jsRoutes.controllers.MainMenuController.createGame();
+
+    fetch(route.url, {
+        method: route.type,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataObject)
+    })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    return Promise.reject(data);
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(error => {
+            if (error && error.errorMessage) {
+                alert(`${error.errorMessage}`);
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+}
+function startGame(gameId) {
+    sendGameStartRequest(gameId)
+}
+function sendGameStartRequest(gameId) {
+    const route = jsRoutes.controllers.IngameController.startGame(gameId);
+
+    fetch(route.url, {
+        method: route.type,
+    })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    return Promise.reject(data);
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            // SUCCESS BLOCK: data is the { status: 'success', ... } object
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(error => {
+            if (error && error.errorMessage) {
+                alert(`${error.errorMessage}`);
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+}
+function removePlayer(gameid, playersessionId) {
+    sendRemovePlayerRequest(gameid, playersessionId)
+}
+
+function sendRemovePlayerRequest(gameId, playersessionId) {
+    const route = jsRoutes.controllers.IngameController.kickPlayer(gameId, playersessionId);
+
+    fetch(route.url, {
+        method: route.type,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    return Promise.reject(data);
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            // SUCCESS BLOCK: data is the { status: 'success', ... } object
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(error => {
+            if (error && error.errorMessage) {
+                alert(`${error.errorMessage}`);
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+}
+function leaveGame(gameId) {
+    sendLeavePlayerRequest(gameId)
+}
+function sendLeavePlayerRequest(gameId) {
+
+    const route = jsRoutes.controllers.IngameController.leaveGame(gameId);
+    fetch(route.url, {
+        method: route.type,
+    })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    return Promise.reject(data);
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            // SUCCESS BLOCK: data is the { status: 'success', ... } object
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(error => {
+            if (error && error.errorMessage) {
+                alert(`${error.errorMessage}`);
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+}
+
+function handlePlayCard(cardobject, gameId) {
+    const cardId = cardobject.dataset.cardId;
+    const jsonObj = {
+        cardID: cardId
+    }
+    sendPlayCardRequest(jsonObj, gameId)
+}
+
+function sendPlayCardRequest(jsonObj, gameId) {
+    const route = jsRoutes.controllers.IngameController.playCard(gameId);
+
+    fetch(route.url, {
+        method: route.type,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jsonObj)
+    })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    return Promise.reject(data);
+                }
+                return data;
+            });
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            }
+        })
+        .catch(error => {
+            if (error && error.errorMessage) {
+                alert(`${error.errorMessage}`);
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+}
+

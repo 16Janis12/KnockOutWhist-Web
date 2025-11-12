@@ -1,82 +1,69 @@
 @(user: Option[model.users.User], gamelobby: logic.game.GameLobby)
 
 @main("Lobby") {
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="p-3 fs-1 d-flex align-items-center">
-                <div class="text-center" style="flex-grow: 1;">
-                    Lobby-Name: @gamelobby.name
+<main class="lobby-background vh-100">
+    <div class="container d-flex flex-column" style="height: calc(100vh - 1rem);">
+        <div class="row">
+            <div class="col">
+                <div class="p-3 fs-1 d-flex align-items-center">
+                    <div class="text-center" style="flex-grow: 1;">
+                        Lobby-Name: @gamelobby.name
+                    </div>
+                        <div class="btn btn-danger ms-auto" onclick="leaveGame('@gamelobby.id')">Exit</div>
                 </div>
-                <form action="@(routes.IngameController.leaveGame(gamelobby.id))">
-                    <button type="submit" class="btn btn-danger ms-auto">Exit</button>
-                </form>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="p-3 text-center fs-4">Playeramount: @gamelobby.getPlayers.size / @gamelobby.maxPlayers</div>
+        <div class="row">
+            <div class="col">
+                <div class="p-3 text-center fs-4">Playeramount: @gamelobby.getPlayers.size / @gamelobby.maxPlayers</div>
+            </div>
         </div>
-    </div>
-    <div class="row justify-content-center">
-
-        @if((gamelobby.getUserSession(user.get.id).host)) {
-            @for(playersession <- gamelobby.getPlayers.values) {
-                <div class="col-auto">
-                    <div class="card" style="width: 18rem;">
+        <div class="row justify-content-center align-items-center flex-grow-1">
+            @if((gamelobby.getUserSession(user.get.id).host)) {
+                @for(playersession <- gamelobby.getPlayers.values) {
+                    <div class="col-auto my-auto">
+                        <div class="card" style="width: 18rem;">
+                            <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                            <div class="card-body">
+                                @if(playersession.id == user.get.id) {
+                                    <h5 class="card-title">@playersession.name (You)</h5>
+    @*                                <p class="card-text">Your text could be here!</p>*@
+                                    <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>
+                                } else {
+                                    <h5 class="card-title">@playersession.name</h5>
+    @*                                <p class="card-text">Your text could be here!</p>*@
+                                    <div class="btn btn-danger" onclick="removePlayer('@gamelobby.id', '@playersession.id')">Remove</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-12 text-center mb-5">
+                    <div class="btn btn-success" onclick="startGame('@gamelobby.id')">Start Game</div>
+                </div>
+            } else {
+                @for(playersession <- gamelobby.getPlayers.values) {
+                    <div class="col-auto my-auto"> <div class="card" style="width: 18rem;">
                         <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
                         <div class="card-body">
                             @if(playersession.id == user.get.id) {
-                                <h5 class="card-title">@playersession.name (You)</h5>
-@*                                <p class="card-text">Your text could be here!</p>*@
-                                <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>
+                            <h5 class="card-title">@playersession.name (You)</h5>
                             } else {
-                                <h5 class="card-title">@playersession.name</h5>
-@*                                <p class="card-text">Your text could be here!</p>*@
-                                <form action="@(routes.IngameController.kickPlayer(gamelobby.id, playersession.id))" method="post">
-                                    <button type="submit" class="btn btn-danger">Remove</button>
-                                </form>
+                            <h5 class="card-title">@playersession.name</h5>
                             }
                         </div>
-                    </div>
-                </div>
-            }
-            <div class="row">
-                <div class="col text-center mt-3">
-                    <a href="@(routes.IngameController.startGame(gamelobby.id))" class="btn btn-success">Start Game</a>
-                </div>
-            </div>
-        } else {
-            @for(playersession <- gamelobby.getPlayers.values) {
-            <div class="col-auto">
-                <div class="card" style="width: 18rem;">
-                    <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
-                    <div class="card-body">
-                        @if(playersession.id == user.get.id) {
-                        <h5 class="card-title">@playersession.name (You)</h5>
-                        } else {
-                        <h5 class="card-title">@playersession.name</h5>
-                        }
-                    </div>
-                </div>
-            </div>
-            }
-            <div class="row">
-                <div class="col mt-3">
-                    <p class="text-center fs-4">Waiting for the host to start the game...</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col mt-1">
-                    <div class="text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
+                }
+
+                <div class="col-12 text-center mt-3">
+                    <p class="fs-4">Waiting for the host to start the game...</p>
+                    <div class="spinner-border mt-1" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
+</main>
 }

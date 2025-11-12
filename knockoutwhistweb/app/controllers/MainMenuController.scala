@@ -3,6 +3,7 @@ package controllers
 import auth.{AuthAction, AuthenticatedRequest}
 import logic.PodManager
 import play.api.*
+import play.api.libs.json.Json
 import play.api.mvc.*
 
 import javax.inject.*
@@ -29,18 +30,28 @@ class MainMenuController @Inject()(
   }
 
   def createGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val postData = request.body.asFormUrlEncoded
-    if (postData.isDefined) {
-      val gamename = postData.get.get("lobbyname").flatMap(_.headOption).getOrElse(s"${request.user.name}'s Game")
-      val playeramount = postData.get.get("playeramount").flatMap(_.headOption).getOrElse("")
+    val jsonBody = request.body.asJson
+    if (jsonBody.isDefined) {
+      val gamename: String = (jsonBody.get \ "lobbyname").asOpt[String]
+        .getOrElse(s"${request.user.name}'s Game")
+
+      val playeramount: String = (jsonBody.get \ "playeramount").asOpt[String]
+        .getOrElse(throw new IllegalArgumentException("Player amount is required."))
+
       val gameLobby = podManager.createGame(
         host = request.user,
         name = gamename,
         maxPlayers = playeramount.toInt
       )
-      Redirect(routes.IngameController.game(gameLobby.id))
+      Ok(Json.obj(
+        "status" -> "success",
+        "redirectUrl" -> routes.IngameController.game(gameLobby.id).url
+      ))
     } else {
-      BadRequest("Invalid form submission")
+      BadRequest(Json.obj(
+        "status" -> "failure",
+        "errorMessage" -> "Invalid form submission"
+      ))
     }
     
   }

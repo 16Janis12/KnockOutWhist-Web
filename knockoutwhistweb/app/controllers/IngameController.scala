@@ -6,6 +6,7 @@ import exceptions.{CantPlayCardException, GameFullException, NotEnoughPlayersExc
 import logic.PodManager
 import model.sessions.{PlayerSession, UserSession}
 import play.api.*
+import play.api.libs.json.Json
 import play.api.mvc.*
 
 import java.util.UUID
@@ -64,30 +65,70 @@ class IngameController @Inject()(
       }
     }
     if (result.isSuccess) {
-      Redirect(routes.IngameController.game(gameId))
+      Ok(Json.obj(
+        "status" -> "success",
+        "redirectUrl" -> routes.IngameController.game(gameId).url
+      ))
     } else {
       val throwable = result.failed.get
       throwable match {
         case _: NotInThisGameException =>
-          BadRequest(throwable.getMessage)
+          BadRequest(Json.obj(
+            "status" -> "failure",
+            "errorMessage" -> throwable.getMessage
+          ))
         case _: NotHostException =>
-          Forbidden(throwable.getMessage)
+          Forbidden(Json.obj(
+            "status" -> "failure",
+            "errorMessage" -> throwable.getMessage
+          ))
         case _: NotEnoughPlayersException =>
-          BadRequest(throwable.getMessage)
+          BadRequest(Json.obj(
+            "status" -> "failure",
+            "errorMessage" -> throwable.getMessage
+          ))
         case _ =>
-          InternalServerError(throwable.getMessage)
+          InternalServerError(Json.obj(
+            "status" -> "failure",
+            "errorMessage" -> throwable.getMessage
+          ))
       }
     }
   }
-  def kickPlayer(gameId: String, playerToKick: UUID): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+  def kickPlayer(gameId: String, playerToKick: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
-    game.get.leaveGame(playerToKick)
-    Redirect(routes.IngameController.game(gameId))
+    val playerToKickUUID = UUID.fromString(playerToKick)
+    val result = Try {
+      game.get.leaveGame(playerToKickUUID)
+    }
+    if(result.isSuccess) {
+      Ok(Json.obj(
+        "status" -> "success",
+        "redirectUrl" -> routes.IngameController.game(gameId).url
+      ))
+    } else {
+      InternalServerError(Json.obj(
+        "status" -> "failure",
+        "errorMessage" -> "Something went wrong."
+      ))
+    }
   }
   def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
-    game.get.leaveGame(request.user.id)
-    Redirect(routes.MainMenuController.mainMenu())
+    val result = Try {
+      game.get.leaveGame(request.user.id)
+    }
+    if (result.isSuccess) {
+      Ok(Json.obj(
+        "status" -> "success",
+        "redirectUrl" -> routes.MainMenuController.mainMenu().url
+      ))
+    } else {
+      InternalServerError(Json.obj(
+        "status" -> "failure",
+        "errorMessage" -> "Something went wrong."
+      ))
+    }
   }
   def joinGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
@@ -119,7 +160,10 @@ class IngameController @Inject()(
     val game = podManager.getGame(gameId)
     game match {
       case Some(g) =>
-        val cardIdOpt = request.body.asFormUrlEncoded.flatMap(_.get("cardId").flatMap(_.headOption))
+        val jsonBody = request.body.asJson
+        val cardIdOpt: Option[String] = jsonBody.flatMap { jsValue =>
+          (jsValue \ "cardID").asOpt[String]
+        }
         cardIdOpt match {
           case Some(cardId) =>
             var optSession: Option[UserSession] = None
@@ -131,27 +175,51 @@ class IngameController @Inject()(
             }
             optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {
-              NoContent
+              Ok(Json.obj(
+                "status" -> "success",
+                "redirectUrl" -> routes.IngameController.game(gameId).url
+              ))
             } else {
               val throwable = result.failed.get
               throwable match {
                 case _: CantPlayCardException =>
-                  BadRequest(throwable.getMessage)
+                  BadRequest(Json.obj(
+                    "status" -> "failure",
+                    "errorMessage" -> throwable.getMessage
+                  ))
                 case _: NotInThisGameException =>
-                  BadRequest(throwable.getMessage)
+                  BadRequest(Json.obj(
+                    "status" -> "failure",
+                    "errorMessage" -> throwable.getMessage
+                  ))
                 case _: IllegalArgumentException =>
-                  BadRequest(throwable.getMessage)
+                  BadRequest(Json.obj(
+                    "status" -> "failure",
+                    "errorMessage" -> throwable.getMessage
+                  ))
                 case _: IllegalStateException =>
-                  BadRequest(throwable.getMessage)
+                  BadRequest(Json.obj(
+                    "status" -> "failure",
+                    "errorMessage" -> throwable.getMessage
+                  ))
                 case _ =>
-                  InternalServerError(throwable.getMessage)
+                  InternalServerError(Json.obj(
+                    "status" -> "failure",
+                    "errorMessage" -> throwable.getMessage
+                  ))
               }
             }
           case None =>
-            BadRequest("cardId parameter is missing")
+            BadRequest(Json.obj(
+              "status" -> "failure",
+              "errorMessage" -> "cardId Parameter is missing"
+            ))
         }
       case None =>
-        NotFound("Game not found")
+        NotFound(Json.obj(
+          "status" -> "failure",
+          "errorMessage" -> "Game not found"
+        ))
     }
   }
   }

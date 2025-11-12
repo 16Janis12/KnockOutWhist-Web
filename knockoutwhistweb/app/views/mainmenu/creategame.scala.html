@@ -2,7 +2,7 @@
 
 @main("Create Game") {
 @navbar(user)
-<form action="@routes.MainMenuController.createGame()" method="post" class="game-field-background">
+<main class="lobby-background flex-grow-1">
     <div class="w-50 mx-auto">
         <div class="mt-3">
             <label for="lobbyname" class="form-label">Lobby-Name</label>
@@ -25,8 +25,8 @@
                 </div>
             </div>
         <div class="mt-3 text-center">
-            <button type="submit" class="btn btn-success">Create Game</button>
+            <div class="btn btn-success" onclick="createGameJS()">Create Game</div>
         </div>
     </div>
-</form>
+</main>
 }
