@@ -39,12 +39,14 @@ class IngameController @Inject()(
           case SelectTrump =>
             Ok(views.html.ingame.selecttrump(
               g.getPlayerByUser(request.user),
-              g.logic
+              g.logic,
+              gameId
             ))
           case TieBreak =>
             Ok(views.html.ingame.tie(
               g.getPlayerByUser(request.user),
-              g.logic
+              g.logic,
+              gameId
             ))
           case _ =>
             InternalServerError(s"Invalid game state for in-game view. GameId: $gameId" + s" State: ${g.logic.getCurrentState}")
@@ -318,7 +320,7 @@ class IngameController @Inject()(
               val session = g.getUserSession(request.user.id)
               optSession = Some(session)
               session.lock.lock()
-              g.selectTie(g.getUserSession(request.user.id), tie.toInt)
+              g.selectTie(g.getUserSession(request.user.id), tie.toInt - 1)
             }
             optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {

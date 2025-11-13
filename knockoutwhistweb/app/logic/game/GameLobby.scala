@@ -157,6 +157,9 @@ class GameLobby private(
    */
   def selectTie(userSession: UserSession, tieNumber: Int): Unit = {
     val player = getPlayerInteractable(userSession, InteractionType.TieChoice)
+    val highestNumber = logic.playerTieLogic.highestAllowedNumber()
+    if (tieNumber < 0 || tieNumber > highestNumber)
+      throw new IllegalArgumentException(s"Selected number $tieNumber is out of allowed range (0 to $highestNumber)")
     userSession.resetCanInteract()
     logic.playerTieLogic.receivedTieBreakerCard(tieNumber)
   }
