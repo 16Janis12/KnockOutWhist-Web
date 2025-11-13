@@ -2,21 +2,23 @@ package logic.game
 
 import de.knockoutwhist.cards.{Hand, Suit}
 import de.knockoutwhist.control.GameLogic
-import de.knockoutwhist.control.GameState.{Lobby, MainMenu}
+import de.knockoutwhist.control.GameState.{InGame, Lobby, MainMenu}
 import de.knockoutwhist.control.controllerBaseImpl.sublogic.util.{MatchUtil, PlayerUtil}
-import de.knockoutwhist.events.global.{GameStateChangeEvent, SessionClosed}
+import de.knockoutwhist.events.global.{CardPlayedEvent, GameStateChangeEvent, SessionClosed}
 import de.knockoutwhist.events.player.PlayerEvent
 import de.knockoutwhist.player.Playertype.HUMAN
 import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
 import exceptions.*
+import logic.game.PollingEvents.{CardPlayed, GameStarted}
 import model.sessions.{InteractionType, UserSession}
 import model.users.User
 
 import java.util.UUID
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.{Promise => ScalaPromise}
 
 class GameLobby private(
                  val logic: GameLogic,
@@ -29,7 +31,19 @@ class GameLobby private(
   logic.createSession()
 
   private val users: mutable.Map[UUID, UserSession] = mutable.Map()
-  
+  private var pollingState: mutable.Queue[PollingEvents] = mutable.Queue()
+  private val waitingPromises: mutable.Map[UUID, ScalaPromise[PollingEvents]] = mutable.Map()
+
+  def registerWaiter(playerId: UUID): ScalaPromise[PollingEvents] = {
+    val promise = ScalaPromise[PollingEvents]()
+    waitingPromises.put(playerId, promise)
+    promise
+  }
+
+  def removeWaiter(playerId: UUID): Unit = {
+    waitingPromises.remove(playerId)
+  }
+
   def addUser(user: User): UserSession = {
     if (users.size >= maxPlayers) throw new GameFullException("The game is full!")
     if (users.contains(user.id)) throw new IllegalArgumentException("User is already in the game!")
@@ -44,11 +58,28 @@ class GameLobby private(
 
   override def listen(event: SimpleEvent): Unit = {
     event match {
+      case event: CardPlayedEvent =>
+        val newEvent = PollingEvents.CardPlayed
+        if (waitingPromises.nonEmpty) {
+          waitingPromises.values.foreach(_.success(newEvent))
+          waitingPromises.clear()
+        } else {
+          pollingState.enqueue(newEvent)
+        }
       case event: PlayerEvent =>
         users.get(event.playerId).foreach(session => session.updatePlayer(event))
       case event: GameStateChangeEvent =>
         if (event.oldState == MainMenu && event.newState == Lobby) {
           return
+        }
+        if (event.oldState == Lobby && event.newState == InGame) {
+          val newEvent = PollingEvents.GameStarted
+          if (waitingPromises.nonEmpty) {
+            waitingPromises.values.foreach(_.success(newEvent))
+            waitingPromises.clear()
+          } else {
+            pollingState.enqueue(newEvent)
+          }
         }
         users.values.foreach(session => session.updatePlayer(event))
       case event: SessionClosed =>
@@ -186,7 +217,9 @@ class GameLobby private(
   def getLogic: GameLogic = {
     logic
   }
-
+  def getPollingState: mutable.Queue[PollingEvents] = {
+    pollingState
+  }
   private def getPlayerBySession(userSession: UserSession): AbstractPlayer = {
     val playerOption = getMatch.totalplayers.find(_.id == userSession.id)
     if (playerOption.isEmpty) {

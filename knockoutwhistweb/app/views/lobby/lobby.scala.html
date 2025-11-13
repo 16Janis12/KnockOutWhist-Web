@@ -1,7 +1,7 @@
 @(user: Option[model.users.User], gamelobby: logic.game.GameLobby)
 
 @main("Lobby") {
-<main class="lobby-background vh-100">
+<main class="lobby-background vh-100" id="lobbybackground">
     <div class="container d-flex flex-column" style="height: calc(100vh - 1rem);">
         <div class="row">
             <div class="col">
@@ -66,4 +66,9 @@
         </div>
     </div>
 </main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            pollForUpdates('@gamelobby.id');
+        });
+</script>
 }

@@ -79,6 +79,157 @@
     })
 })()
 
+function pollForUpdates(gameId) {
+    if (!gameId) {
+        console.error("Game ID is missing. Stopping poll.");
+        return;
+    }
+    const element = document.getElementById('card-slide');
+    const element2 = document.getElementById('lobbybackground');
+    // Safety check for the target element
+    if (!element && !element2) {
+        console.error("Polling target element not found. Stopping poll.");
+        // Use a timeout to retry in case the DOM loads late, passing gameId.
+        setTimeout(() => pollForUpdates(gameId), 5000);
+        return;
+    }
+    const route = jsRoutes.controllers.IngameController.polling(gameId);
+
+    // Call your specific controller endpoint
+    fetch(route.url)
+        .then(response => {
+            if (response.status === 204) {
+                console.log("Polling: Timeout reached. Restarting poll.");
+
+                // CRITICAL: Pass gameId in the recursive call
+                setTimeout(() => pollForUpdates(gameId), 5000);
+            } else if (response.ok && response.status === 200) {
+                response.json().then(data => {
+
+                    if (data.status === "cardPlayed" && data.handData) {
+                        console.log("Event received: Card played. Redrawing hand.");
+
+                        const newHand = data.handData;
+                        let newHandHTML = '';
+                        element.innerHTML = '';
+
+                        newHand.forEach((cardId, index) => {
+                            const cardHtml = `
+                                <div class="col-auto handcard" style="border-radius: 6px">
+                                    <div class="btn btn-outline-light p-0 border-0 shadow-none" 
+                                         data-card-id="${index}" 
+                                         style="border-radius: 6px" 
+                                         onclick="handlePlayCard(this, '${gameId}')">
+                                        
+                                        <img src="/assets/images/cards/${cardId}.png" width="120px" style="border-radius: 6px"/>
+                                    </div>
+                                </div>
+                            `;
+                            newHandHTML += cardHtml;
+                        });
+
+                        element.innerHTML = newHandHTML;
+
+                        const currentPlayerElement = document.getElementById('current-player-name');
+                        if (currentPlayerElement) {
+                            currentPlayerElement.textContent = data.currentPlayerName;
+                        }
+                        const nextPlayerElement = document.getElementById('next-player-name');
+                        if (nextPlayerElement && data.nextPlayer) {
+                            // Use the correctly named field from the server response
+                            nextPlayerElement.textContent = data.nextPlayer;
+                        } else {
+                            // Case 2: Player name is empty or null (signal to clear display).
+                            nextPlayerElement.textContent = "";
+                        }
+
+                        const trumpElement = document.getElementById('trump-suit');
+                        if (trumpElement) {
+                            trumpElement.textContent = data.trumpSuit;
+                        }
+                        const trickContainer = document.getElementById('trick-cards-container');
+                        if (trickContainer) {
+                            let trickHTML = '';
+
+                            // Iterate over the array of played cards received from the server
+                            data.trickCards.forEach(trickCard => {
+                                // Reconstruct the HTML structure from your template
+                                trickHTML += `
+                                    <div class="col-auto">
+                                        <div class="card text-center shadow-sm border-0 bg-transparent" style="width: 7rem; backdrop-filter: blur(4px);">
+                                            <div class="p-2">
+                                                <img src="/assets/images/cards/${trickCard.cardId}.png" width="100%"/>
+                                            </div>
+                                            <div class="card-body p-2 bg-transparent">
+                                                <small class="fw-semibold text-secondary">${trickCard.player}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            trickContainer.innerHTML = trickHTML;
+                        }
+                        const scoreBody = document.getElementById('score-table-body');
+                        if (scoreBody && data.scoreTable) {
+                            let scoreHTML = '';
+                            scoreHTML += `<h4 class="fw-bold mb-3 text-black">Tricks Won</h4>
+    
+                            <div class="d-flex justify-content-between score-header pb-1">
+                                <div style="width: 50%">PLAYER</div>
+                                <div style="width: 50%">TRICKS</div>
+                            </div>`
+                            data.scoreTable.forEach(score => {
+                                scoreHTML += `
+                                    <div class="d-flex justify-content-between score-row pt-1">
+                                        <div style="width: 50%" class="text-truncate">${score.name}</div>
+                                        <div style="width: 50%">${score.tricks}</div>
+                                    </div>
+                                `;
+                            });
+                            scoreBody.innerHTML = scoreHTML;
+                        }
+                        const firstCardContainer = document.getElementById('first-card-container');
+                        const cardId = data.firstCardId; // This will be "KH", "S7", or "BLANK"
+
+                        if (firstCardContainer) {
+                            let imageSrc = '';
+                            let altText = 'First Card';
+
+                            // Check if a card was actually played or if it's the start of a trick
+                            if (cardId === "BLANK") {
+                                imageSrc = "/assets/images/cards/1B.png";
+                                altText = "Blank Card";
+                            } else {
+                                imageSrc = `/assets/images/cards/${cardId}.png`;
+                            }
+
+                            // Reconstruct the image HTML (assuming the inner element needs replacement)
+                            const newImageHTML = `
+                                <img src="${imageSrc}" alt="${altText}" width="80px" style="border-radius: 6px"/>
+                            `;
+
+                            // Clear the container and insert the new image
+                            firstCardContainer.innerHTML = newImageHTML;
+                        }
+                    } else if (data.status === "gameStart") {
+                        window.location.href = data.redirectUrl;
+                    }
+                    pollForUpdates(gameId);
+                });
+            } else {
+                // Handle network or server errors
+                console.error(`Polling error: Status ${response.status}`);
+                // Wait before retrying, passing gameId correctly
+                setTimeout(() => pollForUpdates(gameId), 5000);
+            }
+        })
+        .catch(error => {
+            console.error("Network error during polling:", error);
+            // Wait before retrying on network failure, passing gameId correctly
+            setTimeout(() => pollForUpdates(gameId), 5000);
+        });
+}
+
 function createGameJS() {
     let lobbyName = document.getElementById("lobbyname").value;
     if (lobbyName === "") {
@@ -226,10 +377,26 @@ function handlePlayCard(cardobject, gameId) {
     const jsonObj = {
         cardID: cardId
     }
-    sendPlayCardRequest(jsonObj, gameId)
+    sendPlayCardRequest(jsonObj, gameId, cardobject)
 }
 
-function sendPlayCardRequest(jsonObj, gameId) {
+function sendPlayCardRequest(jsonObj, gameId, cardobject) {
+    const wiggleKeyframes = [
+        { transform: 'translateX(0)' },
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(5px)' },
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(0)' }
+    ];
+
+    // Define the timing options
+    const wiggleTiming = {
+        duration: 400, // 0.4 seconds
+        iterations: 1,
+        easing: 'ease-in-out',
+        // Fill mode ensures the final state is applied until reset
+        fill: 'forwards'
+    };
     const route = jsRoutes.controllers.IngameController.playCard(gameId);
 
     fetch(route.url, {
@@ -249,11 +416,13 @@ function sendPlayCardRequest(jsonObj, gameId) {
         })
         .then(data => {
             if (data.status === 'success') {
-                window.location.href = data.redirectUrl;
+                //window.location.href = data.redirectUrl;
             }
         })
         .catch(error => {
-            if (error && error.errorMessage) {
+            if (error && error.errorMessage.includes("You can't play this card!")) {
+                cardobject.parentElement.animate(wiggleKeyframes, wiggleTiming);
+            } else if (error && error.errorMessage) {
                 alert(`${error.errorMessage}`);
             } else {
                 alert('An unexpected error occurred. Please try again.');

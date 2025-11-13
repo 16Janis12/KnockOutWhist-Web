@@ -1,23 +1,25 @@
 package controllers
 
 import auth.{AuthAction, AuthenticatedRequest}
+import de.knockoutwhist.cards.Hand
 import de.knockoutwhist.control.GameState.{InGame, Lobby, SelectTrump, TieBreak}
 import exceptions.{CantPlayCardException, GameFullException, NotEnoughPlayersException, NotHostException, NotInThisGameException}
 import logic.PodManager
+import logic.game.PollingEvents.CardPlayed
+import logic.game.PollingEvents.GameStarted
+import logic.game.{GameLobby, PollingEvents}
 import model.sessions.{PlayerSession, UserSession}
+import model.users.User
 import play.api.*
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.mvc.*
+import util.WebUIUtils
 
 import java.util.UUID
 import javax.inject.*
+import scala.concurrent.Future
 import scala.util.Try
-
-
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
+import scala.concurrent.ExecutionContext
 @Singleton
 class IngameController @Inject()(
                                   val controllerComponents: ControllerComponents,
@@ -39,14 +41,12 @@ class IngameController @Inject()(
           case SelectTrump =>
             Ok(views.html.ingame.selecttrump(
               g.getPlayerByUser(request.user),
-              g.logic,
-              gameId
+              g.logic
             ))
           case TieBreak =>
             Ok(views.html.ingame.tie(
               g.getPlayerByUser(request.user),
-              g.logic,
-              gameId
+              g.logic
             ))
           case _ =>
             InternalServerError(s"Invalid game state for in-game view. GameId: $gameId" + s" State: ${g.logic.getCurrentState}")
@@ -67,70 +67,30 @@ class IngameController @Inject()(
       }
     }
     if (result.isSuccess) {
-      Ok(Json.obj(
-        "status" -> "success",
-        "redirectUrl" -> routes.IngameController.game(gameId).url
-      ))
+      Redirect(routes.IngameController.game(gameId))
     } else {
       val throwable = result.failed.get
       throwable match {
         case _: NotInThisGameException =>
-          BadRequest(Json.obj(
-            "status" -> "failure",
-            "errorMessage" -> throwable.getMessage
-          ))
+          BadRequest(throwable.getMessage)
         case _: NotHostException =>
-          Forbidden(Json.obj(
-            "status" -> "failure",
-            "errorMessage" -> throwable.getMessage
-          ))
+          Forbidden(throwable.getMessage)
         case _: NotEnoughPlayersException =>
-          BadRequest(Json.obj(
-            "status" -> "failure",
-            "errorMessage" -> throwable.getMessage
-          ))
+          BadRequest(throwable.getMessage)
         case _ =>
-          InternalServerError(Json.obj(
-            "status" -> "failure",
-            "errorMessage" -> throwable.getMessage
-          ))
+          InternalServerError(throwable.getMessage)
       }
     }
   }
-  def kickPlayer(gameId: String, playerToKick: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+  def kickPlayer(gameId: String, playerToKick: UUID): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
-    val playerToKickUUID = UUID.fromString(playerToKick)
-    val result = Try {
-      game.get.leaveGame(playerToKickUUID)
-    }
-    if(result.isSuccess) {
-      Ok(Json.obj(
-        "status" -> "success",
-        "redirectUrl" -> routes.IngameController.game(gameId).url
-      ))
-    } else {
-      InternalServerError(Json.obj(
-        "status" -> "failure",
-        "errorMessage" -> "Something went wrong."
-      ))
-    }
+    game.get.leaveGame(playerToKick)
+    Redirect(routes.IngameController.game(gameId))
   }
   def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
-    val result = Try {
-      game.get.leaveGame(request.user.id)
-    }
-    if (result.isSuccess) {
-      Ok(Json.obj(
-        "status" -> "success",
-        "redirectUrl" -> routes.MainMenuController.mainMenu().url
-      ))
-    } else {
-      InternalServerError(Json.obj(
-        "status" -> "failure",
-        "errorMessage" -> "Something went wrong."
-      ))
-    }
+    game.get.leaveGame(request.user.id)
+    Redirect(routes.MainMenuController.mainMenu())
   }
   def joinGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = podManager.getGame(gameId)
@@ -162,10 +122,7 @@ class IngameController @Inject()(
     val game = podManager.getGame(gameId)
     game match {
       case Some(g) =>
-        val jsonBody = request.body.asJson
-        val cardIdOpt: Option[String] = jsonBody.flatMap { jsValue =>
-          (jsValue \ "cardID").asOpt[String]
-        }
+        val cardIdOpt = request.body.asFormUrlEncoded.flatMap(_.get("cardId").flatMap(_.headOption))
         cardIdOpt match {
           case Some(cardId) =>
             var optSession: Option[UserSession] = None
@@ -177,51 +134,27 @@ class IngameController @Inject()(
             }
             optSession.foreach(_.lock.unlock())
             if (result.isSuccess) {
-              Ok(Json.obj(
-                "status" -> "success",
-                "redirectUrl" -> routes.IngameController.game(gameId).url
-              ))
+              NoContent
             } else {
               val throwable = result.failed.get
               throwable match {
                 case _: CantPlayCardException =>
-                  BadRequest(Json.obj(
-                    "status" -> "failure",
-                    "errorMessage" -> throwable.getMessage
-                  ))
+                  BadRequest(throwable.getMessage)
                 case _: NotInThisGameException =>
-                  BadRequest(Json.obj(
-                    "status" -> "failure",
-                    "errorMessage" -> throwable.getMessage
-                  ))
+                  BadRequest(throwable.getMessage)
                 case _: IllegalArgumentException =>
-                  BadRequest(Json.obj(
-                    "status" -> "failure",
-                    "errorMessage" -> throwable.getMessage
-                  ))
+                  BadRequest(throwable.getMessage)
                 case _: IllegalStateException =>
-                  BadRequest(Json.obj(
-                    "status" -> "failure",
-                    "errorMessage" -> throwable.getMessage
-                  ))
+                  BadRequest(throwable.getMessage)
                 case _ =>
-                  InternalServerError(Json.obj(
-                    "status" -> "failure",
-                    "errorMessage" -> throwable.getMessage
-                  ))
+                  InternalServerError(throwable.getMessage)
               }
             }
           case None =>
-            BadRequest(Json.obj(
-              "status" -> "failure",
-              "errorMessage" -> "cardId Parameter is missing"
-            ))
+            BadRequest("cardId parameter is missing")
         }
       case None =>
-        NotFound(Json.obj(
-          "status" -> "failure",
-          "errorMessage" -> "Game not found"
-        ))
+        NotFound("Game not found")
     }
   }
   }

@@ -31,6 +31,7 @@ POST    /game/:id/kickPlayer         controllers.IngameController.kickPlayer(id:
 POST    /game/:id/trump              controllers.IngameController.playTrump(id: String)
 POST    /game/:id/tie                  controllers.IngameController.playTie(id: String)
 
-POST    /game/:id/kickPlayer         controllers.IngameController.kickPlayer(id: String, playerId: java.util.UUID)
 GET     /game/:id/leaveGame         controllers.IngameController.leaveGame(id: String)
 POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)
+# Polling
+GET    /polling                    controllers.IngameController.polling(gameId: String)
