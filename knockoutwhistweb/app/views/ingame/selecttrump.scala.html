@@ -1,4 +1,4 @@
-@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.GameLogic, gameId: String)
+@(player: de.knockoutwhist.player.AbstractPlayer, gamelobby: logic.game.GameLobby)
 
 @main("Selecting Trumpsuit...") {
 <div id="selecttrumpsuit" class="game-field game-field-background">
@@ -11,14 +11,14 @@
                             <h3 class="mb-0">Select Trump Suit</h3>
                         </div>
                         <div class="card-body">
-                            @if(player.equals(logic.getCurrentMatch.get.roundlist.last.winner.get)) {
+                            @if(player.equals(gamelobby.logic.getCurrentMatch.get.roundlist.last.winner.get)) {
                                 <div class="alert alert-info" role="alert" aria-live="polite">
                                     You (@player.toString) won the last round. Choose the trump suit for the next round.
                                 </div>
 
                                 <div class="row justify-content-center col-auto mb-5">
                                     <div class="col-auto handcard">
-                                        <form action="@routes.IngameController.playTrump(gameId)" method="post">
+                                        <form action="@routes.IngameController.playTrump(gamelobby.id)" method="post">
                                             <input type="hidden" name="cardId" value="0" />
                                             <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none" name="trump" value="0" style="border-radius: 6px">
                                                 @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Spades)) width="120px" style="border-radius: 6px"/>
@@ -26,7 +26,7 @@
                                         </form>
                                     </div>
                                     <div class="col-auto handcard">
-                                        <form action="@routes.IngameController.playTrump(gameId)" method="post">
+                                        <form action="@routes.IngameController.playTrump(gamelobby.id)" method="post">
                                             <input type="hidden" name="cardId" value="1" />
                                             <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none" name="trump" value="1" style="border-radius: 6px">
                                                 @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Hearts)) width="120px" style="border-radius: 6px"/>
@@ -34,7 +34,7 @@
                                         </form>
                                     </div>
                                     <div class="col-auto handcard">
-                                        <form action="@routes.IngameController.playTrump(gameId)" method="post">
+                                        <form action="@routes.IngameController.playTrump(gamelobby.id)" method="post">
                                             <input type="hidden" name="cardId" value="2" />
                                             <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none" name="trump" value="2" style="border-radius: 6px">
                                                 @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Diamonds)) width="120px" style="border-radius: 6px"/>
@@ -42,7 +42,7 @@
                                         </form>
                                     </div>
                                     <div class="col-auto handcard">
-                                        <form action="@routes.IngameController.playTrump(gameId)" method="post">
+                                        <form action="@routes.IngameController.playTrump(gamelobby.id)" method="post">
                                             <input type="hidden" name="cardId" value="3" />
                                             <button type="submit" class="btn btn-outline-light p-0 border-0 shadow-none" name="trump" value="3" style="border-radius: 6px">
                                                 @util.WebUIUtils.cardtoImage(de.knockoutwhist.cards.Card(de.knockoutwhist.cards.CardValue.Ace, de.knockoutwhist.cards.Suit.Clubs)) width="120px" style="border-radius: 6px"/>
@@ -50,7 +50,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="row justify-content-center" id="card-slide">
+                                <div class="row justify-content-center ingame-cards-slide" id="card-slide">
                                     @for(i <- player.currentHand().get.cards.indices) {
                                         <div class="col-auto" style="border-radius: 6px">
                                             @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
@@ -59,7 +59,7 @@
                                 </div>
                             } else {
                                 <div class="alert alert-warning" role="alert" aria-live="polite">
-                                    @logic.getCurrentMatch.get.roundlist.last.winner.get.name is choosing a trumpsuit. The new round will start once a suit is picked.
+                                    @gamelobby.logic.getCurrentMatch.get.roundlist.last.winner.get.name is choosing a trumpsuit. The new round will start once a suit is picked.
                                 </div>
                             }
                         </div>

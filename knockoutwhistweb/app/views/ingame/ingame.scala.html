@@ -4,7 +4,7 @@
 
 @main("Ingame") {
 <div class="lobby-background vh-100">
-    <main class="game-field-background vh-100">
+    <main class="game-field-background vh-100 ingame-side-shadow">
         <div class="py-5 container-xxl">
 
             <div class="row ms-4 me-4">
@@ -72,7 +72,7 @@
             </div>
 
             <div class="row justify-content-center g-2 mt-4 bottom-div" style="backdrop-filter: blur(4px); margin-left: 0; margin-right: 0;">
-                <div class="row justify-content-center" id="card-slide">
+                <div class="row justify-content-center ingame-cards-slide" id="card-slide">
                     @for(i <- player.currentHand().get.cards.indices) {
                     <div class="col-auto handcard" style="border-radius: 6px">
                             <div class="btn btn-outline-light p-0 border-0 shadow-none" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(this, '@gamelobby.id')">

@@ -7,7 +7,7 @@ import model.users.User
 import java.util.UUID
 import java.util.concurrent.locks.{Lock, ReentrantLock}
 
-class UserSession(user: User, val host: Boolean) extends PlayerSession {
+class UserSession(val user: User, val host: Boolean) extends PlayerSession {
   var canInteract: Option[InteractionType] = None
   val lock: ReentrantLock = ReentrantLock()
 

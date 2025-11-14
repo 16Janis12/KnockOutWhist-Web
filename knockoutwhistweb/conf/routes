@@ -34,4 +34,4 @@ POST    /game/:id/tie                  controllers.IngameController.playTie(id: 
 GET     /game/:id/leaveGame         controllers.IngameController.leaveGame(id: String)
 POST   /game/:id/playCard           controllers.IngameController.playCard(id: String)
 # Polling
-GET    /polling                    controllers.IngameController.polling(gameId: String)
+GET    /polling                    controllers.PollingController.polling(gameId: String)

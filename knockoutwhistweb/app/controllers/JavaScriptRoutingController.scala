@@ -20,7 +20,7 @@ class JavaScriptRoutingController  @Inject()(
           routes.javascript.IngameController.kickPlayer,
           routes.javascript.IngameController.leaveGame,
           routes.javascript.IngameController.playCard,
-          routes.javascript.IngameController.polling
+          routes.javascript.PollingController.polling
       )
     ).as("text/javascript")
   }

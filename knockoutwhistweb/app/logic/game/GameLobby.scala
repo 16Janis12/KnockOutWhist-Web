@@ -5,20 +5,20 @@ import de.knockoutwhist.control.GameLogic
 import de.knockoutwhist.control.GameState.{InGame, Lobby, MainMenu}
 import de.knockoutwhist.control.controllerBaseImpl.sublogic.util.{MatchUtil, PlayerUtil}
 import de.knockoutwhist.events.global.{CardPlayedEvent, GameStateChangeEvent, SessionClosed}
-import de.knockoutwhist.events.player.PlayerEvent
+import de.knockoutwhist.events.player.{PlayerEvent, ReceivedHandEvent}
 import de.knockoutwhist.player.Playertype.HUMAN
 import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
 import exceptions.*
-import logic.game.PollingEvents.{CardPlayed, GameStarted}
+import logic.game.PollingEvents.{CardPlayed, LobbyUpdate, NewRound, ReloadEvent}
 import model.sessions.{InteractionType, UserSession}
 import model.users.User
 
 import java.util.UUID
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Promise => ScalaPromise}
+import scala.concurrent.Promise as ScalaPromise
 
 class GameLobby private(
                  val logic: GameLogic,
@@ -31,7 +31,7 @@ class GameLobby private(
   logic.createSession()
 
   private val users: mutable.Map[UUID, UserSession] = mutable.Map()
-  private var pollingState: mutable.Queue[PollingEvents] = mutable.Queue()
+  private val pollingState: mutable.Queue[PollingEvents] = mutable.Queue()
   private val waitingPromises: mutable.Map[UUID, ScalaPromise[PollingEvents]] = mutable.Map()
 
   def registerWaiter(playerId: UUID): ScalaPromise[PollingEvents] = {
@@ -53,19 +53,17 @@ class GameLobby private(
       host = false
     )
     users += (user.id -> userSession)
+    addToQueue(LobbyUpdate)
     userSession
   }
 
   override def listen(event: SimpleEvent): Unit = {
     event match {
+      case event: ReceivedHandEvent =>
+        addToQueue(NewRound)
+        users.get(event.playerId).foreach(session => session.updatePlayer(event))
       case event: CardPlayedEvent =>
-        val newEvent = PollingEvents.CardPlayed
-        if (waitingPromises.nonEmpty) {
-          waitingPromises.values.foreach(_.success(newEvent))
-          waitingPromises.clear()
-        } else {
-          pollingState.enqueue(newEvent)
-        }
+        addToQueue(CardPlayed)
       case event: PlayerEvent =>
         users.get(event.playerId).foreach(session => session.updatePlayer(event))
       case event: GameStateChangeEvent =>
@@ -73,19 +71,24 @@ class GameLobby private(
           return
         }
         if (event.oldState == Lobby && event.newState == InGame) {
-          val newEvent = PollingEvents.GameStarted
-          if (waitingPromises.nonEmpty) {
-            waitingPromises.values.foreach(_.success(newEvent))
-            waitingPromises.clear()
-          } else {
-            pollingState.enqueue(newEvent)
-          }
+          addToQueue(ReloadEvent)
+        }else {
+          addToQueue(ReloadEvent)
         }
         users.values.foreach(session => session.updatePlayer(event))
       case event: SessionClosed =>
         users.values.foreach(session => session.updatePlayer(event))
       case event: SimpleEvent =>
         users.values.foreach(session => session.updatePlayer(event))
+    }
+  }
+
+  private def addToQueue(event: PollingEvents): Unit = {
+    if (waitingPromises.nonEmpty) {
+      waitingPromises.values.foreach(_.success(event))
+      waitingPromises.clear()
+    } else {
+      pollingState.enqueue(event)
     }
   }
 
@@ -125,6 +128,7 @@ class GameLobby private(
       throw new NotInThisGameException("You are not in this game!")
     }
     users.remove(userId)
+    addToQueue(LobbyUpdate)
   }
 
   /**
@@ -188,9 +192,6 @@ class GameLobby private(
    */
   def selectTie(userSession: UserSession, tieNumber: Int): Unit = {
     val player = getPlayerInteractable(userSession, InteractionType.TieChoice)
-    val highestNumber = logic.playerTieLogic.highestAllowedNumber()
-    if (tieNumber < 0 || tieNumber > highestNumber)
-      throw new IllegalArgumentException(s"Selected number $tieNumber is out of allowed range (0 to $highestNumber)")
     userSession.resetCanInteract()
     logic.playerTieLogic.receivedTieBreakerCard(tieNumber)
   }
@@ -269,7 +270,11 @@ class GameLobby private(
     }
     trickOpt.get
   }
-  
+
+  def getUsers: Set[User] = {
+    users.values.map(d => d.user).toSet
+  }
+
 }
 
 object GameLobby {

@@ -2,5 +2,7 @@ package logic.game
 
 enum PollingEvents {
   case CardPlayed
-  case GameStarted
+  case NewRound
+  case ReloadEvent
+  case LobbyUpdate
 }

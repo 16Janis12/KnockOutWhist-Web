@@ -93,7 +93,7 @@ function pollForUpdates(gameId) {
         setTimeout(() => pollForUpdates(gameId), 5000);
         return;
     }
-    const route = jsRoutes.controllers.IngameController.polling(gameId);
+    const route = jsRoutes.controllers.PollingController.polling(gameId);
 
     // Call your specific controller endpoint
     fetch(route.url)
@@ -106,12 +106,20 @@ function pollForUpdates(gameId) {
             } else if (response.ok && response.status === 200) {
                 response.json().then(data => {
 
-                    if (data.status === "cardPlayed" && data.handData) {
+                    if (data.status === "cardPlayed" && data.handData && element) {
                         console.log("Event received: Card played. Redrawing hand.");
 
                         const newHand = data.handData;
                         let newHandHTML = '';
                         element.innerHTML = '';
+
+                        if(data.animation) {
+                            if (!element.classList.contains('ingame-cards-slide')) {
+                                element.classList.add('ingame-cards-slide');
+                            }
+                        } else {
+                            element.classList.remove('ingame-cards-slide');
+                        }
 
                         newHand.forEach((cardId, index) => {
                             const cardHtml = `
@@ -211,8 +219,45 @@ function pollForUpdates(gameId) {
                             // Clear the container and insert the new image
                             firstCardContainer.innerHTML = newImageHTML;
                         }
-                    } else if (data.status === "gameStart") {
+                    } else if (data.status === "reloadEvent") {
                         window.location.href = data.redirectUrl;
+                    } else if (data.status === "lobbyUpdate") {
+                        const players = document.getElementById("players");
+                        let newHtml = ''
+
+                        if (data.host) {
+                            data.users.forEach(user => {
+
+                                const inner = user.self ? `<h5 class="card-title">${user.name} (You)</h5>
+                                    <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>`
+                                    : `    <h5 class="card-title">${user.name}</h5>
+                                        <div class="btn btn-danger" onclick="removePlayer('${gameId}', '${user.id}')">Remove</div>`
+
+                                newHtml += `<div class="col-auto my-auto m-3">
+                                                <div class="card" style="width: 18rem;">
+                                                    <img src="/assets/images/profile.png" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                                                    <div class="card-body">
+                                                        ${inner}
+                                                    </div>
+                                                </div>
+                                            </div>`
+                            })
+                        } else {
+                            data.users.forEach(user => {
+
+                                const inner = user.self ? `<h5 class="card-title">${user.name} (You)</h5>` : `    <h5 class="card-title">${user.name}</h5>`
+
+                                newHtml += `<div class="col-auto my-auto m-3">
+                                                <div class="card" style="width: 18rem;">
+                                                    <img src="/assets/images/profile.png" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                                                    <div class="card-body">
+                                                        ${inner}
+                                                    </div>
+                                                </div>
+                                            </div>`
+                            })
+                        }
+                        players.innerHTML = newHtml;
                     }
                     pollForUpdates(gameId);
                 });
@@ -340,9 +385,11 @@ function sendRemovePlayerRequest(gameId, playersessionId) {
             }
         });
 }
+
 function leaveGame(gameId) {
     sendLeavePlayerRequest(gameId)
 }
+
 function sendLeavePlayerRequest(gameId) {
 
     const route = jsRoutes.controllers.IngameController.leaveGame(gameId);

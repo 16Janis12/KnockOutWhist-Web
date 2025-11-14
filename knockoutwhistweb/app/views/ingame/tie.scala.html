@@ -1,4 +1,4 @@
-@(player: de.knockoutwhist.player.AbstractPlayer, logic: de.knockoutwhist.control.GameLogic, gameId: String)
+@(player: de.knockoutwhist.player.AbstractPlayer, gamelobby: logic.game.GameLobby)
 
 @main("Tie") {
 <div id="tie" class="game-field game-field-background">
@@ -15,20 +15,20 @@
                                 <p class="card-text">
                                     The last round was tied between:
                                     <span class="ms-1">
-                                    @for(players <- logic.playerTieLogic.getTiedPlayers) {
+                                    @for(players <- gamelobby.logic.playerTieLogic.getTiedPlayers) {
                                         <span class="badge text-bg-secondary me-1">@players</span>
                                     }
                                     </span>
                                 </p>
                             </div>
 
-                            @if(player.equals(logic.playerTieLogic.currentTiePlayer())) {
-                                @defining(logic.playerTieLogic.highestAllowedNumber()) { maxNum =>
+                            @if(player.equals(gamelobby.logic.playerTieLogic.currentTiePlayer())) {
+                                @defining(gamelobby.logic.playerTieLogic.highestAllowedNumber()) { maxNum =>
                                     <div class="alert alert-info" role="alert" aria-live="polite">
                                         Pick a number between 1 and @{maxNum + 1}. The resulting card will be your card for the cut.
                                     </div>
 
-                                    <form class="row g-2 align-items-center" method="post" action="@routes.IngameController.playTie(gameId)">
+                                    <form class="row g-2 align-items-center" method="post" action="@routes.IngameController.playTie(gamelobby.id)">
                                         <div class="col-auto">
                                             <label for="tieNumber" class="col-form-label">Your number</label>
                                         </div>
@@ -42,8 +42,8 @@
                                     <h6 class="mt-4 mb-3">Currently Picked Cards</h6>
 
                                     <div id="cardsplayed" class="row g-3 justify-content-center">
-                                        @if(logic.playerTieLogic.getSelectedCard.nonEmpty) {
-                                            @for((player, card) <- logic.playerTieLogic.getSelectedCard) {
+                                        @if(gamelobby.logic.playerTieLogic.getSelectedCard.nonEmpty) {
+                                            @for((player, card) <- gamelobby.logic.playerTieLogic.getSelectedCard) {
                                                 <div class="col-6">
                                                     <div class="card shadow-sm border-0 h-100 text-center">
                                                         <div class="card-body d-flex flex-column justify-content-between">
@@ -67,14 +67,14 @@
                                 }
                             } else {
                                 <div class="alert alert-warning" role="alert" aria-live="polite">
-                                    <strong>@logic.playerTieLogic.currentTiePlayer()</strong> is currently picking a number for the cut.
+                                    <strong>@gamelobby.logic.playerTieLogic.currentTiePlayer()</strong> is currently picking a number for the cut.
                                 </div>
 
                                 <h6 class="mt-4 mb-3">Currently Picked Cards</h6>
 
                                 <div id="cardsplayed" class="row g-3 justify-content-center">
-                                    @if(logic.playerTieLogic.getSelectedCard.nonEmpty) {
-                                        @for((player, card) <- logic.playerTieLogic.getSelectedCard) {
+                                    @if(gamelobby.logic.playerTieLogic.getSelectedCard.nonEmpty) {
+                                        @for((player, card) <- gamelobby.logic.playerTieLogic.getSelectedCard) {
                                             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                                                 <div class="card shadow-sm border-0 h-100 text-center">
                                                     <div class="card-body d-flex flex-column justify-content-between">
