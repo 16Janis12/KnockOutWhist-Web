@@ -17,12 +17,13 @@ import javax.inject.*
 class MainMenuController @Inject()(
                                     val controllerComponents: ControllerComponents,
                                     val authAction: AuthAction,
-                                    val podManager: PodManager
+                                    val podManager: PodManager,
+                                    val ingameController: IngameController
                                   ) extends BaseController {
 
   // Pass the request-handling function directly to authAction (no nested Action)
   def mainMenu(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Ok(views.html.mainmenu.creategame(Some(request.user)))
+    Ok(views.html.main("Knockout Whist - Create Game")(views.html.mainmenu.creategame(Some(request.user))))
   }
 
   def index(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
@@ -45,7 +46,8 @@ class MainMenuController @Inject()(
       )
       Ok(Json.obj(
         "status" -> "success",
-        "redirectUrl" -> routes.IngameController.game(gameLobby.id).url
+        "redirectUrl" -> routes.IngameController.game(gameLobby.id).url,
+        "content" -> ingameController.returnInnerHTML(gameLobby, request.user).toString
       ))
     } else {
       BadRequest(Json.obj(
@@ -57,22 +59,58 @@ class MainMenuController @Inject()(
   }
   
   def joinGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val postData = request.body.asFormUrlEncoded
-    if (postData.isDefined) {
-      val gameId = postData.get.get("gameId").flatMap(_.headOption).getOrElse("")
-      val game = podManager.getGame(gameId)
+    val jsonBody = request.body.asJson
+    val gameId: Option[String] = jsonBody.flatMap { jsValue =>
+      (jsValue \ "gameId").asOpt[String]
+    }
+    if (gameId.isDefined) {
+      val game = podManager.getGame(gameId.get)
       game match {
         case Some(g) =>
-          Redirect(routes.IngameController.joinGame(gameId))
+          g.addUser(request.user)
+          Ok(Json.obj(
+            "status" -> "success",
+            "redirectUrl" -> routes.IngameController.game(g.id).url,
+            "content" -> ingameController.returnInnerHTML(g, request.user).toString
+          ))
         case None =>
-          NotFound("Game not found")
+          NotFound(Json.obj(
+            "status" -> "failure",
+            "errorMessage" -> "No Game found"
+          ))
       }
     } else {
-      BadRequest("Invalid form submission")
+      BadRequest(Json.obj(
+        "status" -> "failure",
+        "errorMessage" -> "Invalid form submission"
+      ))
     }
   }
 
   def rules(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Ok(views.html.mainmenu.rules(Some(request.user)))
+    Ok(views.html.main("Knockout Whist - Rules")(views.html.mainmenu.rules(Some(request.user))))
   }
+
+  def navSPA(location: String) : Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    location match {
+      case "0" => // Main Menu
+        Ok(Json.obj(
+          "status" -> "success",
+          "redirectUrl" -> routes.MainMenuController.mainMenu().url,
+          "content" -> views.html.mainmenu.creategame(Some(request.user)).toString
+        ))
+      case "1" => // Rules
+        Ok(Json.obj(
+          "status" -> "success",
+          "redirectUrl" -> routes.MainMenuController.rules().url,
+          "content" -> views.html.mainmenu.rules(Some(request.user)).toString
+        ))
+      case _ =>
+        BadRequest(Json.obj(
+          "status" -> "failure",
+          "errorMessage" -> "Invalid form submission"
+        ))
+    }
+  }
+
 }

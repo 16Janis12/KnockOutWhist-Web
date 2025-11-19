@@ -12,15 +12,23 @@ class JavaScriptRoutingController  @Inject()(
                                               val authAction: AuthAction,
                                               val podManager: PodManager
                                             ) extends BaseController {
-  def javascriptRoutes(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+  def javascriptRoutes(): Action[AnyContent] =
+    Action { implicit request =>
     Ok(
       JavaScriptReverseRouter("jsRoutes")(
           routes.javascript.MainMenuController.createGame,
+          routes.javascript.MainMenuController.joinGame,
+          routes.javascript.MainMenuController.navSPA,
           routes.javascript.IngameController.startGame,
           routes.javascript.IngameController.kickPlayer,
           routes.javascript.IngameController.leaveGame,
           routes.javascript.IngameController.playCard,
-          routes.javascript.PollingController.polling
+          routes.javascript.IngameController.playDogCard,
+          routes.javascript.IngameController.playTrump,
+          routes.javascript.IngameController.playTie,
+          routes.javascript.IngameController.returnToLobby,
+          routes.javascript.PollingController.polling,
+          routes.javascript.UserController.login_Post
       )
     ).as("text/javascript")
   }

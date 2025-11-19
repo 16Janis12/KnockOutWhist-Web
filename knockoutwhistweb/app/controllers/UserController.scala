@@ -3,6 +3,7 @@ package controllers
 import auth.{AuthAction, AuthenticatedRequest}
 import logic.user.{SessionManager, UserManager}
 import play.api.*
+import play.api.libs.json.Json
 import play.api.mvc.*
 
 import javax.inject.*
@@ -28,28 +29,35 @@ class UserController @Inject()(
         if (possibleUser.isDefined) {
           Redirect(routes.MainMenuController.mainMenu())
         } else {
-          Ok(views.html.login.login())
+          Ok(views.html.main("Login")(views.html.login.login()))
         }
       } else {
-        Ok(views.html.login.login())
+        Ok(views.html.main("Login")(views.html.login.login()))
       }
     }
   }
 
   def login_Post(): Action[AnyContent] = {
     Action { implicit request =>
-      val postData = request.body.asFormUrlEncoded
-      if (postData.isDefined) {
+      val jsonBody = request.body.asJson
+      val username: Option[String] = jsonBody.flatMap { jsValue =>
+        (jsValue \ "username").asOpt[String]
+      }
+      val password: Option[String] = jsonBody.flatMap { jsValue =>
+        (jsValue \ "password").asOpt[String]
+      }
+      if (username.isDefined && password.isDefined) {
         // Extract username and password from form data
-        val username = postData.get.get("username").flatMap(_.headOption).getOrElse("")
-        val password = postData.get.get("password").flatMap(_.headOption).getOrElse("")
-        val possibleUser = userManager.authenticate(username, password)
+        val possibleUser = userManager.authenticate(username.get, password.get)
         if (possibleUser.isDefined) {
-          Redirect(routes.MainMenuController.mainMenu()).withCookies(
+          Ok(Json.obj(
+            "status" -> "success",
+            "redirectUrl" -> routes.MainMenuController.mainMenu().url,
+            "content" -> views.html.mainmenu.creategame(possibleUser).toString
+          )).withCookies(
             Cookie("sessionId", sessionManager.createSession(possibleUser.get))
           )
         } else {
-          println("Failed login attempt for user: " + username)
           Unauthorized("Invalid username or password")
         }
       } else {

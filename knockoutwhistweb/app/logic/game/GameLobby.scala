@@ -4,14 +4,15 @@ import de.knockoutwhist.cards.{Hand, Suit}
 import de.knockoutwhist.control.GameLogic
 import de.knockoutwhist.control.GameState.{InGame, Lobby, MainMenu}
 import de.knockoutwhist.control.controllerBaseImpl.sublogic.util.{MatchUtil, PlayerUtil}
-import de.knockoutwhist.events.global.{CardPlayedEvent, GameStateChangeEvent, SessionClosed}
+import de.knockoutwhist.events.global.tie.TieTurnEvent
+import de.knockoutwhist.events.global.{CardPlayedEvent, GameStateChangeEvent, NewTrickEvent, SessionClosed}
 import de.knockoutwhist.events.player.{PlayerEvent, ReceivedHandEvent}
 import de.knockoutwhist.player.Playertype.HUMAN
 import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
 import exceptions.*
-import logic.game.PollingEvents.{CardPlayed, LobbyUpdate, NewRound, ReloadEvent}
+import logic.game.PollingEvents.{CardPlayed, LobbyCreation, LobbyUpdate, NewRound, NewTrick, ReloadEvent}
 import model.sessions.{InteractionType, UserSession}
 import model.users.User
 
@@ -27,21 +28,39 @@ class GameLobby private(
                  val name: String,
                  val maxPlayers: Int
                ) extends EventListener {
-  logic.addListener(this)
-  logic.createSession()
+
+
 
   private val users: mutable.Map[UUID, UserSession] = mutable.Map()
-  private val pollingState: mutable.Queue[PollingEvents] = mutable.Queue()
+  private val eventsPerPlayer: mutable.Map[UUID, mutable.Queue[PollingEvents]] = mutable.Map()
   private val waitingPromises: mutable.Map[UUID, ScalaPromise[PollingEvents]] = mutable.Map()
+  private val lock = new Object
+  lock.synchronized {
+    logic.addListener(this)
+    logic.createSession()
+  }
+
 
   def registerWaiter(playerId: UUID): ScalaPromise[PollingEvents] = {
     val promise = ScalaPromise[PollingEvents]()
-    waitingPromises.put(playerId, promise)
-    promise
+    lock.synchronized {
+      val queue = eventsPerPlayer.getOrElseUpdate(playerId, mutable.Queue())
+
+      if (queue.nonEmpty) {
+        val evt = queue.dequeue()
+        promise.success(evt)
+        promise
+      } else {
+        waitingPromises.put(playerId, promise)
+        promise
+      }
+    }
   }
 
   def removeWaiter(playerId: UUID): Unit = {
-    waitingPromises.remove(playerId)
+    lock.synchronized {
+      waitingPromises.remove(playerId)
+    }
   }
 
   def addUser(user: User): UserSession = {
@@ -64,17 +83,18 @@ class GameLobby private(
         users.get(event.playerId).foreach(session => session.updatePlayer(event))
       case event: CardPlayedEvent =>
         addToQueue(CardPlayed)
+      case event: TieTurnEvent =>
+        addToQueue(ReloadEvent)
+        users.get(event.player.id).foreach(session => session.updatePlayer(event))
       case event: PlayerEvent =>
         users.get(event.playerId).foreach(session => session.updatePlayer(event))
+      case event: NewTrickEvent =>
+        addToQueue(NewTrick)
       case event: GameStateChangeEvent =>
         if (event.oldState == MainMenu && event.newState == Lobby) {
           return
         }
-        if (event.oldState == Lobby && event.newState == InGame) {
-          addToQueue(ReloadEvent)
-        }else {
-          addToQueue(ReloadEvent)
-        }
+        addToQueue(ReloadEvent)
         users.values.foreach(session => session.updatePlayer(event))
       case event: SessionClosed =>
         users.values.foreach(session => session.updatePlayer(event))
@@ -84,11 +104,29 @@ class GameLobby private(
   }
 
   private def addToQueue(event: PollingEvents): Unit = {
-    if (waitingPromises.nonEmpty) {
-      waitingPromises.values.foreach(_.success(event))
-      waitingPromises.clear()
-    } else {
-      pollingState.enqueue(event)
+    lock.synchronized {
+      users.keys.foreach { playerId =>
+        val q = eventsPerPlayer.getOrElseUpdate(playerId, mutable.Queue())
+        q.enqueue(event)
+      }
+      val waiterIds = waitingPromises.keys.toList
+      waiterIds.foreach { playerId =>
+        val q = eventsPerPlayer.getOrElseUpdate(playerId, mutable.Queue())
+        if (q.nonEmpty) {
+          val evt = q.dequeue()
+          val p = waitingPromises.remove(playerId)
+          p.foreach(_.success(evt))
+        }
+      }
+    }
+
+    waitingPromises.keys.foreach { playerId =>
+      val queue =  eventsPerPlayer(playerId)
+      if (queue.nonEmpty) {
+        val promise = waitingPromises(playerId)
+        promise.success(queue.dequeue())
+        waitingPromises.remove(playerId)
+      }
     }
   }
 
@@ -161,10 +199,11 @@ class GameLobby private(
       throw new CantPlayCardException("You are not in dog life!")
     }
     if (cardIndex == -1) {
-      if (!MatchUtil.dogNeedsToPlay(getMatch, getRound)) {
+      if (MatchUtil.dogNeedsToPlay(getMatch, getRound)) {
         throw new CantPlayCardException("You can't skip this round!")
       }
       logic.playerInputLogic.receivedDog(None)
+      return
     }
     val hand = getHand(player)
     val card = hand.cards(cardIndex)
@@ -196,6 +235,19 @@ class GameLobby private(
     logic.playerTieLogic.receivedTieBreakerCard(tieNumber)
   }
 
+  def returnToLobby(userSession: UserSession): Unit = {
+    if (!users.contains(userSession.id)) {
+      throw new NotInThisGameException("You are not in this game!")
+    }
+    val session = users(userSession.id)
+    if (session != userSession) {
+      throw new IllegalArgumentException("User session does not match!")
+    }
+    if (!session.host)
+      throw new NotHostException("Only the host can return to the lobby!")
+    logic.createSession()
+  }
+
   
   //-------------------
   
@@ -218,8 +270,8 @@ class GameLobby private(
   def getLogic: GameLogic = {
     logic
   }
-  def getPollingState: mutable.Queue[PollingEvents] = {
-    pollingState
+  def getEventsOfPlayer(playerId: UUID): mutable.Queue[PollingEvents] = {
+    eventsPerPlayer.getOrElseUpdate(playerId, mutable.Queue())
   }
   private def getPlayerBySession(userSession: UserSession): AbstractPlayer = {
     val playerOption = getMatch.totalplayers.find(_.id == userSession.id)

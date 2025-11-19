@@ -13,18 +13,18 @@
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         @if(user.isDefined) {
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="@routes.MainMenuController.mainMenu()">Create Game</a>
+                                <a class="nav-link active" aria-current="page" onclick="navSpa('0', 'Knockout Whist - Create Game'); return false;" href="@routes.MainMenuController.mainMenu()">Create Game</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link disabled" aria-disabled="true">Lobbies</a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link active" href="@routes.MainMenuController.rules()">Rules</a>
+                            <a class="nav-link active" onclick="navSpa('1', 'Knockout Whist - Rules'); return false;" href="@routes.MainMenuController.rules()">Rules</a>
                         </li>
                     </ul>
-                    <form class="navbar-nav me-auto mb-2 mb-lg-0" method="post" action="@routes.MainMenuController.joinGame()">
-                        <input class="form-control me-2" type="text" placeholder="Enter GameCode" name="gameId" aria-label="Join Game"/>
+                    <form class="navbar-nav me-auto mb-2 mb-lg-0" onsubmit="joinGame(); return false;">
+                        <input class="form-control me-2" type="text" placeholder="Enter GameCode" id="gameId" aria-label="Join Game"/>
                         <button class="btn btn-outline-success" type="submit">Join</button>
                     </form>
                 </div>

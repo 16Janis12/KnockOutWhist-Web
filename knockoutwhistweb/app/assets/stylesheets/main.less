@@ -49,6 +49,16 @@
   box-shadow: 3px 3px 3px @highlightcolor;
 }
 
+.inactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;             /* cover the whole container */
+  background: rgba(0, 0, 0, 0.50);
+  z-index: 10;
+  border-radius: 6px;
+  pointer-events: none; /* user can't click through overlay */
+}
+
 .bottom-div {
   position: fixed;
   bottom: 0;

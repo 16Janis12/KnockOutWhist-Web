@@ -1,6 +1,4 @@
 @(player: de.knockoutwhist.player.AbstractPlayer, gamelobby: logic.game.GameLobby)
-
-@main("Tie") {
 <div id="tie" class="game-field game-field-background">
     <div class="ingame-stage blur-sides">
         <div class="container py-4">
@@ -28,7 +26,7 @@
                                         Pick a number between 1 and @{maxNum + 1}. The resulting card will be your card for the cut.
                                     </div>
 
-                                    <form class="row g-2 align-items-center" method="post" action="@routes.IngameController.playTie(gamelobby.id)">
+                                    <div class="row g-2 align-items-center">
                                         <div class="col-auto">
                                             <label for="tieNumber" class="col-form-label">Your number</label>
                                         </div>
@@ -36,9 +34,9 @@
                                             <input type="number" id="tieNumber" class="form-control" name="tie" min="1" max="@{maxNum + 1}" placeholder="1" required>
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Confirm</button>
+                                            <button onclick="selectTie('@gamelobby.id')" class="btn btn-primary">Confirm</button>
                                         </div>
-                                    </form>
+                                    </div>
                                     <h6 class="mt-4 mb-3">Currently Picked Cards</h6>
 
                                     <div id="cardsplayed" class="row g-3 justify-content-center">
@@ -104,4 +102,16 @@
         </div>
     </div>
 </div>
-}
+<script>
+        function waitForFunction(name, checkInterval = 100) {
+            return new Promise(resolve => {
+                const timer = setInterval(() => {
+                    if (typeof window[name] === "function") {
+                        clearInterval(timer);
+                        resolve(window[name]);
+                    }
+                }, checkInterval);
+            });
+        }
+        waitForFunction("pollForUpdates").then(fn => fn('@gamelobby.id'));
+</script>

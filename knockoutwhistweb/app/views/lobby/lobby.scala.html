@@ -1,6 +1,5 @@
 @(user: Option[model.users.User], gamelobby: logic.game.GameLobby)
 
-@main("Lobby") {
 <main class="lobby-background vh-100" id="lobbybackground">
     <div class="container d-flex flex-column" style="height: calc(100vh - 1rem);">
         <div class="row">
@@ -9,7 +8,7 @@
                     <div class="text-center" style="flex-grow: 1;">
                         Lobby-Name: @gamelobby.name
                     </div>
-                        <div class="btn btn-danger ms-auto" onclick="leaveGame('@gamelobby.id')">Exit</div>
+                    <div class="btn btn-danger ms-auto" onclick="leaveGame('@gamelobby.id')">Exit</div>
                 </div>
             </div>
         </div>
@@ -19,57 +18,64 @@
             </div>
         </div>
         <div class="row justify-content-center align-items-center flex-grow-1">
-            @if((gamelobby.getUserSession(user.get.id).host)) {
-                <div id="players" class="justify-content-center align-items-center d-flex">
-                    @for(playersession <- gamelobby.getPlayers.values) {
-                        <div class="col-auto my-auto m-3">
-                            <div class="card" style="width: 18rem;">
-                                <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
-                                <div class="card-body">
-                                @if(playersession.id == user.get.id) {
-                                    <h5 class="card-title">@playersession.name (You)</h5>
-                                    <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>
-                                } else {
-                                    <h5 class="card-title">@playersession.name</h5>
-                                    <div class="btn btn-danger" onclick="removePlayer('@gamelobby.id', '@playersession.id')">Remove</div>
-                                }
-                                </div>
-                            </div>
+        @if((gamelobby.getUserSession(user.get.id).host)) {
+            <div id="players" class="justify-content-center align-items-center d-flex">
+            @for(playersession <- gamelobby.getPlayers.values) {
+                <div class="col-auto my-auto m-3">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                        <div class="card-body">
+                        @if(playersession.id == user.get.id) {
+                            <h5 class="card-title">@playersession.name (You)</h5>
+                            <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>
+                        } else {
+                            <h5 class="card-title">@playersession.name</h5>
+                            <div class="btn btn-danger" onclick="removePlayer('@gamelobby.id', '@playersession.id')">Remove</div>
+                        }
                         </div>
-                    }
-                </div>
-                <div class="col-12 text-center mb-5">
-                    <div class="btn btn-success" onclick="startGame('@gamelobby.id')">Start Game</div>
-                </div>
-            } else {
-                <div id="players" class="justify-content-center align-items-center d-flex">
-                    @for(playersession <- gamelobby.getPlayers.values) {
-                        <div class="col-auto my-auto m-3"> <div class="card" style="width: 18rem;">
-                            <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
-                            <div class="card-body">
-                            @if(playersession.id == user.get.id) {
-                                <h5 class="card-title">@playersession.name (You)</h5>
-                            } else {
-                                <h5 class="card-title">@playersession.name</h5>
-                            }
-                            </div>
-                        </div>
-                        </div>
-                    }
-                </div>
-                <div class="col-12 text-center mt-3">
-                    <p class="fs-4">Waiting for the host to start the game...</p>
-                    <div class="spinner-border mt-1" role="status">
-                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             }
+            </div>
+            <div class="col-12 text-center mb-5">
+                <div class="btn btn-success" onclick="startGame('@gamelobby.id')">Start Game</div>
+            </div>
+        } else {
+            <div id="players" class="justify-content-center align-items-center d-flex">
+            @for(playersession <- gamelobby.getPlayers.values) {
+                <div class="col-auto my-auto m-3"> <div class="card" style="width: 18rem;">
+                    <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                    <div class="card-body">
+                    @if(playersession.id == user.get.id) {
+                        <h5 class="card-title">@playersession.name (You)</h5>
+                    } else {
+                        <h5 class="card-title">@playersession.name</h5>
+                    }
+                    </div>
+                </div>
+                </div>
+            }
+            </div>
+            <div class="col-12 text-center mt-3">
+                <p class="fs-4">Waiting for the host to start the game...</p>
+                <div class="spinner-border mt-1" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
         </div>
     </div>
 </main>
 <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            pollForUpdates('@gamelobby.id');
-        });
+        function waitForFunction(name, checkInterval = 100) {
+            return new Promise(resolve => {
+                const timer = setInterval(() => {
+                    if (typeof window[name] === "function") {
+                        clearInterval(timer);
+                        resolve(window[name]);
+                    }
+                }, checkInterval);
+            });
+        }
+        waitForFunction("pollForUpdates").then(fn => fn('@gamelobby.id'));
 </script>
-}
