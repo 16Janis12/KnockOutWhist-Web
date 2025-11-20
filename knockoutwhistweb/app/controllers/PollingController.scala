@@ -78,7 +78,8 @@ class PollingController @Inject() (
         "name" -> u.name,
         "id" -> u.id,
         "self" -> (u.id == userSession.id)
-      ))
+      )),
+      "maxPlayers" -> game.maxPlayers
     )
   }
 

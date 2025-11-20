@@ -79,7 +79,13 @@
     })
 })()
 
+let polling = false;
 function pollForUpdates(gameId) {
+    if (polling) {
+        console.log("[DEBUG] Polling already in progress. Skipping this cycle.");
+        return;
+    }
+    polling = true;
     console.log(`[DEBUG] Starting poll cycle for Game ID: ${gameId} at ${new Date().toISOString()}`);
     if (!gameId) {
         console.error("[DEBUG] Game ID is missing. Stopping poll.");
@@ -90,7 +96,7 @@ function pollForUpdates(gameId) {
     const $mainmenuElement = $('#main-menu-screen')
     const $mainbody = $('#main-body')
     if (!$handElement.length && !$lobbyElement.length && !$mainmenuElement.length && !$mainbody.length) {
-        setTimeout(() => pollForUpdates(gameId), 1000);
+        setTimeout(() => { polling = false; pollForUpdates(gameId) }, 1000);
         return;
     }
     const route = jsRoutes.controllers.PollingController.polling(gameId);
@@ -254,6 +260,7 @@ function pollForUpdates(gameId) {
                     })
                 }
                 $("#players").html(newHtml);
+                $('#playerAmount').text(`Playeramount: ${data.users.length} / ${data.maxPlayers}`);
             } else {
                 console.warn(`[DEBUG] Received unknown status: ${data.status}`);
             }
@@ -267,11 +274,7 @@ function pollForUpdates(gameId) {
             }
         }),
         complete: (() => {
-            if (!window.location.href.includes("game")) {
-                console.log("[DEBUG] Page URL changed. Stopping poll restart.");
-                return;
-            }
-            setTimeout(() => pollForUpdates(gameId), 200);
+            setTimeout(() => { polling = false; pollForUpdates(gameId) }, 200);
         })
     })
 }

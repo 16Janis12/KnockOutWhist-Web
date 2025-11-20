@@ -119,15 +119,6 @@ class GameLobby private(
         }
       }
     }
-
-    waitingPromises.keys.foreach { playerId =>
-      val queue =  eventsPerPlayer(playerId)
-      if (queue.nonEmpty) {
-        val promise = waitingPromises(playerId)
-        promise.success(queue.dequeue())
-        waitingPromises.remove(playerId)
-      }
-    }
   }
 
   /**

@@ -59,7 +59,6 @@ class IngameController @Inject() (
       case Some(g) =>
         val results = Try {
           returnInnerHTML(g, request.user)
-
         }
         if (results.isSuccess) {
           Ok(views.html.main("In-Game - Knockout Whist")(results.get))
@@ -67,7 +66,7 @@ class IngameController @Inject() (
           InternalServerError(results.failed.get.getMessage)
         }
       case None =>
-        NotFound("Game not found")
+        Redirect(routes.MainMenuController.mainMenu())
     }
   }
   def startGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
