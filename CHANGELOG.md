@@ -111,3 +111,20 @@
 
 * removed trailing ([c7dd72e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/c7dd72ecc2786ef63daf2b4288093025a8e22bfd))
 * removed trailing ([42a5adb](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/42a5adbae01802587a48a9de15bad44b5ef014cf))
+##  (2025-11-20)
+
+### ⚠ BREAKING CHANGES
+
+* **game:** Fixed polling, SPA, Gameplayloop etc. (#59)
+
+### Features
+
+* **ci:** Polling ([370de17](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/370de175db65edf87e7ab211190977b540a39d85))
+* **ci:** Polling  Added polling for when the game starts and a card gets played ([#58](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/58)) ([e60fe7c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e60fe7c98dcab05949140a8a54ed6e4e2fbbc022))
+* **game:** Fixed polling, SPA, Gameplayloop etc. ([#59](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/59)) ([a58b2e0](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/a58b2e03b11a54667d63ba6604f579a8e328c9d1))
+* **ui:** added js routing, updated ingame ui, added tricktable ([#50](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/50)) ([c220e54](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/c220e54bb8d87f4f0f37a089bcd993e8df806123)), closes [#43](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/43) [#43](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/43)
+* **ui:** implement tie & trump menu, fixed some critical bugs ([#52](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/52)) ([5d245d0](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/5d245d0011a5fb03193514303b45702cd8329224))
+
+### Bug Fixes
+
+* **polling:** Improve polling mechanism and delay handling ([#60](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/60)) ([641c892](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/641c892981649eb85640527cc0fe325ff683fa77))
