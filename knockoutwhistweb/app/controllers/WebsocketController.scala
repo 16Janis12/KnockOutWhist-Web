@@ -1,5 +1,10 @@
 package controllers
-import actor.KnockOutWebSocketActor
+
+
+import auth.AuthAction
+import logic.PodManager
+import logic.user.SessionManager
+import model.sessions.{UserSession, UserWebsocketActor}
 import org.apache.pekko.actor.{ActorRef, ActorSystem, Props}
 import org.apache.pekko.stream.Materializer
 import play.api.*
@@ -12,17 +17,28 @@ import javax.inject.*
 @Singleton
 class WebsocketController @Inject()(
                                      cc: ControllerComponents,
+                                     val sessionManger: SessionManager,
                                    )(implicit system: ActorSystem, mat: Materializer) extends AbstractController(cc) {
 
   object KnockOutWebSocketActorFactory {
-    def create(out: ActorRef) = {
-      Props(new KnockOutWebSocketActor(out))
+    def create(out: ActorRef, userSession: UserSession): Props = {
+      Props(new UserWebsocketActor(out, userSession))
     }
   }
-  def socket() = WebSocket.accept[String, String] { request =>
+  
+  
+  def socket(): WebSocket = WebSocket.accept[String, String] { request =>
+    val session = request.cookies.get("sessionId")
+    if (session.isEmpty) throw new Exception("No session cookie found")
+    val userOpt = sessionManger.getUserBySession(session.get.value)
+    if (userOpt.isEmpty) throw new Exception("Invalid session")
+    val user = userOpt.get
+    val game = PodManager.identifyGameOfUser(user)
+    if (game.isEmpty) throw new Exception("User is not in a game")
+    val userSession = game.get.getUserSession(user.id)
     ActorFlow.actorRef { out =>
       println("Connect received")
-      KnockOutWebSocketActorFactory.create(out)
+      KnockOutWebSocketActorFactory.create(out, userSession)
     }
   }
 

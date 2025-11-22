@@ -41,4 +41,4 @@ POST   /game/:id/returnToLobby              controllers.IngameController.returnT
 GET    /polling/:gameId                     controllers.PollingController.polling(gameId: String)
 
 # Websocket
-GET     /websocket                          controllers.WebsocketController.socket()
+GET     /websocket                  controllers.WebsocketController.socket()

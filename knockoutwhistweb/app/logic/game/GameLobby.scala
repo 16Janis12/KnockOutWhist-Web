@@ -12,6 +12,7 @@ import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
 import exceptions.*
+import logic.PodManager
 import logic.game.PollingEvents.{CardPlayed, LobbyCreation, LobbyUpdate, NewRound, NewTrick, ReloadEvent}
 import model.sessions.{InteractionType, UserSession}
 import model.users.User
@@ -69,9 +70,11 @@ class GameLobby private(
     if (logic.getCurrentState != Lobby) throw new IllegalStateException("The game has already started!")
     val userSession = new UserSession(
       user = user,
-      host = false
+      host = false,
+      gameLobby = this
     )
     users += (user.id -> userSession)
+    PodManager.registerUserToGame(user, id)
     addToQueue(LobbyUpdate)
     userSession
   }
@@ -156,7 +159,14 @@ class GameLobby private(
     if (sessionOpt.isEmpty) {
       throw new NotInThisGameException("You are not in this game!")
     }
+    if (sessionOpt.get.host) {
+      logic.invoke(SessionClosed())
+      users.clear()
+      PodManager.removeGame(id)
+      return
+    }
     users.remove(userId)
+    PodManager.unregisterUserFromGame(sessionOpt.get.user)
     addToQueue(LobbyUpdate)
   }
 
@@ -338,7 +348,8 @@ object GameLobby {
     )
     lobby.users += (host.id -> new UserSession(
       user = host,
-      host = true
+      host = true,
+      gameLobby = lobby
     ))
     lobby
   }

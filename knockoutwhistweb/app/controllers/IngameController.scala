@@ -20,7 +20,6 @@ import scala.util.Try
 @Singleton
 class IngameController @Inject() (
                                    val cc: ControllerComponents,
-                                   val podManager: PodManager,
                                    val authAction: AuthAction,
                                    implicit val ec: ExecutionContext
                                  ) extends AbstractController(cc) {
@@ -54,7 +53,7 @@ class IngameController @Inject() (
   }
 
   def game(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val results = Try {
@@ -70,7 +69,7 @@ class IngameController @Inject() (
     }
   }
   def startGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val result = Try {
       game match {
         case Some(g) =>
@@ -111,7 +110,7 @@ class IngameController @Inject() (
     }
   }
   def kickPlayer(gameId: String, playerToKick: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val playerToKickUUID = UUID.fromString(playerToKick)
     val result = Try {
       game.get.leaveGame(playerToKickUUID)
@@ -129,7 +128,7 @@ class IngameController @Inject() (
     }
   }
   def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val result = Try {
       game.get.leaveGame(request.user.id)
     }
@@ -147,7 +146,7 @@ class IngameController @Inject() (
   }
   
   def playCard(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] => {
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -218,7 +217,7 @@ class IngameController @Inject() (
   }
   }
   def playDogCard(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] => {
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) => {
         val jsonBody = request.body.asJson
@@ -282,7 +281,7 @@ class IngameController @Inject() (
   }
   }
   def playTrump(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -334,7 +333,7 @@ class IngameController @Inject() (
     }
   }
   def playTie(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -388,7 +387,7 @@ class IngameController @Inject() (
   
   
   def returnToLobby(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val result = Try {

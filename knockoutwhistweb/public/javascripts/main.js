@@ -664,23 +664,4 @@ function sendPlayCardRequest(jsonObj, gameId, cardobject, dog) {
         })
     })
 }
-const ws = new WebSocket("ws://localhost:9000/websocket");
-ws.onopen = (event) => {
-    console.log("WebSocket connection established!");
-
-    ws.send("Client is now connected and ready.");
-};
-ws.onmessage = (event) => {
-    console.log("SERVER RESPONSE:", event.data);
-};
-ws.onerror = (error) => {
-    console.error("WebSocket Error:", error);
-};
-ws.onclose = (event) => {
-    if (event.wasClean) {
-        console.log(`Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-    } else {
-        console.warn('Connection died unexpectedly.');
-    }
-};
 

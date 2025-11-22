@@ -24,7 +24,6 @@ object PollingController {
 @Singleton
 class PollingController @Inject() (
                                     val cc: ControllerComponents,
-                                    val podManager: PodManager,
                                     val authAction: AuthAction,
                                     val ingameController: IngameController,
                                     implicit val ec: ExecutionContext
@@ -117,7 +116,7 @@ class PollingController @Inject() (
 
     val playerId = request.user.id
 
-    podManager.getGame(gameId) match {
+    PodManager.getGame(gameId) match {
       case Some(game) =>
         val playerEventQueue = game.getEventsOfPlayer(playerId)
         if (playerEventQueue.nonEmpty) {

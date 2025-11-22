@@ -17,7 +17,6 @@ import javax.inject.*
 class MainMenuController @Inject()(
                                     val controllerComponents: ControllerComponents,
                                     val authAction: AuthAction,
-                                    val podManager: PodManager,
                                     val ingameController: IngameController
                                   ) extends BaseController {
 
@@ -39,7 +38,7 @@ class MainMenuController @Inject()(
       val playeramount: String = (jsonBody.get \ "playeramount").asOpt[String]
         .getOrElse(throw new IllegalArgumentException("Player amount is required."))
 
-      val gameLobby = podManager.createGame(
+      val gameLobby = PodManager.createGame(
         host = request.user,
         name = gamename,
         maxPlayers = playeramount.toInt
@@ -64,7 +63,7 @@ class MainMenuController @Inject()(
       (jsValue \ "gameId").asOpt[String]
     }
     if (gameId.isDefined) {
-      val game = podManager.getGame(gameId.get)
+      val game = PodManager.getGame(gameId.get)
       game match {
         case Some(g) =>
           g.addUser(request.user)

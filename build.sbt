@@ -1,12 +1,12 @@
 ThisBuild / scalaVersion := "3.5.1"
 
 lazy val commonSettings = Seq(
-  libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.18",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % "test",
-  libraryDependencies += "io.github.mkpaz" % "atlantafx-base" % "2.0.1",
-  libraryDependencies += "org.scalafx" %% "scalafx" % "22.0.0-R33",
-  libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.3.0",
-  libraryDependencies += "org.playframework" %% "play-json" % "3.1.0-M1",
+  libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.19",
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
+  libraryDependencies += "io.github.mkpaz" % "atlantafx-base" % "2.1.0",
+  libraryDependencies += "org.scalafx" %% "scalafx" % "24.0.2-R36",
+  libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.4.0",
+  libraryDependencies += "org.playframework" %% "play-json" % "3.1.0-M9",
   libraryDependencies ++= {
     // Determine OS version of JavaFX binaries
     lazy val osName = System.getProperty("os.name") match {
@@ -38,8 +38,9 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
     commonSettings,
     libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test,
     libraryDependencies += "de.mkammerer" % "argon2-jvm" % "2.12",
-    libraryDependencies += "com.auth0" % "java-jwt" % "4.3.0",
-    libraryDependencies += "com.github.ben-manes.caffeine" % "caffeine" % "3.2.2",
+    libraryDependencies += "com.auth0" % "java-jwt" % "4.5.0",
+    libraryDependencies += "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
+    libraryDependencies += "tools.jackson.module" %% "jackson-module-scala" % "3.0.2",
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
   )
 
