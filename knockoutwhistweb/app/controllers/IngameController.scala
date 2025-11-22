@@ -82,7 +82,8 @@ class IngameController @Inject() (
     if (result.isSuccess) {
       Ok(Json.obj(
         "status" -> "success",
-        "redirectUrl" -> routes.IngameController.game(gameId).url
+        "redirectUrl" -> routes.IngameController.game(gameId).url,
+        "content" -> returnInnerHTML(game.get, request.user).toString()
       ))
     } else {
       val throwable = result.failed.get
