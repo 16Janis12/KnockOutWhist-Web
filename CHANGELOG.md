@@ -128,3 +128,8 @@
 ### Bug Fixes
 
 * **polling:** Improve polling mechanism and delay handling ([#60](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/60)) ([641c892](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/641c892981649eb85640527cc0fe325ff683fa77))
+##  (2025-11-22)
+
+### Bug Fixes
+
+* **api:** Fixed a bug where the game would reload on game start ([#81](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/81)) ([9738a04](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9738a04b7a3c63c8cd1450e563ec04823fb3c35a))
