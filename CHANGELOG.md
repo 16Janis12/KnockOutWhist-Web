@@ -133,3 +133,12 @@
 ### Bug Fixes
 
 * **api:** Fixed a bug where the game would reload on game start ([#81](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/81)) ([9738a04](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9738a04b7a3c63c8cd1450e563ec04823fb3c35a))
+##  (2025-11-23)
+
+### ⚠ BREAKING CHANGES
+
+* **websocket:** Implement WebSocket connection and event handling (#82)
+
+### Features
+
+* **websocket:** Implement WebSocket connection and event handling ([#82](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/82)) ([8ca909d](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8ca909db522dd7108a3e40ce84811eaf8695eaa5))
