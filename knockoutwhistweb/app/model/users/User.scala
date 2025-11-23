@@ -3,10 +3,10 @@ package model.users
 import java.util.UUID
 
 case class User(
-               internalId: Long,
-               id: UUID,
-               name: String,
-               passwordHash: String
+                 internalId: Long,
+                 id: UUID,
+                 name: String,
+                 passwordHash: String
                ) {
 
   def withName(newName: String): User = {

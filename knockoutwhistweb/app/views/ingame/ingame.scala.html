@@ -12,10 +12,10 @@
                     <h4 class="fw-semibold mb-1">Current Player</h4>
                     <p class="fs-5 text-primary" id="current-player-name">@gamelobby.getLogic.getCurrentPlayer.get.name</p>
                     @if(!TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
-                    <h4 class="fw-semibold mb-1">Next Player</h4>
-                    @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
-                    <p class="fs-5 text-primary" id="next-player-name">@nextplayer</p>
-                    }
+                        <h4 class="fw-semibold mb-1">Next Player</h4>
+                        @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
+                            <p class="fs-5 text-primary" id="next-player-name">@nextplayer</p>
+                        }
                     }
                 </div>
 
@@ -30,21 +30,22 @@
                         </div>
 
                         @for(player <- gamelobby.getLogic.getPlayerQueue.get.toList.sortBy { p =>
-                        -(gamelobby.getLogic.getCurrentRound.get.tricklist.filter { trick => trick.winner.contains(p) }.size)
+                            -(gamelobby.getLogic.getCurrentRound.get.tricklist.filter { trick => trick.winner.contains(p) }.size)
                         }) {
-                        <div class="d-flex justify-content-between score-row pt-1">
-                            <div style="width: 50%" class="text-truncate">@player.name</div>
-                            <div style="width: 50%">
+                            <div class="d-flex justify-content-between score-row pt-1">
+                                <div style="width: 50%" class="text-truncate">@player.name</div>
+                                <div style="width: 50%">
                                 @(gamelobby.getLogic.getCurrentRound.get.tricklist.filter { trick => trick.winner.contains(player) }.size)
+                                </div>
                             </div>
-                        </div>
                         }
 
                     </div>
                     <div class="d-flex justify-content-center g-3 mb-5" id="trick-cards-container">
-                        @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
+                    @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
                         <div class="col-auto">
-                            <div class="card text-center shadow-sm border-0 bg-transparent" style="width: 7rem; backdrop-filter: blur(4px);">
+                            <div class="card text-center shadow-sm border-0 bg-transparent" style="width: 7rem;
+                                backdrop-filter: blur(4px);">
                                 <div class="p-2">
                                     @util.WebUIUtils.cardtoImage(cardplayed) width="100%"/>
                                 </div>
@@ -53,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        }
+                    }
                     </div>
                 </div>
                 <div class="col-4 mt-5 text-end">
@@ -62,31 +63,35 @@
 
                     <h5 class="fw-semibold mt-4 mb-1">First Card</h5>
                     <div class="d-inline-block border rounded shadow-sm p-1 bg-light" id="first-card-container">
-                        @if(gamelobby.getLogic.getCurrentTrick.get.firstCard.isDefined) {
-                        @util.WebUIUtils.cardtoImage(gamelobby.getLogic.getCurrentTrick.get.firstCard.get) width="80px"/>
-                        } else {
+                    @if(gamelobby.getLogic.getCurrentTrick.get.firstCard.isDefined) {
+                        @util.WebUIUtils.cardtoImage(gamelobby.getLogic.getCurrentTrick.get.firstCard.get)
+                        width="80px"/>
+                    } else {
                         @views.html.render.card.apply("images/cards/1B.png")("Blank Card") width="80px"/>
-                        }
+                    }
                     </div>
                 </div>
             </div>
 
-            <div class="row justify-content-center g-2 mt-4 bottom-div" style="backdrop-filter: blur(4px); margin-left: 0; margin-right: 0;">
+            <div class="row justify-content-center g-2 mt-4 bottom-div" style="backdrop-filter: blur(4px);
+                margin-left: 0;
+                margin-right: 0;">
                 <div class="row justify-content-center ingame-cards-slide @{
                     !gamelobby.logic.getCurrentPlayer.contains(player) ? "inactive" |: ""
                 }" id="card-slide">
-                    @for(i <- player.currentHand().get.cards.indices) {
+                @for(i <- player.currentHand().get.cards.indices) {
                     <div class="col-auto handcard" style="border-radius: 6px">
                         <div class="btn btn-outline-light p-0 border-0 shadow-none" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(this, '@gamelobby.id', '@player.isInDogLife')">
                             @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
                         </div>
                         @if(player.isInDogLife) {
                             <div class="mt-2">
-                                <button class="btn btn-danger" onclick="handleSkipDogLife(this, '@gamelobby.id')">Skip Dog Life</button>
+                                <button class="btn btn-danger" onclick="handleSkipDogLife(this, '@gamelobby.id')">
+                                    Skip Dog Life</button>
                             </div>
                         }
                     </div>
-                    }
+                }
                 </div>
             </div>
         </div>
@@ -104,4 +109,5 @@
             });
         }
         waitForFunction("pollForUpdates").then(fn => fn('@gamelobby.id'));
+    connectWebSocket()
 </script>

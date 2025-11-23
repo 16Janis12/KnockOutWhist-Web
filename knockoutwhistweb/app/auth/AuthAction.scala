@@ -15,13 +15,6 @@ class AuthAction @Inject()(val sessionManager: SessionManager, val parser: BodyP
 
   override def executionContext: ExecutionContext = ec
 
-  protected def getUserFromSession(request: RequestHeader): Option[User] = {
-    val session = request.cookies.get("sessionId")
-    if (session.isDefined)
-      return sessionManager.getUserBySession(session.get.value)
-    None
-  }
-  
   override def invokeBlock[A](
                                request: Request[A],
                                block: AuthenticatedRequest[A] => Future[Result]
@@ -32,6 +25,13 @@ class AuthAction @Inject()(val sessionManager: SessionManager, val parser: BodyP
       case None =>
         Future.successful(Results.Redirect(routes.UserController.login()))
     }
+  }
+
+  protected def getUserFromSession(request: RequestHeader): Option[User] = {
+    val session = request.cookies.get("sessionId")
+    if (session.isDefined)
+      return sessionManager.getUserBySession(session.get.value)
+    None
   }
 }
 

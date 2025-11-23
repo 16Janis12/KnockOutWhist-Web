@@ -9,7 +9,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class StubUserManager @Inject()(val config: Config) extends UserManager {
-  
+
   private val user: Map[String, User] = Map(
     "Janis" -> User(
       internalId = 1L,
@@ -53,5 +53,5 @@ class StubUserManager @Inject()(val config: Config) extends UserManager {
   override def removeUser(name: String): Boolean = {
     throw new NotImplementedError("StubUserManager.removeUser is not implemented")
   }
-  
+
 }

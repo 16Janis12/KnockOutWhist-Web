@@ -8,6 +8,7 @@ import de.knockoutwhist.utils.events.EventListener
 class WebApplicationConfiguration extends DefaultConfiguration {
 
   override def uis: Set[UI] = Set()
+
   override def listener: Set[EventListener] = Set(DelayHandler)
 
 }

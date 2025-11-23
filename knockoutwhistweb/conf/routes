@@ -4,38 +4,27 @@
 # ~~~~
 
 # For the javascript routing
-GET     /assets/js/routes                   controllers.JavaScriptRoutingController.javascriptRoutes()
+GET         /assets/js/routes        controllers.JavaScriptRoutingController.javascriptRoutes()
 # Primary routes
-GET     /                                   controllers.MainMenuController.index()
-GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+GET         /                        controllers.MainMenuController.index()
+GET         /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
 
 # Main menu routes
-GET     /mainmenu                           controllers.MainMenuController.mainMenu()
-GET     /rules                              controllers.MainMenuController.rules()
-GET     /navSPA/:pType                      controllers.MainMenuController.navSPA(pType)
+GET         /mainmenu                controllers.MainMenuController.mainMenu()
+GET         /rules                   controllers.MainMenuController.rules()
+GET         /navSPA/:pType           controllers.MainMenuController.navSPA(pType)
 
-POST    /createGame                         controllers.MainMenuController.createGame()
-POST    /joinGame                           controllers.MainMenuController.joinGame()
+POST        /createGame              controllers.MainMenuController.createGame()
+POST        /joinGame                controllers.MainMenuController.joinGame()
 
 # User authentication routes
-GET     /login                              controllers.UserController.login()
-POST    /login                              controllers.UserController.login_Post()
+GET         /login                   controllers.UserController.login()
+POST        /login                   controllers.UserController.login_Post()
 
-GET     /logout                             controllers.UserController.logout()
+GET         /logout                  controllers.UserController.logout()
 
 # In-game routes
-GET    /game/:id                            controllers.IngameController.game(id: String)
-POST    /game/:id/start                      controllers.IngameController.startGame(id: String)
-POST    /game/:id/kickPlayer/:playerToKick  controllers.IngameController.kickPlayer(id: String, playerToKick: String)
+GET         /game/:id                controllers.IngameController.game(id: String)
 
-POST    /game/:id/trump                     controllers.IngameController.playTrump(id: String)
-POST    /game/:id/tie                       controllers.IngameController.playTie(id: String)
-
-GET     /game/:id/leaveGame                 controllers.IngameController.leaveGame(id: String)
-POST   /game/:id/playCard                   controllers.IngameController.playCard(id: String)
-POST   /game/:id/dogPlayCard                controllers.IngameController.playDogCard(id: String)
-
-POST   /game/:id/returnToLobby              controllers.IngameController.returnToLobby(id: String)
-
-# Polling
-GET    /polling/:gameId                     controllers.PollingController.polling(gameId: String)
+# Websocket
+GET         /websocket               controllers.WebsocketController.socket()

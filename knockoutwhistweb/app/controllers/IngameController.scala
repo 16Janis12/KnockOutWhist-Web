@@ -1,7 +1,7 @@
 package controllers
 
 import auth.{AuthAction, AuthenticatedRequest}
-import de.knockoutwhist.control.GameState.{FinishedMatch, InGame, Lobby, SelectTrump, TieBreak}
+import de.knockoutwhist.control.GameState.*
 import exceptions.*
 import logic.PodManager
 import logic.game.GameLobby
@@ -18,12 +18,28 @@ import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 @Singleton
-class IngameController @Inject() (
-                                   val cc: ControllerComponents,
-                                   val podManager: PodManager,
-                                   val authAction: AuthAction,
-                                   implicit val ec: ExecutionContext
-                                 ) extends AbstractController(cc) {
+class IngameController @Inject()(
+                                  val cc: ControllerComponents,
+                                  val authAction: AuthAction,
+                                  implicit val ec: ExecutionContext
+                                ) extends AbstractController(cc) {
+
+  def game(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val game = PodManager.getGame(gameId)
+    game match {
+      case Some(g) =>
+        val results = Try {
+          returnInnerHTML(g, request.user)
+        }
+        if (results.isSuccess) {
+          Ok(views.html.main("In-Game - Knockout Whist")(results.get))
+        } else {
+          InternalServerError(results.failed.get.getMessage)
+        }
+      case None =>
+        Redirect(routes.MainMenuController.mainMenu())
+    }
+  }
 
   def returnInnerHTML(gameLobby: GameLobby, user: User): Html = {
     gameLobby.logic.getCurrentState match {
@@ -34,10 +50,10 @@ class IngameController @Inject() (
           gameLobby
         )
       case SelectTrump =>
-          views.html.ingame.selecttrump(
-            gameLobby.getPlayerByUser(user),
-            gameLobby
-          )
+        views.html.ingame.selecttrump(
+          gameLobby.getPlayerByUser(user),
+          gameLobby
+        )
       case TieBreak =>
         views.html.ingame.tie(
           gameLobby.getPlayerByUser(user),
@@ -53,24 +69,8 @@ class IngameController @Inject() (
     }
   }
 
-  def game(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
-    game match {
-      case Some(g) =>
-        val results = Try {
-          returnInnerHTML(g, request.user)
-        }
-        if (results.isSuccess) {
-          Ok(views.html.main("In-Game - Knockout Whist")(results.get))
-        } else {
-          InternalServerError(results.failed.get.getMessage)
-        }
-      case None =>
-        Redirect(routes.MainMenuController.mainMenu())
-    }
-  }
   def startGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val result = Try {
       game match {
         case Some(g) =>
@@ -111,13 +111,14 @@ class IngameController @Inject() (
       }
     }
   }
+
   def kickPlayer(gameId: String, playerToKick: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val playerToKickUUID = UUID.fromString(playerToKick)
     val result = Try {
       game.get.leaveGame(playerToKickUUID)
     }
-    if(result.isSuccess) {
+    if (result.isSuccess) {
       Ok(Json.obj(
         "status" -> "success",
         "redirectUrl" -> routes.IngameController.game(gameId).url
@@ -129,15 +130,17 @@ class IngameController @Inject() (
       ))
     }
   }
+
   def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     val result = Try {
       game.get.leaveGame(request.user.id)
     }
     if (result.isSuccess) {
       Ok(Json.obj(
         "status" -> "success",
-        "redirectUrl" -> routes.MainMenuController.mainMenu().url
+        "redirectUrl" -> routes.MainMenuController.mainMenu().url,
+        "content" -> views.html.mainmenu.creategame(Some(request.user)).toString
       ))
     } else {
       InternalServerError(Json.obj(
@@ -146,9 +149,9 @@ class IngameController @Inject() (
       ))
     }
   }
-  
+
   def playCard(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] => {
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -218,8 +221,9 @@ class IngameController @Inject() (
     }
   }
   }
+
   def playDogCard(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] => {
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) => {
         val jsonBody = request.body.asJson
@@ -282,8 +286,9 @@ class IngameController @Inject() (
     }
   }
   }
+
   def playTrump(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -334,8 +339,9 @@ class IngameController @Inject() (
         NotFound("Game not found")
     }
   }
+
   def playTie(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val jsonBody = request.body.asJson
@@ -386,10 +392,10 @@ class IngameController @Inject() (
         NotFound("Game not found")
     }
   }
-  
-  
+
+
   def returnToLobby(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val game = podManager.getGame(gameId)
+    val game = PodManager.getGame(gameId)
     game match {
       case Some(g) =>
         val result = Try {

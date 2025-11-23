@@ -25,5 +25,5 @@ object GameUtil {
 
     code.toString()
   }
-  
+
 }

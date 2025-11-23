@@ -1,57 +1,61 @@
 @(user: Option[model.users.User])
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-drop-shadow">
-        <div class="container d-flex justify-content-start">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-center" id="navBar">
-                <a class="navbar-brand ms-auto" href="@routes.MainMenuController.mainMenu()">
-                    <img src="@routes.Assets.versioned("images/logo.png")" alt="Logo" width="30" height="20" class="d-inline-block align-text-top">
-                    KnockOutWhist
-                </a>
-                <div class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        @if(user.isDefined) {
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" onclick="navSpa('0', 'Knockout Whist - Create Game'); return false;" href="@routes.MainMenuController.mainMenu()">Create Game</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled" aria-disabled="true">Lobbies</a>
-                            </li>
-                        }
+<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-drop-shadow">
+    <div class="container d-flex justify-content-start">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navBar">
+            <a class="navbar-brand ms-auto" href="@routes.MainMenuController.mainMenu()">
+                <img src="@routes.Assets.versioned("images/logo.png")" alt="Logo" width="30" height="20" class="d-inline-block align-text-top">
+                KnockOutWhist
+            </a>
+            <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    @if(user.isDefined) {
                         <li class="nav-item">
-                            <a class="nav-link active" onclick="navSpa('1', 'Knockout Whist - Rules'); return false;" href="@routes.MainMenuController.rules()">Rules</a>
+                            <a class="nav-link active" aria-current="page" onclick="navSpa('0', 'Knockout Whist - Create Game'); return false;" href="@routes.MainMenuController.mainMenu()">
+                                Create Game</a>
                         </li>
-                    </ul>
-                    <form class="navbar-nav me-auto mb-2 mb-lg-0" onsubmit="joinGame(); return false;">
-                        <input class="form-control me-2" type="text" placeholder="Enter GameCode" id="gameId" aria-label="Join Game"/>
-                        <button class="btn btn-outline-success" type="submit">Join</button>
-                    </form>
-                </div>
-
-                @* Right side: profile dropdown if logged in, otherwise Login / Sign Up buttons *@
-                @if(user.isDefined) {
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="rounded-circle" width="30" height="30" />
-                                <span class="ms-2">@user.get.name</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                                <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">Stats</a></li>
-                                <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="@routes.UserController.logout()">Logout</a></li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" aria-disabled="true">Lobbies</a>
                         </li>
-                    </ul>
-                } else {
-                    <div class="d-flex ms-auto">
-                        <a class="btn btn-outline-primary me-2" href="@routes.UserController.login()">Login</a>
-                        <a class="btn btn-primary" href="@routes.UserController.login()">Sign Up</a>
-                    </div>
-                }
-
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="navSpa('1', 'Knockout Whist - Rules'); return false;" href="@routes.MainMenuController.rules()">
+                            Rules</a>
+                    </li>
+                </ul>
+                <form class="navbar-nav me-auto mb-2 mb-lg-0" onsubmit="joinGame(); return false;">
+                    <input class="form-control me-2" type="text" placeholder="Enter GameCode" id="gameId" aria-label="Join Game"/>
+                    <button class="btn btn-outline-success" type="submit">Join</button>
+                </form>
             </div>
+
+            @* Right side: profile dropdown if logged in, otherwise Login / Sign Up buttons *@
+            @if(user.isDefined) {
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="@routes.Assets.versioned("images/profile.png")" alt="Profile" class="rounded-circle" width="30" height="30" />
+                            <span class="ms-2">@user.get.name</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">
+                                Stats</a></li>
+                            <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">
+                                Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="@routes.UserController.logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            } else {
+                <div class="d-flex ms-auto">
+                    <a class="btn btn-outline-primary me-2" href="@routes.UserController.login()">Login</a>
+                    <a class="btn btn-primary" href="@routes.UserController.login()">Sign Up</a>
+                </div>
+            }
+
         </div>
-    </nav>
+    </div>
+</nav>

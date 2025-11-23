@@ -17,7 +17,6 @@ import javax.inject.*
 class MainMenuController @Inject()(
                                     val controllerComponents: ControllerComponents,
                                     val authAction: AuthAction,
-                                    val podManager: PodManager,
                                     val ingameController: IngameController
                                   ) extends BaseController {
 
@@ -39,7 +38,7 @@ class MainMenuController @Inject()(
       val playeramount: String = (jsonBody.get \ "playeramount").asOpt[String]
         .getOrElse(throw new IllegalArgumentException("Player amount is required."))
 
-      val gameLobby = podManager.createGame(
+      val gameLobby = PodManager.createGame(
         host = request.user,
         name = gamename,
         maxPlayers = playeramount.toInt
@@ -55,16 +54,16 @@ class MainMenuController @Inject()(
         "errorMessage" -> "Invalid form submission"
       ))
     }
-    
+
   }
-  
+
   def joinGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val jsonBody = request.body.asJson
     val gameId: Option[String] = jsonBody.flatMap { jsValue =>
       (jsValue \ "gameId").asOpt[String]
     }
     if (gameId.isDefined) {
-      val game = podManager.getGame(gameId.get)
+      val game = PodManager.getGame(gameId.get)
       game match {
         case Some(g) =>
           g.addUser(request.user)
@@ -91,7 +90,7 @@ class MainMenuController @Inject()(
     Ok(views.html.main("Knockout Whist - Rules")(views.html.mainmenu.rules(Some(request.user))))
   }
 
-  def navSPA(location: String) : Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+  def navSPA(location: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     location match {
       case "0" => // Main Menu
         Ok(Json.obj(

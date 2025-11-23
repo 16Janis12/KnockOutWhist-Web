@@ -1,177 +1,180 @@
 @(user: Option[model.users.User])
-    @navbar(user)
+@navbar(user)
 
-    <main class="lobby-background flex-grow-1">
-        <div class="container my-4" style="max-width:980px;">
-            <div class="card rules-card shadow-sm rounded-3 overflow-hidden">
-                <div class="card-header text-center py-3 border-0">
-                    <h3 class="mb-0 rules-title">Game Rules Overview</h3>
-                </div>
+<main class="lobby-background flex-grow-1">
+    <div class="container my-4" style="max-width: 980px;">
+        <div class="card rules-card shadow-sm rounded-3 overflow-hidden">
+            <div class="card-header text-center py-3 border-0">
+                <h3 class="mb-0 rules-title">Game Rules Overview</h3>
+            </div>
 
-                <div class="card-body p-0">
-                    <style>
+            <div class="card-body p-0">
+                <style>
 
-                    </style>
+                </style>
 
-                    <div class="accordion rules-accordion" id="rulesAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingPlayers">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlayers" aria-expanded="true" aria-controls="collapsePlayers">
-                                    Players
-                                </button>
-                            </h2>
-                            <div id="collapsePlayers" class="accordion-collapse collapse show" aria-labelledby="headingPlayers" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    Two to seven players. The aim is to be the last player left in the game.
-                                </div>
+                <div class="accordion rules-accordion" id="rulesAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPlayers">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlayers" aria-expanded="true" aria-controls="collapsePlayers">
+                                Players
+                            </button>
+                        </h2>
+                        <div id="collapsePlayers" class="accordion-collapse collapse show" aria-labelledby="headingPlayers" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                Two to seven players. The aim is to be the last player left in the game.
                             </div>
                         </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingAim">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAim" aria-expanded="false" aria-controls="collapseAim">
-                                    Aim
-                                </button>
-                            </h2>
-                            <div id="collapseAim" class="accordion-collapse collapse" aria-labelledby="headingAim" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    To be the last player left at the end of the game, with the object in each hand being to win a majority of tricks.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingEquipment">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEquipment" aria-expanded="false" aria-controls="collapseEquipment">
-                                    Equipment
-                                </button>
-                            </h2>
-                            <div id="collapseEquipment" class="accordion-collapse collapse" aria-labelledby="headingEquipment" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    A standard 52-card pack is used.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingRanks">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRanks" aria-expanded="false" aria-controls="collapseRanks">
-                                    Card Ranks
-                                </button>
-                            </h2>
-                            <div id="collapseRanks" class="accordion-collapse collapse" aria-labelledby="headingRanks" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    In each suit, cards rank from highest to lowest: A K Q J 10 9 8 7 6 5 4 3 2.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingDealFirst">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDealFirst" aria-expanded="false" aria-controls="collapseDealFirst">
-                                    Deal (First Hand)
-                                </button>
-                            </h2>
-                            <div id="collapseDealFirst" class="accordion-collapse collapse" aria-labelledby="headingDealFirst" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The dealer deals seven cards to each player. One card is turned up to determine the trump suit for the round.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingDealSubsequent">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDealSubsequent" aria-expanded="false" aria-controls="collapseDealSubsequent">
-                                    Deal (Subsequent Hands)
-                                </button>
-                            </h2>
-                            <div id="collapseDealSubsequent" class="accordion-collapse collapse" aria-labelledby="headingDealSubsequent" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The deal rotates clockwise. The player who took the most tricks in the previous hand selects the trump suit. If there's a tie, players cut cards to decide who calls trumps. One fewer card is dealt in each successive hand until the final hand consists of one card each.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingPlay">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay" aria-expanded="false" aria-controls="collapsePlay">
-                                    Play
-                                </button>
-                            </h2>
-                            <div id="collapsePlay" class="accordion-collapse collapse" aria-labelledby="headingPlay" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The player to the dealer's left (eldest hand) leads the first trick. Any card can be led. Other players must follow suit if possible. A player with no cards of the suit led may play any card.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingWinningTrick">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWinningTrick" aria-expanded="false" aria-controls="collapseWinningTrick">
-                                    Winning a Trick
-                                </button>
-                            </h2>
-                            <div id="collapseWinningTrick" class="accordion-collapse collapse" aria-labelledby="headingWinningTrick" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The highest card of the suit led wins, unless a trump is played, in which case the highest trump wins. The winner of the trick leads the next.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingLeadingTrumps">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLeadingTrumps" aria-expanded="false" aria-controls="collapseLeadingTrumps">
-                                    Leading Trumps
-                                </button>
-                            </h2>
-                            <div id="collapseLeadingTrumps" class="accordion-collapse collapse" aria-labelledby="headingLeadingTrumps" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    Some rules disallow leading trumps before the suit has been 'broken' (a trump has been played to the lead of another suit). Leading trumps is always permissible if a player holds only trumps.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingKnockout">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKnockout" aria-expanded="false" aria-controls="collapseKnockout">
-                                    Knockout
-                                </button>
-                            </h2>
-                            <div id="collapseKnockout" class="accordion-collapse collapse" aria-labelledby="headingKnockout" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    At the end of each hand, any player who took no tricks is knocked out and takes no further part in the game.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingWinningGame">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWinningGame" aria-expanded="false" aria-controls="collapseWinningGame">
-                                    Winning the Game
-                                </button>
-                            </h2>
-                            <div id="collapseWinningGame" class="accordion-collapse collapse" aria-labelledby="headingWinningGame" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The game is won when a player takes all the tricks in a round, as all other players are knocked out, leaving only one player remaining.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingDogLife">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDogLife" aria-expanded="false" aria-controls="collapseDogLife">
-                                    Dog Life
-                                </button>
-                            </h2>
-                            <div id="collapseDogLife" class="accordion-collapse collapse" aria-labelledby="headingDogLife" data-bs-parent="#rulesAccordion">
-                                <div class="accordion-body">
-                                    The first player who takes no tricks is awarded a \"dog's life\". In the next hand, that player is dealt one card and can decide which trick to play it to. Each time a trick is played the dog may either play the card or knock on the table and wait to play it later. If the dog wins a trick, the player to the left leads the next and the dog re-enters the game properly in the next hand. If the dog fails, they are knocked out.
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingAim">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAim" aria-expanded="false" aria-controls="collapseAim">
+                                Aim
+                            </button>
+                        </h2>
+                        <div id="collapseAim" class="accordion-collapse collapse" aria-labelledby="headingAim" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                To be the last player left at the end of the game, with the object in each hand being to win a majority of tricks.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingEquipment">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEquipment" aria-expanded="false" aria-controls="collapseEquipment">
+                                Equipment
+                            </button>
+                        </h2>
+                        <div id="collapseEquipment" class="accordion-collapse collapse" aria-labelledby="headingEquipment" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                A standard 52-card pack is used.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingRanks">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRanks" aria-expanded="false" aria-controls="collapseRanks">
+                                Card Ranks
+                            </button>
+                        </h2>
+                        <div id="collapseRanks" class="accordion-collapse collapse" aria-labelledby="headingRanks" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                In each suit, cards rank from highest to lowest: A K Q J 10 9 8 7 6 5 4 3 2.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDealFirst">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDealFirst" aria-expanded="false" aria-controls="collapseDealFirst">
+                                Deal (First Hand)
+                            </button>
+                        </h2>
+                        <div id="collapseDealFirst" class="accordion-collapse collapse" aria-labelledby="headingDealFirst" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The dealer deals seven cards to each player. One card is turned up to determine the trump suit for the round.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDealSubsequent">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDealSubsequent" aria-expanded="false" aria-controls="collapseDealSubsequent">
+                                Deal (Subsequent Hands)
+                            </button>
+                        </h2>
+                        <div id="collapseDealSubsequent" class="accordion-collapse collapse" aria-labelledby="headingDealSubsequent" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The deal rotates clockwise. The player who took the most tricks in the previous hand selects the trump suit. If there's a tie, players cut cards to decide who calls trumps. One fewer card is dealt in each successive hand until the final hand consists of one card each.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPlay">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePlay" aria-expanded="false" aria-controls="collapsePlay">
+                                Play
+                            </button>
+                        </h2>
+                        <div id="collapsePlay" class="accordion-collapse collapse" aria-labelledby="headingPlay" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The player to the dealer's left (eldest hand) leads the first trick. Any card can be led. Other players must follow suit if possible. A player with no cards of the suit led may play any card.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingWinningTrick">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWinningTrick" aria-expanded="false" aria-controls="collapseWinningTrick">
+                                Winning a Trick
+                            </button>
+                        </h2>
+                        <div id="collapseWinningTrick" class="accordion-collapse collapse" aria-labelledby="headingWinningTrick" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The highest card of the suit led wins, unless a trump is played, in which case the highest trump wins. The winner of the trick leads the next.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingLeadingTrumps">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLeadingTrumps" aria-expanded="false" aria-controls="collapseLeadingTrumps">
+                                Leading Trumps
+                            </button>
+                        </h2>
+                        <div id="collapseLeadingTrumps" class="accordion-collapse collapse" aria-labelledby="headingLeadingTrumps" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                Some rules disallow leading trumps before the suit has been 'broken' (a trump has been played to the lead of another suit). Leading trumps is always permissible if a player holds only trumps.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingKnockout">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKnockout" aria-expanded="false" aria-controls="collapseKnockout">
+                                Knockout
+                            </button>
+                        </h2>
+                        <div id="collapseKnockout" class="accordion-collapse collapse" aria-labelledby="headingKnockout" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                At the end of each hand, any player who took no tricks is knocked out and takes no further part in the game.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingWinningGame">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWinningGame" aria-expanded="false" aria-controls="collapseWinningGame">
+                                Winning the Game
+                            </button>
+                        </h2>
+                        <div id="collapseWinningGame" class="accordion-collapse collapse" aria-labelledby="headingWinningGame" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The game is won when a player takes all the tricks in a round, as all other players are knocked out, leaving only one player remaining.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDogLife">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDogLife" aria-expanded="false" aria-controls="collapseDogLife">
+                                Dog Life
+                            </button>
+                        </h2>
+                        <div id="collapseDogLife" class="accordion-collapse collapse" aria-labelledby="headingDogLife" data-bs-parent="#rulesAccordion">
+                            <div class="accordion-body">
+                                The first player who takes no tricks is awarded a \"dog's life\". In the next hand, that player is dealt one card and can decide which trick to play it to. Each time a trick is played the dog may either play the card or knock on the table and wait to play it later. If the dog wins a trick, the player to the left leads the next and the dog re-enters the game properly in the next hand. If the dog fails, they are knocked out.
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
+<script>
+        disconnectWebSocket();
+</script>
