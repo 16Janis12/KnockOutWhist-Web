@@ -1,7 +1,9 @@
+type EventHandler = (data: any) => any | Promise<any>;
+
 // javascript
 let ws = null; // will be created by connectWebSocket()
-const pending = new Map(); // id -> { resolve, reject, timer }
-const handlers = new Map(); // eventType -> handler(data) -> (value|Promise)
+const pending: Map<string, any> = new Map(); // id -> { resolve, reject, timer }
+const handlers: Map<string, EventHandler> = new Map(); // eventType -> handler(data) -> (value|Promise)
 
 
 let timer = null;
@@ -39,8 +41,8 @@ function setupSocketHandlers(socket) {
 
         if (id && eventType) {
             const handler = handlers.get(eventType);
-            const sendResponse = (respData) => {
-                const response = {id: id, event: eventType, data: respData === undefined ? {} : respData};
+            const sendResponse = (result) => {
+                const response = {id: id, event: eventType, status: result};
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     socket.send(JSON.stringify(response));
                 } else {
@@ -56,10 +58,10 @@ function setupSocketHandlers(socket) {
 
             try {
                 Promise.resolve(handler(data === undefined ? {} : data))
-                    .then(result => sendResponse(result))
-                    .catch(err => sendResponse({error: err?.message ? err.message : String(err)}));
+                    .then(_ => sendResponse("success"))
+                    .catch(_ => sendResponse("error"));
             } catch (err) {
-                sendResponse({error: err?.message ? err.message : String(err)});
+                sendResponse("error");
             }
         }
     };
@@ -180,7 +182,7 @@ function sendEventAndWait(eventType, eventData, timeoutMs = 10000) {
     return p;
 }
 
-function onEvent(eventType, handler) {
+function onEvent(eventType: string, handler: EventHandler) {
     handlers.set(eventType, handler);
 }
 

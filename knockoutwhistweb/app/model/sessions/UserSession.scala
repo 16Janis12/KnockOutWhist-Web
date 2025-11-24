@@ -26,6 +26,7 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
         else canInteract = Some(InteractionType.Card)
       case _ =>
     }
+    websocketActor.foreach(_.transmitEventToClient(event))
   }
 
   override def id: UUID = user.id

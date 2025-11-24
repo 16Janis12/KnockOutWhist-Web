@@ -61,6 +61,10 @@ class UserWebsocketActor(
       ))
       return
     }
+    val statusOpt = (json \ "status").asOpt[String]
+    if (statusOpt.isDefined) {
+      return
+    }
     val event = eventOpt.get
     val data = (json \ "data").asOpt[JsObject].getOrElse(Json.obj())
     val result = Try {
@@ -83,12 +87,11 @@ class UserWebsocketActor(
   }
 
   def transmitJsonToClient(jsonObj: JsObject): Unit = {
-    out ! jsonObj.toString()
+    transmitTextToClient(jsonObj.toString())
   }
 
   def transmitEventToClient(event: SimpleEvent): Unit = {
-    val jsonString = WebsocketEventMapper.toJsonString(event)
-    out ! jsonString
+    transmitJsonToClient(WebsocketEventMapper.toJson(event))
   }
 
 }

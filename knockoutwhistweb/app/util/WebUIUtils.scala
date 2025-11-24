@@ -1,8 +1,9 @@
 package util
 
-import de.knockoutwhist.cards.Card
+import de.knockoutwhist.cards.{Card, Hand}
 import de.knockoutwhist.cards.CardValue.*
 import de.knockoutwhist.cards.Suit.{Clubs, Diamonds, Hearts, Spades}
+import play.api.libs.json.{JsArray, Json}
 import play.twirl.api.Html
 import scalafx.scene.image.Image
 
@@ -34,6 +35,24 @@ object WebUIUtils {
       case Two => "2"
     }
     f"$cv$s"
+  }
+
+  /**
+   * Map a Hand to a JsArray of cards
+   * Per card it has the string and the index in the hand
+   * @param hand
+   * @return
+   */
+  def handToJson(hand: Hand): JsArray = {
+    val cards = hand.cards
+    JsArray(
+      cards.zipWithIndex.map { case (card, index) =>
+        Json.obj(
+          "idx" -> index,
+          "card" -> cardtoString(card)
+        )
+      }
+    )
   }
 
 }

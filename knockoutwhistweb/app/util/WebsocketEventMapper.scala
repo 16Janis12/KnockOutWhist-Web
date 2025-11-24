@@ -1,8 +1,11 @@
 package util
 
 import de.knockoutwhist.utils.events.SimpleEvent
+import logic.game.GameLobby
+import play.api.libs.json.{JsValue, Json}
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.scala.ScalaModule
+import util.mapper.{ReceivedHandEventMapper, SimpleEventMapper}
 
 object WebsocketEventMapper {
 
@@ -13,8 +16,29 @@ object WebsocketEventMapper {
 
   private val mapper = JsonMapper.builder().addModule(scalaModule).build()
 
-  def toJsonString(obj: SimpleEvent): String = {
-    mapper.writeValueAsString(obj)
+  private var customMappers: Map[String,SimpleEventMapper[SimpleEvent]] = Map()
+
+  private def registerCustomMapper[T <: SimpleEvent](mapper: SimpleEventMapper[T]): Unit = {
+    customMappers = customMappers + (mapper.id -> mapper.asInstanceOf[SimpleEventMapper[SimpleEvent]])
+  }
+  
+  // Register all custom mappers here
+  registerCustomMapper(ReceivedHandEventMapper)
+  
+  def toJson(obj: SimpleEvent, gameLobby: GameLobby): JsValue = {
+    val data: Option[JsValue] = if (customMappers.contains(obj.id)) {
+      Some(customMappers(obj.id).toJson(obj))
+    }else {
+      None
+    }
+    if (data.isEmpty) {
+      return Json.obj()
+    }
+    Json.obj(
+      "id" -> ("request-" + java.util.UUID.randomUUID().toString),
+      "event" -> obj.id,
+      "data" -> data
+    )
   }
 
 }
