@@ -142,3 +142,4 @@
 ### Features
 
 * **websocket:** Implement WebSocket connection and event handling ([#82](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/82)) ([8ca909d](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8ca909db522dd7108a3e40ce84811eaf8695eaa5))
+##  (2025-11-24)
