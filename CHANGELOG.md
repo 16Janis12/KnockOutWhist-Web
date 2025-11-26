@@ -154,3 +154,8 @@
 ### Features
 
 * **api:** Implemented card played event via websocket ([#85](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/85)) ([3c0828f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3c0828fdbeb507706b86f1662476c46e760533e4))
+##  (2025-11-26)
+
+### Features
+
+* **api:** Implemented session closed and kick event via websocket ([#87](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/87)) ([1ef5e8a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/1ef5e8a72fdf8a3d1ae624c8c3d7c6595017bc6f))
