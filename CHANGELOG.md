@@ -143,3 +143,9 @@
 
 * **websocket:** Implement WebSocket connection and event handling ([#82](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/82)) ([8ca909d](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8ca909db522dd7108a3e40ce84811eaf8695eaa5))
 ##  (2025-11-24)
+##  (2025-11-26)
+
+### Features
+
+* **api:** Implement received hand event handling and UI updates ([#83](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/83)) ([52e5033](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/52e5033afca344ae40a644196555a9655913710a)), closes [#76](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/76)
+* **base:** Fixed logic for websockets and added GameStateEvent. Might've caused instability on other feature branches! ([#84](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/84)) ([b81bb3d](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b81bb3d0aeb8500a9d7417a10e24e7f8a17d71d2))
