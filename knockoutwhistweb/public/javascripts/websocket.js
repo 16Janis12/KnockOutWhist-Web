@@ -1,10 +1,7 @@
-type EventHandler = (data: any) => any | Promise<any>;
-
 // javascript
 let ws = null; // will be created by connectWebSocket()
-const pending: Map<string, any> = new Map(); // id -> { resolve, reject, timer }
-const handlers: Map<string, EventHandler> = new Map(); // eventType -> handler(data) -> (value|Promise)
-
+const pending = new Map(); // id -> { resolve, reject, timer }
+const handlers = new Map(); // eventType -> handler(data) -> (value|Promise)
 
 let timer = null;
 
@@ -52,6 +49,7 @@ function setupSocketHandlers(socket) {
 
             if (!handler) {
                 // no handler: respond with an error object in data so server can fail it
+                console.warn("No handler for event:", eventType);
                 sendResponse({error: "No handler for event: " + eventType});
                 return;
             }
@@ -182,7 +180,7 @@ function sendEventAndWait(eventType, eventData, timeoutMs = 10000) {
     return p;
 }
 
-function onEvent(eventType: string, handler: EventHandler) {
+function onEvent(eventType, handler) {
     handlers.set(eventType, handler);
 }
 

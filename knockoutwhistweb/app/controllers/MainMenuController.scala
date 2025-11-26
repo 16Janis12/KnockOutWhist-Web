@@ -16,8 +16,7 @@ import javax.inject.*
 @Singleton
 class MainMenuController @Inject()(
                                     val controllerComponents: ControllerComponents,
-                                    val authAction: AuthAction,
-                                    val ingameController: IngameController
+                                    val authAction: AuthAction
                                   ) extends BaseController {
 
   // Pass the request-handling function directly to authAction (no nested Action)
@@ -46,7 +45,7 @@ class MainMenuController @Inject()(
       Ok(Json.obj(
         "status" -> "success",
         "redirectUrl" -> routes.IngameController.game(gameLobby.id).url,
-        "content" -> ingameController.returnInnerHTML(gameLobby, request.user).toString
+        "content" -> IngameController.returnInnerHTML(gameLobby, gameLobby.logic.getCurrentState, request.user).toString
       ))
     } else {
       BadRequest(Json.obj(
@@ -70,7 +69,7 @@ class MainMenuController @Inject()(
           Ok(Json.obj(
             "status" -> "success",
             "redirectUrl" -> routes.IngameController.game(g.id).url,
-            "content" -> ingameController.returnInnerHTML(g, request.user).toString
+            "content" -> IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user).toString
           ))
         case None =>
           NotFound(Json.obj(

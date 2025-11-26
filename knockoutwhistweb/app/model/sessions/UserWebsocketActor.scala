@@ -12,12 +12,18 @@ class UserWebsocketActor(
                           session: UserSession
                         ) extends Actor {
 
-  if (session.websocketActor.isDefined) {
-    session.websocketActor.foreach(actor => actor.transmitTextToClient("Error: Multiple websocket connections detected. Closing this connection."))
-    context.stop(self)
-  } else {
+  {
+    session.lock.lock()
+    if (session.websocketActor.isDefined) {
+      val otherWebsocket = session.websocketActor.get
+      otherWebsocket.transmitTextToClient("Error: Multiple websocket connections detected. Closing your connection.")
+      context.stop(otherWebsocket.self)
+      transmitTextToClient("Previous websocket connection closed. You are now connected.")
+    }
     session.websocketActor = Some(this)
+    session.lock.unlock()
   }
+
 
   override def receive: Receive = {
     case msg: String =>
@@ -86,12 +92,12 @@ class UserWebsocketActor(
     }
   }
 
-  def transmitJsonToClient(jsonObj: JsObject): Unit = {
+  def transmitJsonToClient(jsonObj: JsValue): Unit = {
     transmitTextToClient(jsonObj.toString())
   }
 
   def transmitEventToClient(event: SimpleEvent): Unit = {
-    transmitJsonToClient(WebsocketEventMapper.toJson(event))
+    transmitJsonToClient(WebsocketEventMapper.toJson(event, session))
   }
 
 }

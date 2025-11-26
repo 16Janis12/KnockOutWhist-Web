@@ -217,3 +217,6 @@ function navSpa(page, title) {
     });
     return false
 }
+
+
+globalThis.exchangeBody = exchangeBody;

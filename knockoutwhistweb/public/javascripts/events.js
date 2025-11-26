@@ -39,4 +39,12 @@ function receiveHandEvent(eventData) {
     handElement.html(newHtml);
 }
 
+function receiveGameStateChange(eventData) {
+    const content = eventData.content;
+    const title = eventData.title || 'Knockout Whist';
+
+    exchangeBody(content, title);
+}
+
 onEvent("ReceivedHandEvent", receiveHandEvent)
+onEvent("GameStateChangeEvent", receiveGameStateChange)

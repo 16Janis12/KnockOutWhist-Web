@@ -1,6 +1,7 @@
 package controllers
 
 import auth.{AuthAction, AuthenticatedRequest}
+import de.knockoutwhist.control.GameState
 import de.knockoutwhist.control.GameState.*
 import exceptions.*
 import logic.PodManager
@@ -29,7 +30,7 @@ class IngameController @Inject()(
     game match {
       case Some(g) =>
         val results = Try {
-          returnInnerHTML(g, request.user)
+          IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user)
         }
         if (results.isSuccess) {
           Ok(views.html.main("In-Game - Knockout Whist")(results.get))
@@ -38,34 +39,6 @@ class IngameController @Inject()(
         }
       case None =>
         Redirect(routes.MainMenuController.mainMenu())
-    }
-  }
-
-  def returnInnerHTML(gameLobby: GameLobby, user: User): Html = {
-    gameLobby.logic.getCurrentState match {
-      case Lobby => views.html.lobby.lobby(Some(user), gameLobby)
-      case InGame =>
-        views.html.ingame.ingame(
-          gameLobby.getPlayerByUser(user),
-          gameLobby
-        )
-      case SelectTrump =>
-        views.html.ingame.selecttrump(
-          gameLobby.getPlayerByUser(user),
-          gameLobby
-        )
-      case TieBreak =>
-        views.html.ingame.tie(
-          gameLobby.getPlayerByUser(user),
-          gameLobby
-        )
-      case FinishedMatch =>
-        views.html.ingame.finishedMatch(
-          Some(user),
-          gameLobby
-        )
-      case _ =>
-        throw new IllegalStateException(s"Invalid game state for in-game view. GameId: ${gameLobby.id}" + s" State: ${gameLobby.logic.getCurrentState}")
     }
   }
 
@@ -83,7 +56,7 @@ class IngameController @Inject()(
       Ok(Json.obj(
         "status" -> "success",
         "redirectUrl" -> routes.IngameController.game(gameId).url,
-        "content" -> returnInnerHTML(game.get, request.user).toString()
+        "content" -> IngameController.returnInnerHTML(game.get, game.get.logic.getCurrentState, request.user).toString()
       ))
     } else {
       val throwable = result.failed.get
@@ -434,5 +407,37 @@ class IngameController @Inject()(
         ))
     }
   }
+  
+}
 
+object IngameController {
+
+  def returnInnerHTML(gameLobby: GameLobby, gameState: GameState, user: User): Html = {
+    gameState match {
+      case Lobby => views.html.lobby.lobby(Some(user), gameLobby)
+      case InGame =>
+        views.html.ingame.ingame(
+          gameLobby.getPlayerByUser(user),
+          gameLobby
+        )
+      case SelectTrump =>
+        views.html.ingame.selecttrump(
+          gameLobby.getPlayerByUser(user),
+          gameLobby
+        )
+      case TieBreak =>
+        views.html.ingame.tie(
+          gameLobby.getPlayerByUser(user),
+          gameLobby
+        )
+      case FinishedMatch =>
+        views.html.ingame.finishedMatch(
+          Some(user),
+          gameLobby
+        )
+      case _ =>
+        throw new IllegalStateException(s"Invalid game state for in-game view. GameId: ${gameLobby.id}" + s" State: ${gameLobby.logic.getCurrentState}")
+    }
+  }
+  
 }
