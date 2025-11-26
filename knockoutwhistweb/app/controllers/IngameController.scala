@@ -89,7 +89,7 @@ class IngameController @Inject()(
     val game = PodManager.getGame(gameId)
     val playerToKickUUID = UUID.fromString(playerToKick)
     val result = Try {
-      game.get.leaveGame(playerToKickUUID)
+      game.get.leaveGame(playerToKickUUID, true)
     }
     if (result.isSuccess) {
       Ok(Json.obj(
@@ -107,7 +107,7 @@ class IngameController @Inject()(
   def leaveGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val game = PodManager.getGame(gameId)
     val result = Try {
-      game.get.leaveGame(request.user.id)
+      game.get.leaveGame(request.user.id, false)
     }
     if (result.isSuccess) {
       Ok(Json.obj(

@@ -1,6 +1,35 @@
 @(user: Option[model.users.User], gamelobby: logic.game.GameLobby)
 
 <main class="lobby-background vh-100" id="lobbybackground">
+    <!-- Kick Modal -->
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" data-focus="true" id="kickedModal" tabindex="-1" role="dialog" aria-labelledby="kickedModalTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="kickedModalTitle">Kicked</h5>
+                </div>
+                <div class="modal-body">
+                    <p>You've been kicked from the lobby.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Closed Modal -->
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" data-focus="true" id="sessionClosed" tabindex="-1" role="dialog" aria-labelledby="sessionClosedModalTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sessionClosedModalTitle">Session Closed</h5>
+                </div>
+                <div class="modal-body">
+                    <p>The session was closed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lobby -->
     <div class="container d-flex flex-column" style="height: calc(100vh - 1rem);">
         <div class="row">
             <div class="col">
@@ -15,7 +44,7 @@
         <div class="row">
             <div class="col">
                 <div class="p-3 text-center fs-4" id="playerAmount">
-                    Playeramount: @gamelobby.getPlayers.size / @gamelobby.maxPlayers</div>
+                    Players: @gamelobby.getPlayers.size / @gamelobby.maxPlayers</div>
             </div>
         </div>
         <div class="row justify-content-center align-items-center flex-grow-1">

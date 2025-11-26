@@ -6,7 +6,7 @@ import model.sessions.UserSession
 import play.api.libs.json.{JsValue, Json}
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.scala.ScalaModule
-import util.mapper.{CardPlayedEventMapper, GameStateEventMapper, ReceivedHandEventMapper, SimpleEventMapper}
+import util.mapper.{CardPlayedEventMapper, GameStateEventMapper, KickEventMapper, LeftEventMapper, LobbyUpdateEventMapper, ReceivedHandEventMapper, SessionClosedMapper, SimpleEventMapper}
 
 object WebsocketEventMapper {
 
@@ -27,6 +27,10 @@ object WebsocketEventMapper {
   registerCustomMapper(ReceivedHandEventMapper)
   registerCustomMapper(GameStateEventMapper)
   registerCustomMapper(CardPlayedEventMapper)
+  registerCustomMapper(LobbyUpdateEventMapper)
+  registerCustomMapper(LeftEventMapper)
+  registerCustomMapper(KickEventMapper)
+  registerCustomMapper(SessionClosedMapper)
   
   def toJson(obj: SimpleEvent, session: UserSession): JsValue = {
     val data: Option[JsValue] = if (customMappers.contains(obj.id)) {

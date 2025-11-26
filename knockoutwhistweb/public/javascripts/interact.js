@@ -1,7 +1,10 @@
 function handlePlayCard(card, dog) {
-  // TODO needs implementation
+    // TODO needs implementation
 }
 
 function handleSkipDogLife(button) {
-  // TODO needs implementation
+    // TODO needs implementation
+}
+function handleKickPlayer(playerId) {
+    // TODO needs implementation
 }

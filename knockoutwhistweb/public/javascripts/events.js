@@ -42,8 +42,9 @@ function receiveHandEvent(eventData) {
 function receiveGameStateChange(eventData) {
     const content = eventData.content;
     const title = eventData.title || 'Knockout Whist';
+    const url = eventData.url || null;
 
-    exchangeBody(content, title);
+    exchangeBody(content, title, url);
 }
 function receiveCardPlayedEvent(eventData) {
     const firstCard = eventData.firstCard;
@@ -84,6 +85,79 @@ function receiveCardPlayedEvent(eventData) {
                     `;
     firstCardContainer.html(newFirstCardHTML);
 }
+function receiveLobbyUpdateEvent(eventData) {
+    const host = eventData.host;
+    const maxPlayers = eventData.maxPlayers;
+    const players = eventData.players;
+
+    const lobbyPlayersContainer = $('#players');
+    const playerAmountBox = $('#playerAmount');
+
+    let newHtml = ''
+
+    if (host) {
+        players.forEach(user => {
+
+            const inner = user.self ? `<h5 class="card-title">${user.name} (You)</h5>
+                                <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>`
+                : `    <h5 class="card-title">${user.name}</h5>
+                                    <div class="btn btn-danger" onclick="removePlayer('${user.id}')">Remove</div>`
+
+            newHtml += `<div class="col-auto my-auto m-3">
+                            <div class="card" style="width: 18rem;">
+                                <img src="/assets/images/profile.png" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                                <div class="card-body">
+                                    ${inner}
+                                </div>
+                            </div>
+                        </div>`
+        })
+    } else {
+        players.forEach(user => {
+
+            const inner = user.self ? `<h5 class="card-title">${user.name} (You)</h5>` : `    <h5 class="card-title">${user.name}</h5>`
+
+            newHtml += `<div class="col-auto my-auto m-3">
+                            <div class="card" style="width: 18rem;">
+                                <img src="/assets/images/profile.png" alt="Profile" class="card-img-top w-50 mx-auto mt-3" />
+                                <div class="card-body">
+                                    ${inner}
+                                </div>
+                            </div>
+                        </div>`
+        })
+    }
+
+    lobbyPlayersContainer.html(newHtml);
+    playerAmountBox.text(`Players: ${players.length} / ${maxPlayers}`);
+
+}
+function receiveKickEvent(eventData) {
+    $('#kickedModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    }).modal('show');
+
+    setTimeout(() => {
+        receiveGameStateChange(eventData)
+    }, 5000);
+}
+function receiveSessionClosedEvent(eventData) {
+    $('#sessionClosed').modal({
+        backdrop: 'static',
+        keyboard: false
+    }).modal('show');
+
+    setTimeout(() => {
+        receiveGameStateChange(eventData)
+    }, 5000);
+}
+
+
 onEvent("ReceivedHandEvent", receiveHandEvent)
 onEvent("GameStateChangeEvent", receiveGameStateChange)
 onEvent("CardPlayedEvent", receiveCardPlayedEvent)
+onEvent("LobbyUpdateEvent", receiveLobbyUpdateEvent)
+onEvent("LeftEvent", receiveGameStateChange)
+onEvent("KickEvent", receiveKickEvent)
+onEvent("SessionClosed", receiveSessionClosedEvent)

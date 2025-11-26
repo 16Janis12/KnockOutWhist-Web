@@ -10,13 +10,14 @@ import de.knockoutwhist.player.Playertype.HUMAN
 import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
+import events.{KickEvent, LeftEvent, LobbyUpdateEvent, UserEvent}
 import exceptions.*
 import logic.PodManager
 import model.sessions.{InteractionType, UserSession}
 import model.users.User
 import play.api.libs.json.{JsObject, Json}
 
-import java.util.UUID
+import java.util.{Timer, TimerTask, UUID}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -44,7 +45,7 @@ class GameLobby private(
     )
     users += (user.id -> userSession)
     PodManager.registerUserToGame(user, id)
-    //TODO : transmit Lobby Update transmitToAll()
+    logic.invoke(LobbyUpdateEvent())
     userSession
   }
 
@@ -52,6 +53,8 @@ class GameLobby private(
     event match {
       case event: PlayerEvent =>
         users.get(event.playerId).foreach(session => session.updatePlayer(event))
+      case event: UserEvent =>
+        users.get(event.userId).foreach(session => session.updatePlayer(event))
       case event: GameStateChangeEvent =>
         if (event.oldState == MainMenu && event.newState == Lobby) {
           return
@@ -93,8 +96,9 @@ class GameLobby private(
    * Remove the user from the game lobby.
    *
    * @param user the user who wants to leave the game.
+   * @param kicked whether the user was kicked or left voluntarily.
    */
-  def leaveGame(userId: UUID): Unit = {
+  def leaveGame(userId: UUID, kicked: Boolean): Unit = {
     val sessionOpt = users.get(userId)
     if (sessionOpt.isEmpty) {
       throw new NotInThisGameException("You are not in this game!")
@@ -105,16 +109,14 @@ class GameLobby private(
       PodManager.removeGame(id)
       return
     }
-    sessionOpt.get.websocketActor.foreach(act => act.transmitJsonToClient(Json.obj(
-      "id" -> "-1",
-      "event" -> "SessionClosed",
-      "data" -> Json.obj(
-        "reason" -> "You left the game (or got kicked)."
-      )
-    )))
+    if (kicked) {
+      logic.invoke(KickEvent(sessionOpt.get.user))
+    } else {
+      logic.invoke(LeftEvent(sessionOpt.get.user))
+    }
     users.remove(userId)
     PodManager.unregisterUserFromGame(sessionOpt.get.user)
-    //TODO: transmit Lobby Update transmitToAll()
+    logic.invoke(LobbyUpdateEvent())
   }
 
   /**
