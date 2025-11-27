@@ -91,7 +91,12 @@ function setupSocketHandlers(socket) {
 }
 
 // connect/disconnect helpers
-function connectWebSocket(url = "ws://localhost:9000/websocket") {
+function connectWebSocket(url = null) {
+    if (!url) {
+        const loc = window.location;
+        const protocol = loc.protocol === "https:" ? "wss:" : "ws:";
+        url = protocol + "//" + loc.host + "/websocket";
+    }
     if (ws && ws.readyState === WebSocket.OPEN) return Promise.resolve();
     if (ws && ws.readyState === WebSocket.CONNECTING) {
         // already connecting - return a promise that resolves on open
