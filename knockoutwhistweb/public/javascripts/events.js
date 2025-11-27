@@ -85,6 +85,37 @@ function receiveCardPlayedEvent(eventData) {
                     `;
     firstCardContainer.html(newFirstCardHTML);
 }
+function receiveTurnEvent(eventData) {
+    const currentPlayer = eventData.currentPlayer;
+    const nextPlayers = eventData.nextPlayers;
+
+    const currentPlayerNameContainer = $('#current-player-name');
+    const nextPlayersContainer = $('#next-players-container');
+    const nextPlayerText = $('#next-players-section');
+
+    let currentPlayerName = currentPlayer.name;
+    if (currentPlayer.dog) {
+        currentPlayerName += " 🐶";
+    }
+    currentPlayerNameContainer.text(currentPlayerName);
+
+    if (nextPlayers.length === 0) {
+        nextPlayerText.hide();
+        nextPlayersContainer.html('');
+    } else {
+        nextPlayerText.show();
+        let nextPlayersHtml = '';
+        nextPlayers.forEach((player) => {
+            let playerName = player.name;
+            if (player.dog) {
+                playerName += " 🐶";
+            }
+            nextPlayersHtml += `<p className="fs-5 text-primary">${playerName}</p>`;
+        });
+        nextPlayersContainer.html(nextPlayersHtml);
+    }
+}
+
 function receiveLobbyUpdateEvent(eventData) {
     const host = eventData.host;
     const maxPlayers = eventData.maxPlayers;
@@ -154,6 +185,37 @@ function receiveSessionClosedEvent(eventData) {
 }
 
 
+function receiveTurnEvent(eventData) {
+    const currentPlayer = eventData.currentPlayer;
+    const nextPlayers = eventData.nextPlayers;
+
+    const currentPlayerNameContainer = $('#current-player-name');
+    const nextPlayersContainer = $('#next-players-container');
+    const nextPlayerText = $('#next-players-section');
+
+    let currentPlayerName = currentPlayer.name;
+    if (currentPlayer.dog) {
+        currentPlayerName += " 🐶";
+    }
+    currentPlayerNameContainer.text(currentPlayerName);
+
+    if (nextPlayers.length === 0) {
+        nextPlayerText.hide();
+        nextPlayersContainer.html('');
+    } else {
+        nextPlayerText.show();
+        let nextPlayersHtml = '';
+        nextPlayers.forEach((player) => {
+            let playerName = player.name;
+            if (player.dog) {
+                playerName += " 🐶";
+            }
+            nextPlayersHtml += `<p className="fs-5 text-primary">${playerName}</p>`;
+        });
+        nextPlayersContainer.html(nextPlayersHtml);
+    }
+}
+
 onEvent("ReceivedHandEvent", receiveHandEvent)
 onEvent("GameStateChangeEvent", receiveGameStateChange)
 onEvent("CardPlayedEvent", receiveCardPlayedEvent)
@@ -161,3 +223,4 @@ onEvent("LobbyUpdateEvent", receiveLobbyUpdateEvent)
 onEvent("LeftEvent", receiveGameStateChange)
 onEvent("KickEvent", receiveKickEvent)
 onEvent("SessionClosed", receiveSessionClosedEvent)
+onEvent("TurnEvent", receiveTurnEvent)

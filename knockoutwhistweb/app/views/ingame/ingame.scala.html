@@ -15,12 +15,16 @@
                     }else {
                         <p class="fs-5 text-primary" id="current-player-name">---</p>
                     }
-                    @if(gamelobby.getLogic.getPlayerQueue.isDefined && gamelobby.getLogic.getCurrentMatch && !TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
-                        <h4 class="fw-semibold mb-1">Next Player</h4>
-                        @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
-                            <p class="fs-5 text-primary" id="next-player-name">@nextplayer</p>
+                    <h4 class="fw-semibold mb-1" style="display: none;" id="next-players-text">Next Players</h4>
+                    <div id="next-players-container">
+                        @if(gamelobby.getLogic.getPlayerQueue.isDefined && gamelobby.getLogic.getCurrentMatch && !TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
+                            @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
+                                <p class="fs-5 text-primary">@nextplayer @if(nextplayer.isInDogLife) {
+                                    🐶
+                                }</p>
+                            }
                         }
-                    }
+                    </div>
                 </div>
 
                 <div class="col-4 text-center">
