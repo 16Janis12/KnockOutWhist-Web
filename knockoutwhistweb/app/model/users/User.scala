@@ -1,5 +1,6 @@
 package model.users
 
+
 import java.util.UUID
 
 case class User(
@@ -16,5 +17,4 @@ case class User(
   private def withPasswordHash(newPasswordHash: String): User = {
     this.copy(passwordHash = newPasswordHash)
   }
-
 }

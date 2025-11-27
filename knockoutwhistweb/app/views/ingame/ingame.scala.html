@@ -107,7 +107,7 @@
                     } else {
                         @for(i <- player.currentHand().get.cards.indices) {
                             <div class="col-auto handcard" style="border-radius: 6px">
-                                <div class="btn btn-outline-light p-0 border-0 shadow-none" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(this, '@gamelobby.id', '@player.isInDogLife')">
+                                <div class="btn btn-outline-light p-0 border-0 shadow-none" id="@i" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(@i, '@player.isInDogLife')">
                                     @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
                                 </div>
                                 @if(player.isInDogLife) {

@@ -4,7 +4,7 @@ import de.knockoutwhist.events.player.{RequestCardEvent, RequestTieChoiceEvent, 
 import de.knockoutwhist.utils.events.SimpleEvent
 import logic.game.GameLobby
 import model.users.User
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsObject, JsValue}
 
 import java.util.UUID
 import java.util.concurrent.locks.ReentrantLock
@@ -39,14 +39,38 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
 
   def handleWebResponse(eventType: String, data: JsObject): Unit = {
     lock.lock()
-    Try {
+    val result = Try {
       eventType match {
         case "Ping" =>
           // No action needed for Ping
           ()
+        case "Start Game" =>
+          gameLobby.startGame(user)
+        case "play Card" =>
+          val maybeCardIndex: Option[Int] = (data \ "cardindex").asOpt[Int]
+          maybeCardIndex match {
+            case Some(index) =>
+              val session = gameLobby.getUserSession(user.id)
+              gameLobby.playCard(session, index)
+            case None =>
+              println("Card Index not found or is not a number.")
+          }
+        case "Picked Trumpsuit" =>
+          val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
+          maybeSuitIndex match {
+            case Some(index) =>
+              val session = gameLobby.getUserSession(user.id)
+              gameLobby.selectTrump(session, index)
+            case None =>
+              println("Card Index not found or is not a number.")
+          }
       }
     }
     lock.unlock()
+    if (result.isFailure) {
+      val throwable = result.failed.get
+      throw throwable
+    }
   }
 
 }

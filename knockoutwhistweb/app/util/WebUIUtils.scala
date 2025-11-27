@@ -1,8 +1,8 @@
 package util
 
-import de.knockoutwhist.cards.{Card, Hand}
 import de.knockoutwhist.cards.CardValue.*
 import de.knockoutwhist.cards.Suit.{Clubs, Diamonds, Hearts, Spades}
+import de.knockoutwhist.cards.{Card, Hand}
 import play.api.libs.json.{JsArray, Json}
 import play.twirl.api.Html
 import scalafx.scene.image.Image

@@ -1,12 +1,11 @@
 package util
 
 import de.knockoutwhist.utils.events.SimpleEvent
-import logic.game.GameLobby
 import model.sessions.UserSession
 import play.api.libs.json.{JsValue, Json}
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.scala.ScalaModule
-import util.mapper.{CardPlayedEventMapper, GameStateEventMapper, KickEventMapper, LeftEventMapper, LobbyUpdateEventMapper, ReceivedHandEventMapper, SessionClosedMapper, SimpleEventMapper, TurnEventMapper}
+import util.mapper.*
 
 object WebsocketEventMapper {
 
@@ -27,6 +26,10 @@ object WebsocketEventMapper {
   registerCustomMapper(ReceivedHandEventMapper)
   registerCustomMapper(GameStateEventMapper)
   registerCustomMapper(CardPlayedEventMapper)
+  registerCustomMapper(NewRoundEventMapper)
+  registerCustomMapper(NewTrickEventMapper)
+  registerCustomMapper(TrickEndEventMapper)
+  registerCustomMapper(RequestCardEventMapper)
   registerCustomMapper(LobbyUpdateEventMapper)
   registerCustomMapper(LeftEventMapper)
   registerCustomMapper(KickEventMapper)
