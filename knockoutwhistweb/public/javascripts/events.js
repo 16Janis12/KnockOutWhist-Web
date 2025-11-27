@@ -1,3 +1,5 @@
+var canPlayCard = false;
+
 function alertMessage(message) {
     let newHtml = '';
     const alertId = `alert-${Date.now()}`;
@@ -38,7 +40,7 @@ function receiveHandEvent(eventData) {
     //Build Hand Container
     hand.forEach((card) => {
         //Data
-        const idx = card.idx
+        const idx = card.idx;
         const cardS = card.card;
 
         const cardHtml = `
@@ -157,6 +159,7 @@ function requestCardEvent(eventData) {
     const player = eventData.player;
     const handElement = $('#card-slide')
     handElement.removeClass('inactive');
+    canPlayCard = true;
 }
 
 
@@ -281,7 +284,7 @@ function receiveTurnEvent(eventData) {
 
     const currentPlayerNameContainer = $('#current-player-name');
     const nextPlayersContainer = $('#next-players-container');
-    const nextPlayerText = $('#next-players-section');
+    const nextPlayerText = $('#next-players-text');
 
     let currentPlayerName = currentPlayer.name;
     if (currentPlayer.dog) {
@@ -293,6 +296,7 @@ function receiveTurnEvent(eventData) {
         nextPlayerText.hide();
         nextPlayersContainer.html('');
     } else {
+        console.log("Length"+nextPlayers.length);
         nextPlayerText.show();
         let nextPlayersHtml = '';
         nextPlayers.forEach((player) => {
@@ -300,7 +304,7 @@ function receiveTurnEvent(eventData) {
             if (player.dog) {
                 playerName += " 🐶";
             }
-            nextPlayersHtml += `<p className="fs-5 text-primary">${playerName}</p>`;
+            nextPlayersHtml += `<p class="fs-5 text-primary">${playerName}</p>`;
         });
         nextPlayersContainer.html(nextPlayersHtml);
     }

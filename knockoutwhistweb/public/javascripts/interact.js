@@ -1,37 +1,57 @@
-function handlePlayCard(cardIndex, dog) {
+function handlePlayCard(card, dog) {
+
+    if(!canPlayCard) return
+    canPlayCard = false;
+
+    const cardId = card.dataset.cardId;
+
+    console.debug(`Playing card ${cardId} from hand`)
+
+    const wiggleKeyframes = [
+        { transform: 'translateX(0)' },
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(5px)' },
+        { transform: 'translateX(-5px)' },
+        { transform: 'translateX(0)' }
+    ];
+
+    const wiggleTiming = {
+        duration: 400,
+        iterations: 1,
+        easing: 'ease-in-out',
+        fill: 'forwards'
+    };
+
+
     const cardslide = $('#card-slide')
-    cardslide.addClass("inactive")
 
     const payload = {
-        cardindex: cardIndex,
+        cardindex: cardId,
         isDog: dog
     }
-    sendEventAndWait("play Card", payload).then(
+    sendEventAndWait("PlayCard", payload).then(
         () => {
-            console.debug("play card successful")
-            const datacardid = $(`#${cardIndex}`)
-            datacardid.parent('.handcard').remove();
+            card.parentElement.remove();
             cardslide.find('.handcard').each(function(newIndex) {
 
                 const $innerButton = $(this).find('.btn');
-
-                $innerButton.attr('id', newIndex);
                 $innerButton.attr('data-card-id', newIndex);
 
                 const isInDogLife = $innerButton.attr('onclick').includes("'true'") ? 'true' : 'false';
-                $innerButton.attr('onclick', `handlePlayCard(${newIndex}, '${isInDogLife}')`);
+                $innerButton.attr('onclick', `handlePlayCard(this, '${isInDogLife}')`);
 
                 console.debug(`Re-indexed card: Old index was ${$innerButton.attr('data-card-id')}, New index is ${newIndex}`);
             });
+
+            cardslide.addClass("inactive")
         }
     ).catch(
         (err) => {
+            canPlayCard = true;
             const cardslide = $('#card-slide')
-            console.warn("play card was not successful")
-            if (err.message === "You can't play this card!") {
-                cardslide.removeClass("inactive")
-            }
-            alertMessage("You aren't allowed to play this card")
+            cardslide.removeClass("inactive")
+            card.parentElement.animate(wiggleKeyframes, wiggleTiming);
+            alertMessage(err.message)
         }
     )
 }
@@ -40,7 +60,7 @@ function handleSkipDogLife(button) {
     // TODO needs implementation
 }
 function startGame() {
-    sendEvent("Start Game")
+    sendEvent("StartGame")
 }
 
 function handleTrumpSelection(object) {
@@ -49,8 +69,7 @@ function handleTrumpSelection(object) {
     const payload = {
         suitIndex: trumpIndex
     }
-    console.log("SENDING TRUMP SUIT SELECTION:", payload);
-    sendEvent("Picked Trumpsuit", payload)
+    sendEvent("PickTrumpsuit", payload)
 
 }
 function handleKickPlayer(playerId) {

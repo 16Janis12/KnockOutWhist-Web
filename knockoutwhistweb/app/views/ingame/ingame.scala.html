@@ -15,16 +15,21 @@
                     }else {
                         <p class="fs-5 text-primary" id="current-player-name">---</p>
                     }
-                    <h4 class="fw-semibold mb-1" style="display: none;" id="next-players-text">Next Players</h4>
-                    <div id="next-players-container">
-                        @if(gamelobby.getLogic.getPlayerQueue.isDefined && gamelobby.getLogic.getCurrentMatch && !TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
+                    @if(gamelobby.getLogic.getPlayerQueue.isDefined && gamelobby.getLogic.getCurrentMatch && !TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
+                        <h4 class="fw-semibold mb-1" id="next-players-text">Next Players</h4>
+                        <div id="next-players-container">
                             @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
                                 <p class="fs-5 text-primary">@nextplayer @if(nextplayer.isInDogLife) {
                                     🐶
                                 }</p>
                             }
-                        }
-                    </div>
+                        </div>
+                    } else {
+                        <h4 class="fw-semibold mb-1" style="display: none;" id="next-players-text">Next Players</h4>
+                        <div id="next-players-container">
+
+                        </div>
+                    }
                 </div>
 
                 <div class="col-4 text-center">
@@ -107,7 +112,7 @@
                     } else {
                         @for(i <- player.currentHand().get.cards.indices) {
                             <div class="col-auto handcard" style="border-radius: 6px">
-                                <div class="btn btn-outline-light p-0 border-0 shadow-none" id="@i" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(@i, '@player.isInDogLife')">
+                                <div class="btn btn-outline-light p-0 border-0 shadow-none" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(this, '@player.isInDogLife')">
                                     @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
                                 </div>
                                 @if(player.isInDogLife) {
@@ -125,16 +130,17 @@
     </main>
 </div>
 <script>
-        function waitForFunction(name, checkInterval = 100) {
-            return new Promise(resolve => {
-                const timer = setInterval(() => {
-                    if (typeof window[name] === "function") {
-                        clearInterval(timer);
-                        resolve(window[name]);
-                    }
-                }, checkInterval);
-            });
-        }
-        waitForFunction("pollForUpdates").then(fn => fn('@gamelobby.id'));
+    function waitForFunction(name, checkInterval = 100) {
+        return new Promise(resolve => {
+            const timer = setInterval(() => {
+                if (typeof window[name] === "function") {
+                    clearInterval(timer);
+                    resolve(window[name]);
+                }
+            }, checkInterval);
+        });
+    }
+    waitForFunction("pollForUpdates").then(fn => fn('@gamelobby.id'));
     connectWebSocket()
+    canPlayCard = @gamelobby.logic.getCurrentPlayer.contains(player);
 </script>

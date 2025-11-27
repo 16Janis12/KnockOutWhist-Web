@@ -41,21 +41,21 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
     lock.lock()
     val result = Try {
       eventType match {
-        case "Ping" =>
+        case "ping" =>
           // No action needed for Ping
           ()
-        case "Start Game" =>
+        case "StartGame" =>
           gameLobby.startGame(user)
-        case "play Card" =>
-          val maybeCardIndex: Option[Int] = (data \ "cardindex").asOpt[Int]
+        case "PlayCard" =>
+          val maybeCardIndex: Option[String] = (data \ "cardindex").asOpt[String]
           maybeCardIndex match {
             case Some(index) =>
               val session = gameLobby.getUserSession(user.id)
-              gameLobby.playCard(session, index)
+              gameLobby.playCard(session, index.toInt)
             case None =>
               println("Card Index not found or is not a number.")
           }
-        case "Picked Trumpsuit" =>
+        case "PickTrumpsuit" =>
           val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
           maybeSuitIndex match {
             case Some(index) =>
