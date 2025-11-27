@@ -128,8 +128,8 @@ function trickEndEvent(eventData) {
         }
     )
     const playerorder = players.sort((playerA, playerB) => {
-        const countA = playercounts.get(playerA.name) || 0;
-        const countB = playercounts.get(playerB.name) || 0;
+        const countA = playercounts.get(playerA) || 0;
+        const countB = playercounts.get(playerB) || 0;
         return countB - countA;
     });
     playerorder.forEach( player => {
@@ -142,7 +142,9 @@ function trickEndEvent(eventData) {
                                 </div>
         `
     });
+    alertMessage(`${winner} won the trick!`)
     tricktable.html(newHtml);
+
 }
 function newTrickEvent() {
     const firstCardContainer = $('#first-card-container');
@@ -309,7 +311,11 @@ function receiveTurnEvent(eventData) {
         nextPlayersContainer.html(nextPlayersHtml);
     }
 }
-
+function receiveRoundEndEvent(eventData) {
+    const player = eventData.player
+    const tricks = eventData.tricks
+    alertMessage(`${player} won this round with ${tricks} tricks!`)
+}
 onEvent("ReceivedHandEvent", receiveHandEvent)
 onEvent("GameStateChangeEvent", receiveGameStateChange)
 onEvent("NewRoundEvent", newRoundEvent)
@@ -322,5 +328,6 @@ onEvent("LeftEvent", receiveGameStateChange)
 onEvent("KickEvent", receiveKickEvent)
 onEvent("SessionClosed", receiveSessionClosedEvent)
 onEvent("TurnEvent", receiveTurnEvent)
+onEvent("RoundEndEvent", receiveRoundEndEvent)
 
 globalThis.alertMessage = alertMessage
