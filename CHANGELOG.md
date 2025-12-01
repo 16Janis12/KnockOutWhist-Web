@@ -172,3 +172,8 @@
 
 * **api:** Fixed websocket routing ([#88](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/88)) ([46c96d4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/46c96d4ceb935ac91fc515a1fdaef195e5ebc0a7))
 * **api:** fixes - reimplemented animations ([#90](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/90)) ([cfcd967](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/cfcd967ce08ecf07f3f06826c337f684eb3b0c5f))
+##  (2025-12-01)
+
+### Features
+
+* **api:** BAC-10 Websockets - Kick Users ([#93](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/93)) ([0541bb5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0541bb58d19efd98d134b3d0412f39b4b1001783))
