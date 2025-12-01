@@ -182,3 +182,8 @@
 ### Features
 
 * **api:** BAC-11 Websocket - Return to Lobby ([#94](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/94)) ([fd2467a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fd2467a9ea22dca64d5152a5a3e6db86d9a6f345))
+##  (2025-12-01)
+
+### Bug Fixes
+
+* **api:** BAC-23 Remove old polling code ([#95](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/95)) ([a55f0b4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/a55f0b4b6164a47e3524422650ed99d10f9c8b0d))
