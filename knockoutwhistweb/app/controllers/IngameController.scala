@@ -12,6 +12,7 @@ import play.api.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.*
 import play.twirl.api.Html
+import util.GameUtil
 
 import java.util.UUID
 import javax.inject.*
@@ -33,7 +34,7 @@ class IngameController @Inject()(
           IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user)
         }
         if (results.isSuccess) {
-          Ok(views.html.main("In-Game - Knockout Whist")(results.get))
+          Ok(views.html.main("Knockout Whist - " + GameUtil.stateToTitle(g.logic.getCurrentState))(results.get))
         } else {
           InternalServerError(results.failed.get.getMessage)
         }

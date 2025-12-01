@@ -1,5 +1,8 @@
 package util
 
+import de.knockoutwhist.control.GameState
+import de.knockoutwhist.control.GameState.{FinishedMatch, InGame, Lobby, MainMenu, SelectTrump, TieBreak}
+
 import scala.util.Random
 
 object GameUtil {
@@ -24,6 +27,17 @@ object GameUtil {
     }
 
     code.toString()
+  }
+  
+  def stateToTitle(gameState: GameState): String = {
+    gameState match {
+      case Lobby => "Lobby"
+      case MainMenu => "Main Menu"
+      case InGame => "In Game"
+      case SelectTrump => "Select Trump"
+      case TieBreak => "Tie Break"
+      case FinishedMatch => "Finished Match"
+    }
   }
 
 }
