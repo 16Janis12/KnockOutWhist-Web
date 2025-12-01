@@ -177,3 +177,8 @@
 ### Features
 
 * **api:** BAC-10 Websockets - Kick Users ([#93](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/93)) ([0541bb5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0541bb58d19efd98d134b3d0412f39b4b1001783))
+##  (2025-12-01)
+
+### Features
+
+* **api:** BAC-11 Websocket - Return to Lobby ([#94](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/94)) ([fd2467a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fd2467a9ea22dca64d5152a5a3e6db86d9a6f345))
