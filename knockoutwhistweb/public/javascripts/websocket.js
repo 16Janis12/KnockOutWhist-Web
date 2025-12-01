@@ -87,6 +87,7 @@ function setupSocketHandlers(socket) {
         } else {
             console.warn('Connection died unexpectedly.');
         }
+        location.href = "/mainmenu";
     };
 }
 
