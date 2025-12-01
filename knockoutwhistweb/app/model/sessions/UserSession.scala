@@ -73,6 +73,8 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
             case None =>
               println("Player ID not found or is not a valid UUID.")
           }
+        case "ReturnToLobby" =>
+          gameLobby.returnToLobby(this)
       }
     }
     lock.unlock()

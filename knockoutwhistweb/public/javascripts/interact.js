@@ -77,3 +77,6 @@ function handleKickPlayer(playerId) {
         playerId: playerId
     })
 }
+function handleReturnToLobby() {
+    sendEvent("ReturnToLobby")
+}

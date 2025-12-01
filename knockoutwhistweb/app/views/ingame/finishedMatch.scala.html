@@ -10,7 +10,7 @@
         <div class="row justify-content-center align-items-center flex-grow-1">
         @if((gamelobby.getUserSession(user.get.id).host)) {
             <div class="col-12 text-center mb-5">
-                <div class="btn btn-success" onclick="backToLobby('@gamelobby.id')">Return to lobby</div>
+                <div class="btn btn-success" onclick="handleReturnToLobby()">Return to lobby</div>
             </div>
         } else {
             <div class="col-12 text-center mt-3">
