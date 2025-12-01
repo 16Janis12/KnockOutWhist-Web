@@ -187,3 +187,8 @@
 ### Bug Fixes
 
 * **api:** BAC-23 Remove old polling code ([#95](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/95)) ([a55f0b4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/a55f0b4b6164a47e3524422650ed99d10f9c8b0d))
+##  (2025-12-01)
+
+### Bug Fixes
+
+* FRO-6 Websocket Close Handle ([#96](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/96)) ([3585566](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/358556612ec74601c8b31125e4e65f750abf8c4c))
