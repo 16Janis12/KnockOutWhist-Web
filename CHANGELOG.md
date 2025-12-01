@@ -159,3 +159,16 @@
 ### Features
 
 * **api:** Implemented session closed and kick event via websocket ([#87](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/87)) ([1ef5e8a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/1ef5e8a72fdf8a3d1ae624c8c3d7c6595017bc6f))
+##  (2025-12-01)
+
+### Features
+
+* **api:** Implemented turn event via websocket ([#86](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/86)) ([2aee79b](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2aee79bb6887008397aa0780d1d74ce96af1c202))
+* GameState to Title Mapping BAC-1 ([#92](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/92)) ([6e17328](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/6e17328846745375482c97383b143d86a86e7f32))
+* **ui:** Implement countless feature using the SJWP ([#89](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/89)) ([1f96290](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/1f962903712163543fd4f98e696be5e7e29d88a6))
+* **ui:** Popups ([#91](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/91)) ([0037820](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/003782090509bca1c5022c308231b7560dd9b23d))
+
+### Bug Fixes
+
+* **api:** Fixed websocket routing ([#88](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/88)) ([46c96d4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/46c96d4ceb935ac91fc515a1fdaef195e5ebc0a7))
+* **api:** fixes - reimplemented animations ([#90](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/90)) ([cfcd967](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/cfcd967ce08ecf07f3f06826c337f684eb3b0c5f))
