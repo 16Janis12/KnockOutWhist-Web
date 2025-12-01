@@ -73,5 +73,7 @@ function handleTrumpSelection(object) {
 
 }
 function handleKickPlayer(playerId) {
-    // TODO needs implementation
+    sendEvent("KickPlayer", {
+        playerId: playerId
+    })
 }

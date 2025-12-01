@@ -227,7 +227,7 @@ function receiveLobbyUpdateEvent(eventData) {
             const inner = user.self ? `<h5 class="card-title">${user.name} (You)</h5>
                                 <a href="#" class="btn btn-danger disabled" aria-disabled="true" tabindex="-1">Remove</a>`
                 : `    <h5 class="card-title">${user.name}</h5>
-                                    <div class="btn btn-danger" onclick="removePlayer('${user.id}')">Remove</div>`
+                                    <div class="btn btn-danger" onclick="handleKickPlayer('${user.id}')">Remove</div>`
 
             newHtml += `<div class="col-auto my-auto m-3">
                             <div class="card" style="width: 18rem;">

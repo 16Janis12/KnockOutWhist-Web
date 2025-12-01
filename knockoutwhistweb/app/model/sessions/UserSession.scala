@@ -64,6 +64,15 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
             case None =>
               println("Card Index not found or is not a number.")
           }
+        case "KickPlayer" =>
+          val maybePlayerId: Option[String] = (data \ "playerId").asOpt[String]
+          maybePlayerId match {
+            case Some(id) =>
+              val playerUUID = UUID.fromString(id)
+              gameLobby.leaveGame(playerUUID, true)
+            case None =>
+              println("Player ID not found or is not a valid UUID.")
+          }
       }
     }
     lock.unlock()
