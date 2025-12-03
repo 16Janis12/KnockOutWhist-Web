@@ -20,6 +20,7 @@ import play.api.libs.json.{JsObject, Json}
 import java.util.{Timer, TimerTask, UUID}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.util.Try
 
 class GameLobby private(
                          val logic: GameLogic,
@@ -276,6 +277,37 @@ class GameLobby private(
 
   def getUsers: Set[User] = {
     users.values.map(d => d.user).toSet
+  }
+  def getFinalRanking: List[(String, (Int, Int))] = {
+    Try {
+      val match1 = getMatch
+      if (!match1.isOver) {
+        List.empty
+      } else {
+        val winnerName = logic.getWinner.get.name
+
+        val allPlayerNames = match1.totalplayers.map(_.name)
+        val roundlist = match1.roundlist
+
+        val playerMetrics: Map[String, (Int, Int)] = allPlayerNames.map { name =>
+          val roundsWon = roundlist.count { round =>
+            round.winner.exists(_.name == name)
+          }
+          val totalTricksWon = roundlist.flatMap(_.tricklist).count { trick =>
+            trick.winner.exists(_.name == name)
+          }
+          name -> (roundsWon, totalTricksWon)
+        }.toMap
+
+        val winnerMetrics = playerMetrics(winnerName)
+        val remainingPlayersMetrics = playerMetrics.view.filterKeys(_ != winnerName).toList
+
+        val sortedRemainingPlayers = remainingPlayersMetrics.sortBy { case (_, (rounds, tricks)) =>
+          (-rounds, -tricks)
+        }
+        (winnerName, winnerMetrics) :: sortedRemainingPlayers
+      }
+    }.getOrElse(List())
   }
 
   private def transmitToAll(event: JsObject): Unit = {
