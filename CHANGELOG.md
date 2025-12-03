@@ -192,3 +192,8 @@
 ### Bug Fixes
 
 * FRO-6 Websocket Close Handle ([#96](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/96)) ([3585566](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/358556612ec74601c8b31125e4e65f750abf8c4c))
+##  (2025-12-03)
+
+### Features
+
+* **ui:** FRO-7 Endscreen ([#97](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/97)) ([d57e6ef](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/d57e6efa985ca07c32f9f54595fe7393dbdf4d8a))
