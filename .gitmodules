@@ -2,3 +2,8 @@
 	path = knockoutwhist
 	branch = main
 	url = https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist.git
+
+[submodule "knockoutwhistfrontend"]
+	path = knockoutwhistfrontend
+	branch = main
+	url = https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Frontend.git
