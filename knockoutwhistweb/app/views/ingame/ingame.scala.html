@@ -8,123 +8,29 @@
         <div class="py-5 container-xxl">
 
             <div class="row ms-4 me-4">
-                <div class="col-4 mt-5 text-start">
-                    <h4 class="fw-semibold mb-1">Current Player</h4>
-                    @if(gamelobby.getLogic.getCurrentPlayer.isDefined) {
-                        <p class="fs-5 text-primary" id="current-player-name">@gamelobby.getLogic.getCurrentPlayer.get.name</p>
-                    }else {
-                        <p class="fs-5 text-primary" id="current-player-name">---</p>
-                    }
-                    @if(gamelobby.getLogic.getPlayerQueue.isDefined && gamelobby.getLogic.getCurrentMatch && !TrickUtil.isOver(gamelobby.getLogic.getCurrentMatch.get, gamelobby.getLogic.getPlayerQueue.get)) {
-                        <h4 class="fw-semibold mb-1" id="next-players-text">Next Players</h4>
-                        <div id="next-players-container">
-                            @for(nextplayer <- gamelobby.getLogic.getPlayerQueue.get.duplicate()) {
-                                <p class="fs-5 text-primary">@nextplayer @if(nextplayer.isInDogLife) {
-                                    🐶
-                                }</p>
-                            }
-                        </div>
-                    } else {
-                        <h4 class="fw-semibold mb-1" style="display: none;" id="next-players-text">Next Players</h4>
-                        <div id="next-players-container">
-
-                        </div>
-                    }
-                </div>
+                <div class="col-4 mt-5 text-start" id="turn-component"></div>
 
                 <div class="col-4 text-center">
 
-                    <div class="score-table mt-5" id="score-table-body">
-                        <h4 class="fw-bold mb-3 text-black">Tricks Won</h4>
-
-                        <div class="d-flex justify-content-between score-header pb-1">
-                            <div style="width: 50%">PLAYER</div>
-                            <div style="width: 50%">TRICKS</div>
-                        </div>
-
-                        @if(gamelobby.getLogic.getPlayerQueue.isDefined) {
-                            @for(player <- gamelobby.getLogic.getPlayerQueue.get.toList.sortBy { p =>
-                                -(gamelobby.getLogic.getCurrentRound.get.tricklist.filter { trick => trick.winner.contains(p) }.size)
-                            }) {
-                                <div class="d-flex justify-content-between score-row pt-1">
-                                    <div style="width: 50%" class="text-truncate">@player.name</div>
-                                    <div style="width: 50%">
-                                    @(gamelobby.getLogic.getCurrentRound.get.tricklist.filter { trick => trick.winner.contains(player) }.size)
-                                    </div>
-                                </div>
-                            }
-                        }else{
-                            <div class="d-flex justify-content-between score-row pt-1">
-                            </div>
-                        }
 
 
-                    </div>
-                    <div class="d-flex justify-content-center g-3 mb-5" id="trick-cards-container">
-                        @if(gamelobby.getLogic.getCurrentTrick.isEmpty || gamelobby.getLogic.getCurrentTrick.get.cards.isEmpty) {
-                            <div class="col-auto">
-                            </div>
-                        } else {
-                            @for((cardplayed, player) <- gamelobby.getLogic.getCurrentTrick.get.cards) {
-                                <div class="col-auto">
-                                    <div class="card text-center shadow-sm border-0 bg-transparent" style="width: 7rem;
-                                        backdrop-filter: blur(4px);">
-                                        <div class="p-2">
-                                            @util.WebUIUtils.cardtoImage(cardplayed) width="100%"/>
-                                        </div>
-                                        <div class="card-body p-2 bg-transparent">
-                                            <small class="fw-semibold text-secondary">@player</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
+                    <div id="score-table"></div>
+
+
+                    <div class="d-flex justify-content-center g-3 mb-5" id="trick-cards-container"></div>
+
                 </div>
-                <div class="col-4 mt-5 text-end">
-                    <h4 class="fw-semibold mb-1">Trumpsuit</h4>
-                    @if(gamelobby.getLogic.getCurrentRound.isEmpty) {
-                        <p class="fs-5 text-primary" id="trumpsuit">No Trumpsuit</p>
-                    }else {
-                        <p class="fs-5 text-primary" id="trumpsuit">@gamelobby.getLogic.getCurrentRound.get.trumpSuit</p>
-                    }
 
-                    <h5 class="fw-semibold mt-4 mb-1">First Card</h5>
-                    <div class="d-inline-block border rounded shadow-sm p-1 bg-light" id="first-card-container">
-                    @if(gamelobby.getLogic.getCurrentTrick.isDefined && gamelobby.getLogic.getCurrentTrick.get.firstCard.isDefined) {
-                        @util.WebUIUtils.cardtoImage(gamelobby.getLogic.getCurrentTrick.get.firstCard.get)
-                        width="80px"/>
-                    } else {
-                        @views.html.render.card.apply("images/cards/1B.png")("Blank Card") width="80px"/>
-                    }
-                    </div>
-                </div>
+
+                <div class="col-4 mt-5 text-end" id="game-info-component"></div>
+
+
             </div>
 
             <div class="row justify-content-center g-2 mt-4 bottom-div" style="backdrop-filter: blur(4px);
                 margin-left: 0;
                 margin-right: 0;">
-                <div class="row justify-content-center ingame-cards-slide @{
-                    !gamelobby.logic.getCurrentPlayer.contains(player) ? "inactive" |: ""
-                }" id="card-slide">
-                    @if(player.currentHand().isEmpty || player.currentHand().get.cards.isEmpty) {
-
-                    } else {
-                        @for(i <- player.currentHand().get.cards.indices) {
-                            <div class="col-auto handcard" style="border-radius: 6px">
-                                <div class="btn btn-outline-light p-0 border-0 shadow-none" data-card-id="@i" style="border-radius: 6px" onclick="handlePlayCard(this, '@player.isInDogLife')">
-                                    @util.WebUIUtils.cardtoImage(player.currentHand().get.cards(i)) width="120px" style="border-radius: 6px"/>
-                                </div>
-                                @if(player.isInDogLife) {
-                                    <div class="mt-2">
-                                        <button class="btn btn-danger" onclick="handleSkipDogLife(this, '@gamelobby.id')">
-                                            Skip Dog Life</button>
-                                    </div>
-                                }
-                            </div>
-                        }
-                    }
-                </div>
+                <div id="player-hand-container"></div>
             </div>
         </div>
     </main>
@@ -132,4 +38,5 @@
 <script>
     connectWebSocket()
     canPlayCard = @gamelobby.logic.getCurrentPlayer.contains(player);
+    globalThis.initGameVueComponents()
 </script>
