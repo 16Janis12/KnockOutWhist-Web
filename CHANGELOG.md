@@ -204,3 +204,8 @@
 ### Bug Fixes
 
 * BAC-25 Race Condition: Websocket Promises ([#99](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/99)) ([f847424](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f847424b9cea423ace5661d1efb6e4f01483c655))
+##  (2025-12-04)
+
+### Features
+
+* FRO-3 FRO-4 Added vue compontents to ingame and lobby ([#100](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/100)) ([194df56](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/194df5691ccda1c21ebe9157c4396a4a21aa921d))
