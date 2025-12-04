@@ -199,3 +199,8 @@
 * **ui:** FRO-7 Endscreen ([#97](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/97)) ([d57e6ef](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/d57e6efa985ca07c32f9f54595fe7393dbdf4d8a))
 ##  (2025-12-03)
 ##  (2025-12-03)
+##  (2025-12-04)
+
+### Bug Fixes
+
+* BAC-25 Race Condition: Websocket Promises ([#99](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/99)) ([f847424](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f847424b9cea423ace5661d1efb6e4f01483c655))
