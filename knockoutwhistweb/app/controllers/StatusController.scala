@@ -108,7 +108,7 @@ class StatusController @Inject()(
             }
           case None => None
         }
-        
+
         findSelector match {
           case Some(selector) =>
             val isSelf = selector.id == user.id
@@ -134,7 +134,7 @@ class StatusController @Inject()(
         Json.obj()
       case InGame =>
         Json.obj(
-          
+
         )
       case TieBreak =>
         Json.obj(
@@ -142,6 +142,7 @@ class StatusController @Inject()(
         )
       case FinishedMatch =>
         Json.obj(
+
         )
     }
   }
