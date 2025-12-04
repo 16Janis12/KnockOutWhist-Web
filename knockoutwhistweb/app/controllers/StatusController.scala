@@ -2,12 +2,14 @@ package controllers
 
 import auth.{AuthAction, AuthenticatedRequest}
 import de.knockoutwhist.control.GameState.{FinishedMatch, InGame, Lobby, MainMenu, SelectTrump, TieBreak}
+import de.knockoutwhist.player.AbstractPlayer
 import logic.PodManager
 import logic.game.GameLobby
 import logic.user.SessionManager
 import model.users.User
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, *}
+import util.WebUIUtils
 
 import javax.inject.Inject
 
@@ -95,16 +97,44 @@ class StatusController @Inject()(
           "players" -> gameLobby.getUsers.map(p => Json.obj("id" -> p.id, "name" -> p.name, "isSelf" -> (p.id == user.id)))
         )
       case SelectTrump =>
-        Json.obj(
-          
-        )
+        val findSelector: Option[AbstractPlayer] = gameLobby.logic.getCurrentMatch match {
+          case Some(matchImpl) =>
+            if (matchImpl.roundlist.isEmpty) None
+            else {
+              matchImpl.roundlist.last.winner match {
+                case Some(winner) => Some(winner)
+                case None => None
+              }
+            }
+          case None => None
+        }
+        
+        findSelector match {
+          case Some(selector) =>
+            val isSelf = selector.id == user.id
+            val playerHand = {
+              val userPlayer = gameLobby.getPlayerByUser(user)
+              val handOpt = userPlayer.currentHand()
+              handOpt match {
+                case Some(hand) =>
+                  WebUIUtils.handToJson(hand)
+                case None => Json.arr()
+              }
+            }
+            Json.obj(
+              "selector" -> selector.name,
+              "isSelf" -> isSelf,
+              "hand" -> playerHand
+            )
+          case None => Json.obj(
+            "error" -> "No winner found. Please try again later."
+          )
+        }
       case MainMenu =>
-        Json.obj(
-
-        )
+        Json.obj()
       case InGame =>
         Json.obj(
-
+          
         )
       case TieBreak =>
         Json.obj(
@@ -112,8 +142,7 @@ class StatusController @Inject()(
         )
       case FinishedMatch =>
         Json.obj(
-
-      )
+        )
     }
   }
 
