@@ -26,6 +26,7 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
         else canInteract = Some(InteractionType.Card)
       case _ =>
     }
+    websocketActor.foreach(_.solveRequests())
     websocketActor.foreach(_.transmitEventToClient(event))
   }
 
@@ -38,49 +39,41 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
   }
 
   def handleWebResponse(eventType: String, data: JsObject): Unit = {
-    lock.lock()
-    val result = Try {
-      eventType match {
-        case "ping" =>
-          // No action needed for Ping
-          ()
-        case "StartGame" =>
-          gameLobby.startGame(user)
-        case "PlayCard" =>
-          val maybeCardIndex: Option[String] = (data \ "cardindex").asOpt[String]
-          maybeCardIndex match {
-            case Some(index) =>
-              val session = gameLobby.getUserSession(user.id)
-              gameLobby.playCard(session, index.toInt)
-            case None =>
-              println("Card Index not found or is not a number.")
-          }
-        case "PickTrumpsuit" =>
-          val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
-          maybeSuitIndex match {
-            case Some(index) =>
-              val session = gameLobby.getUserSession(user.id)
-              gameLobby.selectTrump(session, index)
-            case None =>
-              println("Card Index not found or is not a number.")
-          }
-        case "KickPlayer" =>
-          val maybePlayerId: Option[String] = (data \ "playerId").asOpt[String]
-          maybePlayerId match {
-            case Some(id) =>
-              val playerUUID = UUID.fromString(id)
-              gameLobby.leaveGame(playerUUID, true)
-            case None =>
-              println("Player ID not found or is not a valid UUID.")
-          }
-        case "ReturnToLobby" =>
-          gameLobby.returnToLobby(this)
-      }
-    }
-    lock.unlock()
-    if (result.isFailure) {
-      val throwable = result.failed.get
-      throw throwable
+    eventType match {
+      case "ping" =>
+        // No action needed for Ping
+        ()
+      case "StartGame" =>
+        gameLobby.startGame(user)
+      case "PlayCard" =>
+        val maybeCardIndex: Option[String] = (data \ "cardindex").asOpt[String]
+        maybeCardIndex match {
+          case Some(index) =>
+            val session = gameLobby.getUserSession(user.id)
+            gameLobby.playCard(session, index.toInt)
+          case None =>
+            println("Card Index not found or is not a number.")
+        }
+      case "PickTrumpsuit" =>
+        val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
+        maybeSuitIndex match {
+          case Some(index) =>
+            val session = gameLobby.getUserSession(user.id)
+            gameLobby.selectTrump(session, index)
+          case None =>
+            println("Card Index not found or is not a number.")
+        }
+      case "KickPlayer" =>
+        val maybePlayerId: Option[String] = (data \ "playerId").asOpt[String]
+        maybePlayerId match {
+          case Some(id) =>
+            val playerUUID = UUID.fromString(id)
+            gameLobby.leaveGame(playerUUID, true)
+          case None =>
+            println("Player ID not found or is not a valid UUID.")
+        }
+      case "ReturnToLobby" =>
+        gameLobby.returnToLobby(this)
     }
   }
 

@@ -5,12 +5,15 @@ import org.apache.pekko.actor.{Actor, ActorRef}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import util.WebsocketEventMapper
 
+import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
 class UserWebsocketActor(
                           out: ActorRef,
                           session: UserSession
                         ) extends Actor {
+
+  private val requests: mutable.Map[String, String] = mutable.Map()
 
   {
     session.lock.lock()
@@ -48,12 +51,14 @@ class UserWebsocketActor(
   }
 
   private def handle(json: JsValue): Unit = {
+    session.lock.lock()
     val idOpt = (json \ "id").asOpt[String]
     if (idOpt.isEmpty) {
       transmitJsonToClient(Json.obj(
         "status" -> "error",
         "error" -> "Missing 'id' field"
       ))
+      session.lock.unlock()
       return
     }
     val id = idOpt.get
@@ -65,17 +70,25 @@ class UserWebsocketActor(
         "status" -> "error",
         "error" -> "Missing 'event' field"
       ))
+      session.lock.unlock()
       return
     }
     val statusOpt = (json \ "status").asOpt[String]
     if (statusOpt.isDefined) {
+      session.lock.unlock()
       return
     }
     val event = eventOpt.get
     val data = (json \ "data").asOpt[JsObject].getOrElse(Json.obj())
+    requests += (id -> event)
     val result = Try {
       session.handleWebResponse(event, data)
     }
+    if (!requests.contains(id)) {
+      session.lock.unlock()
+      return
+    }
+    requests -= id
     if (result.isSuccess) {
       transmitJsonToClient(Json.obj(
         "id" -> id,
@@ -90,6 +103,7 @@ class UserWebsocketActor(
         "error" -> result.failed.get.getMessage
       ))
     }
+    session.lock.unlock()
   }
 
   def transmitJsonToClient(jsonObj: JsValue): Unit = {
@@ -98,6 +112,22 @@ class UserWebsocketActor(
 
   def transmitEventToClient(event: SimpleEvent): Unit = {
     transmitJsonToClient(WebsocketEventMapper.toJson(event, session))
+  }
+
+  def solveRequests(): Unit = {
+    if (!session.lock.isHeldByCurrentThread)
+      return;
+    if (requests.isEmpty)
+      return;
+    val pendingRequests = requests.toMap
+    requests.clear()
+    pendingRequests.foreach { case (id, event) =>
+      transmitJsonToClient(Json.obj(
+        "id" -> id,
+        "event" -> event,
+        "status" -> "success"
+      ))
+    }
   }
 
 }
