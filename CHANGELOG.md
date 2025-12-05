@@ -209,3 +209,8 @@
 ### Features
 
 * FRO-3 FRO-4 Added vue compontents to ingame and lobby ([#100](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/100)) ([194df56](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/194df5691ccda1c21ebe9157c4396a4a21aa921d))
+##  (2025-12-05)
+
+### Bug Fixes
+
+* BAC-29 Implement Mappers for Common Classes ([#101](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/101)) ([270f44c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/270f44cc1f3447ffcc33fb19a47c52391c69972b))
