@@ -20,7 +20,7 @@
                                 </p>
                             </div>
 
-                            @if(player.equals(gamelobby.logic.playerTieLogic.currentTiePlayer())) {
+                            @if(gamelobby.logic.playerTieLogic.currentTiePlayer().contains(player)) {
                                 @defining(gamelobby.logic.playerTieLogic.highestAllowedNumber()) { maxNum =>
                                     <div class="alert alert-info" role="alert" aria-live="polite">
                                         Pick a number between 1 and @{
@@ -71,7 +71,7 @@
                                 }
                             } else {
                                 <div class="alert alert-warning" role="alert" aria-live="polite">
-                                    <strong>@gamelobby.logic.playerTieLogic.currentTiePlayer()</strong>
+                                    <strong>@gamelobby.logic.playerTieLogic.currentTiePlayer().get</strong>
                                     is currently picking a number for the cut.
                                 </div>
 

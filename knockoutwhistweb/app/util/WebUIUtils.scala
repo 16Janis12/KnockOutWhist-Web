@@ -9,10 +9,14 @@ import scalafx.scene.image.Image
 
 object WebUIUtils {
   def cardtoImage(card: Card): Html = {
-    views.html.render.card.apply(f"images/cards/${cardtoString(card)}.png")(card.toString)
+    views.html.render.card.apply(cardToPath(card))(card.toString)
+  }
+  
+  def cardToPath(card: Card): String = {
+    f"images/cards/${cardtoString(card)}.png"
   }
 
-  def cardtoString(card: Card) = {
+  def cardtoString(card: Card): String = {
     val s = card.suit match {
       case Spades => "S"
       case Hearts => "H"
@@ -35,6 +39,31 @@ object WebUIUtils {
       case Two => "2"
     }
     f"$cv$s"
+  }
+  
+  def stringToCard(cardStr: String): Card = {
+    val cv = cardStr.charAt(0) match {
+      case 'A' => Ace
+      case 'K' => King
+      case 'Q' => Queen
+      case 'J' => Jack
+      case 'T' => Ten
+      case '9' => Nine
+      case '8' => Eight
+      case '7' => Seven
+      case '6' => Six
+      case '5' => Five
+      case '4' => Four
+      case '3' => Three
+      case '2' => Two
+    }
+    val s = cardStr.charAt(1) match {
+      case 'S' => Spades
+      case 'H' => Hearts
+      case 'C' => Clubs
+      case 'D' => Diamonds
+    }
+    Card(cv, s)
   }
 
   /**
