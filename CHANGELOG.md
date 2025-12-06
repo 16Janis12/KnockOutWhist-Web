@@ -214,3 +214,8 @@
 ### Bug Fixes
 
 * BAC-29 Implement Mappers for Common Classes ([#101](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/101)) ([270f44c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/270f44cc1f3447ffcc33fb19a47c52391c69972b))
+##  (2025-12-06)
+
+### Features
+
+* BAC-30 Implement Jackson Mapping via DTOs ([#102](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/102)) ([8d697fd](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8d697fd311478cf792b4631377de4522ecbda9f7))
