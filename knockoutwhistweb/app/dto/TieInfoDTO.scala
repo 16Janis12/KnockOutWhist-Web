@@ -1,19 +1,25 @@
 package dto
 
-import de.knockoutwhist.control.sublogic.PlayerTieLogic
-import play.api.libs.json.{Json, OFormat}
+import dto.subDTO.PlayerDTO
+import logic.game.GameLobby
+import model.users.User
 
-case class TieInfoDTO(currentPlayer: Option[PlayerDTO], tiedPlayers: Seq[PlayerDTO], highestAmount: Int)
+import scala.util.Try
+
+case class TieInfoDTO(currentPlayer: Option[PlayerDTO], self: Option[PlayerDTO], tiedPlayers: Seq[PlayerDTO], highestAmount: Int)
 
 object TieInfoDTO {
 
-  implicit val tieInfoFormat: OFormat[TieInfoDTO] = Json.format[TieInfoDTO]
-  
-  def apply(tieInput: PlayerTieLogic): Unit = {
+  def apply(lobby: GameLobby, user: User): TieInfoDTO = {
+    val selfPlayer = Try {
+      Some(lobby.getPlayerByUser(user))
+    }.getOrElse(None)
+
     TieInfoDTO(
-      currentPlayer = tieInput.currentTiePlayer().map(PlayerDTO.apply),
-      tiedPlayers = tieInput.getTiedPlayers.map(PlayerDTO.apply),
-      highestAmount = tieInput.highestAllowedNumber()
+      currentPlayer = lobby.logic.playerTieLogic.currentTiePlayer().map(PlayerDTO.apply),
+      self = selfPlayer.map(PlayerDTO.apply),
+      tiedPlayers = lobby.logic.playerTieLogic.getTiedPlayers.map(PlayerDTO.apply),
+      highestAmount = lobby.logic.playerTieLogic.highestAllowedNumber()
     )
   }
   

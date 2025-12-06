@@ -1,7 +1,6 @@
-package dto
+package dto.subDTO
 
 import de.knockoutwhist.cards.Card
-import play.api.libs.json.{Json, OFormat}
 import util.WebUIUtils
 
 case class CardDTO(identifier: String, path: String, idx: Int) {
@@ -13,8 +12,6 @@ case class CardDTO(identifier: String, path: String, idx: Int) {
 }
 
 object CardDTO {
-  
-  implicit val cardFormat: OFormat[CardDTO] = Json.format[CardDTO]
   
   def apply(card: Card, index: Int = 0): CardDTO = {
     CardDTO(

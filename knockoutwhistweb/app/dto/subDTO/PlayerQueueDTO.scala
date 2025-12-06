@@ -1,13 +1,10 @@
-package dto
+package dto.subDTO
 
 import de.knockoutwhist.control.GameLogic
-import play.api.libs.json.{Json, OFormat}
 
 case class PlayerQueueDTO(currentPlayer: Option[PlayerDTO], queue: Seq[PlayerDTO])
 
 object PlayerQueueDTO {
-
-  implicit val queueFormat: OFormat[PlayerQueueDTO] = Json.format[PlayerQueueDTO]
 
   def apply(logic: GameLogic): PlayerQueueDTO = {
     val currentPlayerDTO = logic.getCurrentPlayer.map(PlayerDTO(_))
