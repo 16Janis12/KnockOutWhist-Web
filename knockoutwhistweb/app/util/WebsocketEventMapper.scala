@@ -57,12 +57,12 @@ object WebsocketEventMapper {
     Json.obj(
       "id" -> ("request-" + java.util.UUID.randomUUID().toString),
       "event" -> obj.id,
-      "state" -> toJson(session),
+      "state" -> stateToJson(session),
       "data" -> data
     )
   }
 
-  def toJson(session: UserSession): JsValue = {
+  def stateToJson(session: UserSession): JsValue = {
     session.gameLobby.getLogic.getCurrentState match {
       case Lobby => Json.toJson(LobbyInfoDTO(session.gameLobby, session.user))
       case InGame => Json.toJson(GameInfoDTO(session.gameLobby, session.user))

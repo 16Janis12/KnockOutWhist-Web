@@ -28,3 +28,7 @@ GET         /game/:id                controllers.IngameController.game(id: Strin
 
 # Websocket
 GET         /websocket               controllers.WebsocketController.socket()
+
+# Status
+GET         /status                  controllers.StatusController.requestStatus()
+GET         /status/:gameId          controllers.StatusController.game(gameId: String)
