@@ -234,3 +234,8 @@
 ### Features
 
 * FRO-2 Implement Login Component ([#105](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/105)) ([e8b31b1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e8b31b174819b5f033034501856c4b1189c4c4ee))
+##  (2025-12-10)
+
+### Features
+
+* FRO-20 Create scoreboard component ([#106](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/106)) ([2a29ca8](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2a29ca8cdd3ef55f6f66f00b5e7727e1b1af1458))
