@@ -5,6 +5,7 @@ import logic.game.GameLobby
 import model.users.User
 
 case class WonInfoDTO(
+                     gameId: String,
                      winner: Option[PodiumPlayerDTO],
                      allPlayers: Seq[PodiumPlayerDTO]
                      )
@@ -24,6 +25,7 @@ object WonInfoDTO {
     val winnerDTO = lobby.logic.getWinner
 
     WonInfoDTO(
+      gameId = lobby.id,
       winner = winnerDTO.map(player => PodiumPlayerDTO(lobby.logic, player)),
       allPlayers = allPlayersDTO
     )

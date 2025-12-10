@@ -6,7 +6,7 @@ import model.users.User
 
 import scala.util.Try
 
-case class TieInfoDTO(currentPlayer: Option[PlayerDTO], self: Option[PlayerDTO], tiedPlayers: Seq[PlayerDTO], highestAmount: Int)
+case class TieInfoDTO(gameId: String, currentPlayer: Option[PlayerDTO], self: Option[PlayerDTO], tiedPlayers: Seq[PlayerDTO], highestAmount: Int)
 
 object TieInfoDTO {
 
@@ -16,6 +16,7 @@ object TieInfoDTO {
     }.getOrElse(None)
 
     TieInfoDTO(
+      gameId = lobby.id,
       currentPlayer = lobby.logic.playerTieLogic.currentTiePlayer().map(PlayerDTO.apply),
       self = selfPlayer.map(PlayerDTO.apply),
       tiedPlayers = lobby.logic.playerTieLogic.getTiedPlayers.map(PlayerDTO.apply),

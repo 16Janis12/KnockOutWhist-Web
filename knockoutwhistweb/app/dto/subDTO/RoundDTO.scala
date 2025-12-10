@@ -3,7 +3,7 @@ package dto.subDTO
 import de.knockoutwhist.cards.Card
 import de.knockoutwhist.cards.CardValue.Ace
 
-case class RoundDTO(trumpSuit: CardDTO, firstRound: Boolean, tricklist: List[TrickDTO])
+case class RoundDTO(trumpSuit: CardDTO, firstRound: Boolean, trickList: List[TrickDTO])
 
 object RoundDTO {
 
@@ -11,7 +11,7 @@ object RoundDTO {
     RoundDTO(
       trumpSuit = CardDTO(Card(Ace, round.trumpSuit)),
       firstRound = round.firstRound,
-      tricklist = round.tricklist.map(trick => TrickDTO(trick))
+      trickList = round.tricklist.map(trick => TrickDTO(trick))
     )
   }
 

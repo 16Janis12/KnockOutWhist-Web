@@ -7,6 +7,7 @@ import model.users.User
 import scala.util.Try
 
 case class TrumpInfoDTO(
+                       gameId: String,
                        chooser: Option[PlayerDTO],
                        self: Option[PlayerDTO],
                        selfHand: Option[HandDTO],
@@ -20,6 +21,7 @@ object TrumpInfoDTO {
     }.getOrElse(None)
 
     TrumpInfoDTO(
+      gameId = lobby.id,
       chooser = lobby.logic.getTrumpPlayer.map(PlayerDTO(_)),
       self = selfPlayer.map(PlayerDTO(_)),
       selfHand = selfPlayer.flatMap(_.currentHand()).map(HandDTO(_))
