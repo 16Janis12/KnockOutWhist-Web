@@ -28,7 +28,7 @@ object GameInfoDTO {
       hand = selfPlayer.flatMap(_.currentHand()).map(HandDTO(_)),
       playerQueue = PlayerQueueDTO(lobby.logic),
       currentTrick = lobby.logic.getCurrentTrick.map(TrickDTO(_)),
-      currentRound = lobby.logic.getCurrentRound.map(RoundDTO(_))
+      currentRound = lobby.logic.getCurrentRound.map(r => RoundDTO(r, lobby.logic.getCurrentMatch))
     )
   }
 
