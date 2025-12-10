@@ -219,3 +219,8 @@
 ### Features
 
 * BAC-30 Implement Jackson Mapping via DTOs ([#102](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/102)) ([8d697fd](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8d697fd311478cf792b4631377de4522ecbda9f7))
+##  (2025-12-10)
+
+### Bug Fixes
+
+* FRO-29 Websocket Communication ([#104](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/104)) ([fa3d21e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fa3d21e3038eb07369764850a9ad9badd269ac57))
