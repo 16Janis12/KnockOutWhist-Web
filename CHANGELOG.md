@@ -239,3 +239,8 @@
 ### Features
 
 * FRO-20 Create scoreboard component ([#106](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/106)) ([2a29ca8](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2a29ca8cdd3ef55f6f66f00b5e7727e1b1af1458))
+##  (2025-12-10)
+
+### Features
+
+* **api:** FRO-14 Create Game ([#107](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/107)) ([bd7a055](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/bd7a055a0944a1c5219f21bb080bf658229f49e9))
