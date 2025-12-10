@@ -229,3 +229,8 @@
 ### Features
 
 * BAC-27 Implemented endpoint which returns information about the current state ([#103](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/103)) ([dd5e8e6](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dd5e8e65e55f02a7618b3c60e8fc7087774e5106))
+##  (2025-12-10)
+
+### Features
+
+* FRO-2 Implement Login Component ([#105](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/105)) ([e8b31b1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e8b31b174819b5f033034501856c4b1189c4c4ee))
