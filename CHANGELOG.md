@@ -224,3 +224,8 @@
 ### Bug Fixes
 
 * FRO-29 Websocket Communication ([#104](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/104)) ([fa3d21e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fa3d21e3038eb07369764850a9ad9badd269ac57))
+##  (2025-12-10)
+
+### Features
+
+* BAC-27 Implemented endpoint which returns information about the current state ([#103](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/103)) ([dd5e8e6](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dd5e8e65e55f02a7618b3c60e8fc7087774e5106))
