@@ -18,10 +18,9 @@ POST        /createGame              controllers.MainMenuController.createGame()
 POST        /joinGame                controllers.MainMenuController.joinGame()
 
 # User authentication routes
-GET         /login                   controllers.UserController.login()
 POST        /login                   controllers.UserController.login_Post()
-
-GET         /logout                  controllers.UserController.logout()
+POST        /logout                  controllers.UserController.logoutPost()
+GET         /userInfo                controllers.UserController.getUserInfo()
 
 # In-game routes
 GET         /game/:id                controllers.IngameController.game(id: String)

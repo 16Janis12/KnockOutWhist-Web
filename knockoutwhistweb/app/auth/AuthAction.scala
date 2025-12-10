@@ -23,12 +23,12 @@ class AuthAction @Inject()(val sessionManager: SessionManager, val parser: BodyP
       case Some(user) =>
         block(new AuthenticatedRequest(user, request))
       case None =>
-        Future.successful(Results.Redirect(routes.UserController.login()))
+        Future.successful(Results.Unauthorized)
     }
   }
 
   protected def getUserFromSession(request: RequestHeader): Option[User] = {
-    val session = request.cookies.get("sessionId")
+    val session = request.cookies.get("accessToken")
     if (session.isDefined)
       return sessionManager.getUserBySession(session.get.value)
     None

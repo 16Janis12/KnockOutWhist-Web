@@ -1,10 +1,13 @@
 package controllers
 
 import auth.{AuthAction, AuthenticatedRequest}
+import dto.subDTO.UserDTO
 import logic.user.{SessionManager, UserManager}
+import model.users.User
 import play.api.*
 import play.api.libs.json.Json
 import play.api.mvc.*
+import play.api.mvc.Cookie.SameSite.{Lax, None, Strict}
 
 import javax.inject.*
 
@@ -21,22 +24,6 @@ class UserController @Inject()(
                                 val authAction: AuthAction
                               ) extends BaseController {
 
-  def login(): Action[AnyContent] = {
-    Action { implicit request =>
-      val session = request.cookies.get("sessionId")
-      if (session.isDefined) {
-        val possibleUser = sessionManager.getUserBySession(session.get.value)
-        if (possibleUser.isDefined) {
-          Redirect(routes.MainMenuController.mainMenu())
-        } else {
-          Ok(views.html.main("Login")(views.html.login.login()))
-        }
-      } else {
-        Ok(views.html.main("Login")(views.html.login.login()))
-      }
-    }
-  }
-
   def login_Post(): Action[AnyContent] = {
     Action { implicit request =>
       val jsonBody = request.body.asJson
@@ -51,12 +38,17 @@ class UserController @Inject()(
         val possibleUser = userManager.authenticate(username.get, password.get)
         if (possibleUser.isDefined) {
           Ok(Json.obj(
-            "status" -> "success",
-            "redirectUrl" -> routes.MainMenuController.mainMenu().url,
-            "content" -> views.html.mainmenu.creategame(possibleUser).toString
-          )).withCookies(
-            Cookie("sessionId", sessionManager.createSession(possibleUser.get))
-          )
+            "user" -> Json.obj(
+              "id" -> possibleUser.get.id,
+              "username" -> possibleUser.get.name
+            )
+          )).withCookies(Cookie(
+            name = "accessToken",
+            value = sessionManager.createSession(possibleUser.get),
+            httpOnly = true,
+            secure = false,
+            sameSite = Some(Lax)
+          ))
         } else {
           Unauthorized("Invalid username or password")
         }
@@ -65,14 +57,21 @@ class UserController @Inject()(
       }
     }
   }
+  
+  def getUserInfo(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val user: User = request.user
+    Ok(Json.obj(
+      "id" -> user.id,
+      "username" -> user.name
+    ))
+  }
 
-  // Pass the request-handling function directly to authAction (no nested Action)
-  def logout(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val sessionCookie = request.cookies.get("sessionId")
+  def logoutPost(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val sessionCookie = request.cookies.get("accessToken")
     if (sessionCookie.isDefined) {
       sessionManager.invalidateSession(sessionCookie.get.value)
     }
-    Redirect(routes.UserController.login()).discardingCookies(DiscardingCookie("sessionId"))
+    NoContent.discardingCookies(DiscardingCookie("accessToken"))
   }
 
 }
