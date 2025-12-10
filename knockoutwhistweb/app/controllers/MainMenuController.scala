@@ -44,8 +44,7 @@ class MainMenuController @Inject()(
       )
       Ok(Json.obj(
         "status" -> "success",
-        "redirectUrl" -> routes.IngameController.game(gameLobby.id).url,
-        "content" -> IngameController.returnInnerHTML(gameLobby, gameLobby.logic.getCurrentState, request.user).toString
+        "gameId" -> gameLobby.id,
       ))
     } else {
       BadRequest(Json.obj(
