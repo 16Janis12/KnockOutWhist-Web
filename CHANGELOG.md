@@ -244,3 +244,8 @@
 ### Features
 
 * **api:** FRO-14 Create Game ([#107](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/107)) ([bd7a055](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/bd7a055a0944a1c5219f21bb080bf658229f49e9))
+##  (2025-12-11)
+
+### Features
+
+* FRO-31 Small backend changes ([#108](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/108)) ([b17aae5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b17aae5795b35ce3805db87c9bf741a5a96cd5ac))
