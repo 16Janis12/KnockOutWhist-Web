@@ -57,7 +57,8 @@ object WebsocketEventMapper {
     Json.obj(
       "id" -> ("request-" + java.util.UUID.randomUUID().toString),
       "event" -> obj.id,
-      "state" -> stateToJson(session),
+      "state" -> session.gameLobby.getLogic.getCurrentState.toString,
+      "stateData" -> stateToJson(session),
       "data" -> data
     )
   }

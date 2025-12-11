@@ -34,7 +34,7 @@ class StatusController @Inject()(
             Json.obj(
               "status" -> "authenticated",
               "username" -> user.name,
-              "inGame" -> "false"
+              "inGame" -> false
             )
           )
         } else {
@@ -43,7 +43,7 @@ class StatusController @Inject()(
             Json.obj(
               "status" -> "authenticated",
               "username" -> user.name,
-              "inGame" -> "true",
+              "inGame" -> true,
               "gameId" -> game.id
             )
           )
@@ -80,7 +80,7 @@ class StatusController @Inject()(
   }}
 
   private def getUserFromSession(request: RequestHeader): Option[User] = {
-    val session = request.cookies.get("sessionId")
+    val session = request.cookies.get("accessToken")
     if (session.isDefined)
       return sessionManager.getUserBySession(session.get.value)
     None
