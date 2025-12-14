@@ -8,7 +8,7 @@ object TrickDTO {
 
   def apply(trick: Trick): TrickDTO = {
     TrickDTO(
-      cards = trick.cards.map { case (card, player) => player.id.toString -> CardDTO(card) },
+      cards = trick.cards.map { case (card, player) => player.name -> CardDTO(card) },
       firstCard = trick.firstCard.map(card => CardDTO(card)),
       winner = trick.winner.map(player => PlayerDTO(player))
     )

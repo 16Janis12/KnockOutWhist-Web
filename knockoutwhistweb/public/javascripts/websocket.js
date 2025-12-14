@@ -1,11 +1,9 @@
-// javascript
-let ws = null; // will be created by connectWebSocket()
-const pending = new Map(); // id -> { resolve, reject, timer }
-const handlers = new Map(); // eventType -> handler(data) -> (value|Promise)
+let ws = null;
+const pending = new Map();
+const handlers = new Map(); 
 
 let timer = null;
 
-// helper to attach message/error/close handlers to a socket
 function setupSocketHandlers(socket) {
     socket.onmessage = (event) => {
         console.debug("SERVER MESSAGE:", event.data);
@@ -48,7 +46,6 @@ function setupSocketHandlers(socket) {
             };
 
             if (!handler) {
-                // no handler: respond with an error object in data so server can fail it
                 console.warn("No handler for event:", eventType);
                 sendResponse({error: "No handler for event: " + eventType});
                 return;
@@ -91,7 +88,6 @@ function setupSocketHandlers(socket) {
     };
 }
 
-// connect/disconnect helpers
 function connectWebSocket(url = null) {
     if (!url) {
         const loc = window.location;
@@ -100,7 +96,6 @@ function connectWebSocket(url = null) {
     }
     if (ws && ws.readyState === WebSocket.OPEN) return Promise.resolve();
     if (ws && ws.readyState === WebSocket.CONNECTING) {
-        // already connecting - return a promise that resolves on open
         return new Promise((resolve, reject) => {
             const prevOnOpen = ws.onopen;
             const prevOnError = ws.onerror;
@@ -121,7 +116,6 @@ function connectWebSocket(url = null) {
     return new Promise((resolve, reject) => {
         ws.onopen = () => {
             console.log("WebSocket connection established!");
-            // start heartbeat
             timer = setInterval(() => {
                 if (ws && ws.readyState === WebSocket.OPEN) {
                     sendEventAndWait("ping", {}).then(

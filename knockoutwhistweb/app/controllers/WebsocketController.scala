@@ -21,7 +21,7 @@ class WebsocketController @Inject()(
                                    )(implicit system: ActorSystem, mat: Materializer) extends AbstractController(cc) {
 
   def socket(): WebSocket = WebSocket.accept[String, String] { request =>
-    val session = request.cookies.get("sessionId")
+    val session = request.cookies.get("accessToken")
     if (session.isEmpty) throw new Exception("No session cookie found")
     val userOpt = sessionManger.getUserBySession(session.get.value)
     if (userOpt.isEmpty) throw new Exception("Invalid session")

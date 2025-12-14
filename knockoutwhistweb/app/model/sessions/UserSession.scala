@@ -46,13 +46,13 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
       case "StartGame" =>
         gameLobby.startGame(user)
       case "PlayCard" =>
-        val maybeCardIndex: Option[String] = (data \ "cardindex").asOpt[String]
+        val maybeCardIndex: Option[Int] = (data \ "cardindex").asOpt[Int]
         maybeCardIndex match {
           case Some(index) =>
             val session = gameLobby.getUserSession(user.id)
-            gameLobby.playCard(session, index.toInt)
+            gameLobby.playCard(session, index)
           case None =>
-            println("Card Index not found or is not a number.")
+            println("Card Index not found or is not a number." + data)
         }
       case "PickTrumpsuit" =>
         val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
@@ -74,6 +74,10 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
         }
       case "ReturnToLobby" =>
         gameLobby.returnToLobby(this)
+      case "LeaveGame" =>
+        gameLobby.leaveGame(user.id, false)
+      case _ =>
+        println("Unknown event type: " + eventType + " with data: " + data)
     }
   }
 
