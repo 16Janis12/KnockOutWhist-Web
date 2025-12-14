@@ -249,3 +249,8 @@
 ### Features
 
 * FRO-31 Small backend changes ([#108](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/108)) ([b17aae5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b17aae5795b35ce3805db87c9bf741a5a96cd5ac))
+##  (2025-12-14)
+
+### Features
+
+* Update routing and websocket configuration for game state management ([#109](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/109)) ([35f6085](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/35f608513dd80eece46d49b40ecf31c8e915d307))
