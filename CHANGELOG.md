@@ -254,3 +254,8 @@
 ### Features
 
 * Update routing and websocket configuration for game state management ([#109](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/109)) ([35f6085](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/35f608513dd80eece46d49b40ecf31c8e915d307))
+##  (2025-12-18)
+
+### Features
+
+* **ui:** FRO-36 PWA ([#110](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/110)) ([e4384ee](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e4384ee8945ac462fe1f3580215117e0a438f71a))
