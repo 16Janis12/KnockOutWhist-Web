@@ -37,6 +37,12 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
   .settings(
 
     resolvers += "GitHub Packages" at "https://maven.pkg.github.com/16Janis12/KnockOutWhist-Web",
+    credentials += Credentials(
+      "GitHub Package Registry",
+      "maven.pkg.github.com",
+      sys.env("GITHUB_USER"),
+      sys.env("GITHUB_TOKEN")
+    ),
 
     commonSettings,
     libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test,
