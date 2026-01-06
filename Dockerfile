@@ -16,6 +16,7 @@ RUN sbt -Dscoverage.skip=true update
 # Copy the rest of the code
 COPY . .
 
+
 # Build the app and stage it
 RUN sbt -Dscoverage.skip=true clean stage
 
