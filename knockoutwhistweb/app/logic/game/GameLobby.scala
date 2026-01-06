@@ -106,6 +106,9 @@ class GameLobby private(
     }
     if (sessionOpt.get.host) {
       logic.invoke(SessionClosed())
+      for (session <- users.values) {
+        PodManager.unregisterUserFromGame(session.user)
+      }
       users.clear()
       PodManager.removeGame(id)
       return

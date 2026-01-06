@@ -1,5 +1,5 @@
 # === Stage 1: Build the Play application ===
-FROM sbtscala/scala-sbt:eclipse-temurin-alpine-22_36_1.10.3_3.5.1 AS builder
+FROM --platform=$BUILDPLATFORM sbtscala/scala-sbt:eclipse-temurin-alpine-22_36_1.10.3_3.5.1 AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ COPY . .
 RUN sbt -Dscoverage.skip=true clean stage
 
 # === Stage 2: Runtime image ===
-FROM eclipse-temurin:21-jre-alpine
+FROM --platform=$TARGETPLATFORM eclipse-temurin:22-jre-alpine
 
 # Install Argon2 CLI and libraries
 RUN apk add --no-cache bash argon2 argon2-libs
