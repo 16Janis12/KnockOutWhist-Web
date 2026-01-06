@@ -259,3 +259,8 @@
 ### Features
 
 * **ui:** FRO-36 PWA ([#110](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/110)) ([e4384ee](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e4384ee8945ac462fe1f3580215117e0a438f71a))
+##  (2026-01-06)
+
+### Features
+
+* Enhance win effects and animations in OfflineView component ([088dda8](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/088dda8d528edb9f3fd420e7e69eb44144d39eff))
