@@ -22,14 +22,14 @@ class Gateway @Inject()(
   
   val redis: RedisManager = {
     val config: Config = Config()
-    val url = "valkey://" + sys.env.getOrElse("VALKEY_HOST", "localhost") + ":" + sys.env.getOrElse("VALKEY_PORT", "6379")
-    logger.info(s"Connecting to Valkey at $url")
+    val url = "redis://" + sys.env.getOrElse("REDIS_HOST", "localhost") + ":" + sys.env.getOrElse("REDIS_PORT", "6379")
+    logger.info(s"Connecting to Redis at $url")
     config.useSingleServer.setAddress(url)
     RedisManager(config)
   }
 
   redis.continuousSyncPod(() => {
-    logger.info("Syncing pod with Valkey")
+    logger.info("Syncing pod with Redis")
     createPod()
   })
   
