@@ -54,6 +54,16 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
           case None =>
             println("Card Index not found or is not a number." + data)
         }
+      case "PlayDogCard" =>
+        val maybeCardIndex: Option[Int] = (data \ "cardindex").asOpt[Int]
+        maybeCardIndex match {
+          case Some(index) =>
+            val session = gameLobby.getUserSession(user.id)
+            gameLobby.playDogCard(session, index)
+          case None =>
+            val session = gameLobby.getUserSession(user.id)
+            gameLobby.playDogCard(session, -1)
+        }
       case "PickTrumpsuit" =>
         val maybeSuitIndex: Option[Int] = (data \ "suitIndex").asOpt[Int]
         maybeSuitIndex match {
