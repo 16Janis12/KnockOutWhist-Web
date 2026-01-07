@@ -321,3 +321,9 @@
 ### Bug Fixes
 
 * Update knockoutwhistfrontend hash for consistency ([0e555cd](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0e555cdfeb114464c9438bfd5dc397201a073867))
+##  (2026-01-07)
+
+### Features
+
+* Implement PlayDogCard functionality in user session and update Vue component ([859dfce](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/859dfce521b193b9208d0c70fca88016f8fe08f4))
+* Implement PlayDogCard functionality in user session and update Vue component ([61ae9b5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/61ae9b5a5e7cd9fd82b77e9159814b0066874c2d))
