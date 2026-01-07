@@ -34,6 +34,7 @@ class StatusController @Inject()(
             Json.obj(
               "status" -> "authenticated",
               "username" -> user.name,
+              "userId" -> user.id,
               "inGame" -> false
             )
           )
@@ -43,6 +44,7 @@ class StatusController @Inject()(
             Json.obj(
               "status" -> "authenticated",
               "username" -> user.name,
+              "userId" -> user.id,
               "inGame" -> true,
               "gameId" -> game.id
             )
