@@ -287,3 +287,8 @@
 ### Features
 
 * Add caching headers for env.js in Nginx configuration ([dbad818](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dbad818fdaeb237a05f583e5402773a4339e7aa1))
+##  (2026-01-07)
+
+### Features
+
+* Add logging to Gateway for pod synchronization and startup events ([6ef7401](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/6ef74014430673e725245bf37e44c5b90b81abb3))
