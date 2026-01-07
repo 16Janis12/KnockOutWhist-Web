@@ -276,3 +276,4 @@
 * Update Dockerfile for multi-platform support and add nginx configuration ([ccf993b](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/ccf993bff25b4551a70c1f0263695f828df15a02))
 * Update Dockerfile for multi-platform support and add nginx configuration ([3e06734](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3e067346ffe3bdc62dc936ea8e79ae9293d86351))
 * Update Dockerfile for multi-platform support and add nginx configuration ([b2527ed](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b2527ed041568d20f880515b406fe0b0e10c12c1))
+##  (2026-01-07)
