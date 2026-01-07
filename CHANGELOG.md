@@ -297,3 +297,8 @@
 ### Features
 
 * Add logging to Gateway for pod synchronization and startup events ([2615707](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/26157076d686a5dd3f8157ec2b2d1ae9d9e9eedf))
+##  (2026-01-07)
+
+### Features
+
+* Add Health and Login endpoints with updated Redis configuration ([4a5af36](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4a5af36ae0dcb540e02b7a1cd042e54cc6342c78))
