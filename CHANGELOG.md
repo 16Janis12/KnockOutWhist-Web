@@ -264,3 +264,15 @@
 ### Features
 
 * Enhance win effects and animations in OfflineView component ([088dda8](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/088dda8d528edb9f3fd420e7e69eb44144d39eff))
+##  (2026-01-07)
+
+### Features
+
+* Add GatewayModule for enhanced module configuration ([1d05bd4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/1d05bd43b482564636345322a2cecf58f7d229d0))
+* Enhance Dockerfile with secret management for GitHub credentials ([5f9ef2b](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/5f9ef2beb0a6e7d5e8caf436f545bbd78a6b242e))
+* Simplify Dockerfile by removing multi-stage build and adjusting file copy paths ([e17f59e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e17f59e614a0060b70514c2337ac6fd84688546e))
+* Update build.sbt and Dockerfile for improved GitHub credentials handling ([8126b46](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/8126b46a0a1649d2b20b31975603f7610fafd18b))
+* Update build.sbt and Dockerfile for improved GitHub credentials handling ([25dd926](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/25dd9264b57ffafc5b01587ff5dda2e2188b5fbd))
+* Update Dockerfile for multi-platform support and add nginx configuration ([ccf993b](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/ccf993bff25b4551a70c1f0263695f828df15a02))
+* Update Dockerfile for multi-platform support and add nginx configuration ([3e06734](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3e067346ffe3bdc62dc936ea8e79ae9293d86351))
+* Update Dockerfile for multi-platform support and add nginx configuration ([b2527ed](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b2527ed041568d20f880515b406fe0b0e10c12c1))
