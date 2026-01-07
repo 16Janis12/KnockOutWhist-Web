@@ -1,10 +1,6 @@
 # === Stage 1: Build the Play application ===
 FROM --platform=$BUILDPLATFORM sbtscala/scala-sbt:eclipse-temurin-alpine-22_36_1.10.3_3.5.1 AS builder
 
-ARG GITHUB_USER
-ARG GITHUB_TOKEN
-
-
 WORKDIR /app
 
 # Install Node.js and Less CSS preprocessor

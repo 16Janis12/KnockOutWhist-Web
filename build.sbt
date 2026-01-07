@@ -40,8 +40,8 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
     credentials += Credentials(
       "GitHub Package Registry",
       "maven.pkg.github.com",
-      sys.env("GITHUB_USER"),
-      sys.env("GITHUB_TOKEN")
+      sys.env.getOrElse("GITHUB_USER", sys.error("GITHUB_USER not set")),
+      sys.env.getOrElse("GITHUB_TOKEN", sys.error("GITHUB_TOKEN not set"))
     ),
 
     commonSettings,
