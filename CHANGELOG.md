@@ -307,3 +307,8 @@
 ### Features
 
 * Update Gateway to use ArrayList for game IDs and bound users ([2f89951](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2f89951c25484d6bc412536a83019ee6d0b7f780))
+##  (2026-01-07)
+
+### Features
+
+* Update joinGame endpoint to accept gameId as a path parameter ([cf18549](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/cf1854976a51eb4931d50cf93640498ed18686fc))
