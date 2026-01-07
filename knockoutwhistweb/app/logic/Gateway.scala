@@ -7,6 +7,7 @@ import org.redisson.config.Config
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
+import java.util
 import java.util.UUID
 import javax.inject.*
 import scala.concurrent.ExecutionContext
@@ -45,8 +46,8 @@ class Gateway @Inject()(
       PodManager.podName,
       PodManager.podIp,
       9000,
-      PodManager.getAllGameIds().asJava,
-      PodManager.allBoundUsers().asJava
+      new util.ArrayList[String](PodManager.getAllGameIds().asJava),
+      new util.ArrayList[String](PodManager.allBoundUsers().asJava)
     )
   }
 
