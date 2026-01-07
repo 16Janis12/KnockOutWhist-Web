@@ -1,5 +1,12 @@
 ThisBuild / scalaVersion := "3.5.1"
 
+credentials += Credentials(
+  "GitHub Package Registry",
+  "maven.pkg.github.com",
+  sys.env.getOrElse("GITHUB_USER", sys.error("GITHUB_USER not set")),
+  sys.env.getOrElse("GITHUB_TOKEN", sys.error("GITHUB_TOKEN not set"))
+)
+
 lazy val commonSettings = Seq(
   libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.19",
   libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
@@ -37,12 +44,6 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
   .settings(
 
     resolvers += "GitHub Packages" at "https://maven.pkg.github.com/16Janis12/KnockOutWhist-Web",
-    credentials += Credentials(
-      "GitHub Package Registry",
-      "maven.pkg.github.com",
-      sys.env.getOrElse("GITHUB_USER", sys.error("GITHUB_USER not set")),
-      sys.env.getOrElse("GITHUB_TOKEN", sys.error("GITHUB_TOKEN not set"))
-    ),
 
     commonSettings,
     libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test,
