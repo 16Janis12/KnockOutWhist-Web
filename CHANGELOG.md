@@ -282,3 +282,8 @@
 ### Features
 
 * Update configuration files for CORS settings and add production environment ([3b7a1e3](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3b7a1e3c646d870134d8d06b4962498b0e282cbd))
+##  (2026-01-07)
+
+### Features
+
+* Add caching headers for env.js in Nginx configuration ([dbad818](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dbad818fdaeb237a05f583e5402773a4339e7aa1))
