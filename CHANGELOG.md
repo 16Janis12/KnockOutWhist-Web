@@ -312,3 +312,12 @@
 ### Features
 
 * Update joinGame endpoint to accept gameId as a path parameter ([cf18549](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/cf1854976a51eb4931d50cf93640498ed18686fc))
+##  (2026-01-07)
+
+### Features
+
+* Enhance user state management with polling and WebSocket connection handling ([b4bf2ce](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b4bf2ceb4dc76ac388124b9705a1aa9e577582af))
+
+### Bug Fixes
+
+* Update knockoutwhistfrontend hash for consistency ([0e555cd](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0e555cdfeb114464c9438bfd5dc397201a073867))
