@@ -55,32 +55,21 @@ class MainMenuController @Inject()(
 
   }
 
-  def joinGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    val jsonBody = request.body.asJson
-    val gameId: Option[String] = jsonBody.flatMap { jsValue =>
-      (jsValue \ "gameId").asOpt[String]
-    }
-    if (gameId.isDefined) {
-      val game = PodManager.getGame(gameId.get)
-      game match {
-        case Some(g) =>
-          g.addUser(request.user)
-          Ok(Json.obj(
-            "status" -> "success",
-            "redirectUrl" -> routes.IngameController.game(g.id).url,
-            "content" -> IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user).toString
-          ))
-        case None =>
-          NotFound(Json.obj(
-            "status" -> "failure",
-            "errorMessage" -> "No Game found"
-          ))
-      }
-    } else {
-      BadRequest(Json.obj(
-        "status" -> "failure",
-        "errorMessage" -> "Invalid form submission"
-      ))
+  def joinGame(gameId: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
+    val game = PodManager.getGame(gameId)
+    game match {
+      case Some(g) =>
+        g.addUser(request.user)
+        Ok(Json.obj(
+          "status" -> "success",
+          "redirectUrl" -> routes.IngameController.game(g.id).url,
+          "content" -> IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user).toString
+        ))
+      case None =>
+        NotFound(Json.obj(
+          "status" -> "failure",
+          "errorMessage" -> "No Game found"
+        ))
     }
   }
 

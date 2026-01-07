@@ -15,7 +15,7 @@ GET         /rules                   controllers.MainMenuController.rules()
 GET         /navSPA/:pType           controllers.MainMenuController.navSPA(pType)
 
 POST        /createGame              controllers.MainMenuController.createGame()
-POST        /joinGame                controllers.MainMenuController.joinGame()
+POST        /joinGame/:gameId        controllers.MainMenuController.joinGame(gameId: String)
 
 # User authentication routes
 POST        /login                   controllers.UserController.login_Post()
