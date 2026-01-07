@@ -31,3 +31,6 @@ GET         /websocket               controllers.WebsocketController.socket()
 # Status
 GET         /status                  controllers.StatusController.requestStatus()
 GET         /status/:gameId          controllers.StatusController.game(gameId: String)
+
+# Health
+GET         /health/simple           controllers.HealthController.simple()
