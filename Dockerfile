@@ -1,6 +1,10 @@
 # === Stage 1: Build the Play application ===
 FROM --platform=$BUILDPLATFORM sbtscala/scala-sbt:eclipse-temurin-alpine-22_36_1.10.3_3.5.1 AS builder
 
+ARG GITHUB_USER
+ARG GITHUB_TOKEN
+
+
 WORKDIR /app
 
 # Install Node.js and Less CSS preprocessor
@@ -11,14 +15,21 @@ RUN apk add --no-cache nodejs npm && \
 # Cache dependencies first
 COPY project ./project
 COPY build.sbt ./
-RUN sbt -Dscoverage.skip=true update
+RUN --mount=type=secret,id=github_user \
+    --mount=type=secret,id=github_token \
+    export GITHUB_USER=$(cat /run/secrets/github_user) && \
+    export GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    sbt -Dscoverage.skip=true update
 
 # Copy the rest of the code
 COPY . .
 
-
 # Build the app and stage it
-RUN sbt -Dscoverage.skip=true clean stage
+RUN --mount=type=secret,id=github_user \
+    --mount=type=secret,id=github_token \
+    export GITHUB_USER=$(cat /run/secrets/github_user) && \
+    export GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    sbt -Dscoverage.skip=true clean stage
 
 # === Stage 2: Runtime image ===
 FROM --platform=$TARGETPLATFORM eclipse-temurin:22-jre-alpine
