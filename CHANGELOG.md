@@ -292,3 +292,8 @@
 ### Features
 
 * Add logging to Gateway for pod synchronization and startup events ([6ef7401](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/6ef74014430673e725245bf37e44c5b90b81abb3))
+##  (2026-01-07)
+
+### Features
+
+* Add logging to Gateway for pod synchronization and startup events ([2615707](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/26157076d686a5dd3f8157ec2b2d1ae9d9e9eedf))
