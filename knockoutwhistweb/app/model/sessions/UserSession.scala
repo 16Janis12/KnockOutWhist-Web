@@ -73,6 +73,15 @@ class UserSession(val user: User, val host: Boolean, val gameLobby: GameLobby) e
           case None =>
             println("Card Index not found or is not a number.")
         }
+      case "PickTie" =>
+        val maybeCardIndex: Option[Int] = (data \ "cardIndex").asOpt[Int]
+        maybeCardIndex match {
+          case Some(index) =>
+            val session = gameLobby.getUserSession(user.id)
+            gameLobby.selectTie(session, index)
+          case None =>
+            println("Card Index not found or is not a number.")
+        }
       case "KickPlayer" =>
         val maybePlayerId: Option[String] = (data \ "playerId").asOpt[String]
         maybePlayerId match {

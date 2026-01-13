@@ -36,7 +36,7 @@ object WebsocketEventMapper {
   
   // Register all custom mappers here
   registerCustomMapper(ReceivedHandEventMapper)
-  registerCustomMapper(GameStateEventMapper)
+  //registerCustomMapper(GameStateEventMapper)
   registerCustomMapper(CardPlayedEventMapper)
   registerCustomMapper(NewRoundEventMapper)
   registerCustomMapper(NewTrickEventMapper)
@@ -54,6 +54,7 @@ object WebsocketEventMapper {
     }else {
       None
     }
+    //println(s"This is getting sent to client: EVENT: ${obj.id}, STATE: ${session.gameLobby.getLogic.getCurrentState.toString}, STATEDATA: ${stateToJson(session)}, DATA: ${data}")
     Json.obj(
       "id" -> ("request-" + java.util.UUID.randomUUID().toString),
       "event" -> obj.id,
