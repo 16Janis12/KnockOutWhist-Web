@@ -327,3 +327,8 @@
 
 * Implement PlayDogCard functionality in user session and update Vue component ([859dfce](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/859dfce521b193b9208d0c70fca88016f8fe08f4))
 * Implement PlayDogCard functionality in user session and update Vue component ([61ae9b5](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/61ae9b5a5e7cd9fd82b77e9159814b0066874c2d))
+##  (2026-01-13)
+
+### Features
+
+* **ui:** Tie selection ([#111](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/111)) ([dc3da9a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dc3da9a75c75597ce81ce4d023af5390197012c9))
