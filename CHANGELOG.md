@@ -337,3 +337,9 @@
 ### Features
 
 * CORE-4 Rework the delay handler ([#113](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/113)) ([4b17af2](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4b17af2c2f50a9d67cf1cf49cafdaac8f807d4b6))
+##  (2026-01-14)
+
+### Features
+
+* CORE-4 Rework the delay handler ([3ce2b13](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3ce2b133bccf4dd591b6d038d6fa0d409a907775))
+* Update LobbyComponent to use icons for player removal buttons ([802b6bf](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/802b6bf764eb41b806888e1b46a3e6d379d31f1b))
