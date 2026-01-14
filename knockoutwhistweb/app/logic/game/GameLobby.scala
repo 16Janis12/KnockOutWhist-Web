@@ -9,6 +9,7 @@ import de.knockoutwhist.events.player.PlayerEvent
 import de.knockoutwhist.player.Playertype.HUMAN
 import de.knockoutwhist.player.{AbstractPlayer, PlayerFactory}
 import de.knockoutwhist.rounds.{Match, Round, Trick}
+import de.knockoutwhist.utils.DelayHandler
 import de.knockoutwhist.utils.events.{EventListener, SimpleEvent}
 import events.{KickEvent, LeftEvent, LobbyUpdateEvent, UserEvent}
 import exceptions.*
@@ -33,6 +34,7 @@ class GameLobby private(
 
   private val users: mutable.Map[UUID, UserSession] = mutable.Map()
   logic.addListener(this)
+  logic.addListener(DelayHandler)
   logic.createSession()
 
   def addUser(user: User): UserSession = {
