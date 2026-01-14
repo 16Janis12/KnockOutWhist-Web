@@ -332,3 +332,8 @@
 ### Features
 
 * **ui:** Tie selection ([#111](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/111)) ([dc3da9a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/dc3da9a75c75597ce81ce4d023af5390197012c9))
+##  (2026-01-14)
+
+### Features
+
+* CORE-4 Rework the delay handler ([#113](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/113)) ([4b17af2](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4b17af2c2f50a9d67cf1cf49cafdaac8f807d4b6))
