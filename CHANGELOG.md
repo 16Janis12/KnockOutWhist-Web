@@ -353,3 +353,8 @@
 ### Features
 
 * Update persistence.xml and build.sbt for resource management ([a7292e3](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/a7292e3b5df4788f2f8bea5a2ec7b209b7357608))
+##  (2026-01-20)
+
+### Features
+
+* Update connection provider in persistence.xml for HikariCP ([f4290b4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f4290b44976fb6dcd4fc4b896614ba6062da73b1))
