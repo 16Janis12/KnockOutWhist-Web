@@ -368,3 +368,8 @@
 ### Features
 
 * Add HikariCP specific configuration to db.conf ([009b2b1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/009b2b1ad9180f58a0b1434354f8a467b4e452ca))
+##  (2026-01-20)
+
+### Features
+
+* Add HikariCP specific configuration to db.conf ([4aa8709](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4aa8709eb593b03254efc616b6b04c23b23ab6ab))
