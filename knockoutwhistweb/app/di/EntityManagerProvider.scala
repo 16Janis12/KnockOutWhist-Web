@@ -1,10 +1,9 @@
 package di
 
-import com.google.inject.Provider
-import com.google.inject.Inject
-import play.api.Configuration
+import com.google.inject.{Inject, Provider}
 import jakarta.inject.Singleton
 import jakarta.persistence.{EntityManager, EntityManagerFactory, Persistence}
+import play.api.Configuration
 
 @Singleton
 class EntityManagerProvider @Inject()(config: Configuration) extends Provider[EntityManager] {
@@ -18,6 +17,14 @@ class EntityManagerProvider @Inject()(config: Configuration) extends Provider[En
     props.put("jakarta.persistence.jdbc.url", dbConfig.get[String]("url"))
     props.put("jakarta.persistence.jdbc.user", dbConfig.get[String]("username"))
     props.put("jakarta.persistence.jdbc.password", dbConfig.get[String]("password"))
+    
+    // Also pass HikariCP settings if present
+    dbConfig.getOptional[Configuration]("hikaricp").foreach { hikariConfig =>
+      hikariConfig.keys.foreach { key =>
+        val value = hikariConfig.underlying.getValue(key).unwrapped()
+        props.put(s"hibernate.hikari.$key", value)
+      }
+    }
 
     Persistence.createEntityManagerFactory("defaultPersistenceUnit", props)
   }
