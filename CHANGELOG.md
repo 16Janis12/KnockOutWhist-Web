@@ -343,3 +343,8 @@
 
 * CORE-4 Rework the delay handler ([3ce2b13](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/3ce2b133bccf4dd591b6d038d6fa0d409a907775))
 * Update LobbyComponent to use icons for player removal buttons ([802b6bf](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/802b6bf764eb41b806888e1b46a3e6d379d31f1b))
+##  (2026-01-20)
+
+### Features
+
+* BAC-39 Authentication ([#114](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/114)) ([f6d3a18](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f6d3a1845205318f43eb443601fd257613b7defb))
