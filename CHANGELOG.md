@@ -398,3 +398,8 @@
 ### Features
 
 * Implement transaction management for user addition and removal in HibernateUserManager ([45dec00](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/45dec00b86a1395457226ed62ac319c61e38739a))
+##  (2026-01-20)
+
+### Features
+
+* Add mainRoute configuration for OpenID in application and environment files ([4f52c1a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4f52c1a0f30cf0b917452149a52b53b94d82a7c9))
