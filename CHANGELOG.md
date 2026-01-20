@@ -393,3 +393,8 @@
 ### Features
 
 * Integrate UserManager and HibernateUserManager in session management ([e32f4eb](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e32f4eb8fff9daec46f20284e28e94a59231d033))
+##  (2026-01-20)
+
+### Features
+
+* Implement transaction management for user addition and removal in HibernateUserManager ([45dec00](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/45dec00b86a1395457226ed62ac319c61e38739a))
