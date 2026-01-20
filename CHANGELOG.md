@@ -383,3 +383,8 @@
 ### Features
 
 * Disable default JPA and Hibernate modules and enhance EntityManagerProvider for HikariCP integration ([9fa1e5e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9fa1e5e07122aebd0391d47c3513013243a72a0f))
+##  (2026-01-20)
+
+### Features
+
+* Add logging for user management operations in HibernateUserManager ([9ca1813](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9ca1813f06539cffeb573d0e00571e4f2d5144f1))
