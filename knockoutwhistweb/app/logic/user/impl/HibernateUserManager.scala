@@ -5,6 +5,7 @@ import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 import logic.user.UserManager
 import model.users.{User, UserEntity}
+import play.api.Logger
 import services.OpenIDUserInfo
 import util.UserHash
 
@@ -14,6 +15,8 @@ import scala.jdk.CollectionConverters.*
 @Singleton
 class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends UserManager {
 
+  private val logger = Logger(getClass.getName)
+
   override def addUser(name: String, password: String): Boolean = {
     try {
       // Check if user already exists
@@ -22,6 +25,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         .getResultList
       
       if (!existing.isEmpty) {
+        logger.warn(s"User $name already exists")
         return false
       }
 
@@ -35,9 +39,13 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
 
       em.persist(userEntity)
       em.flush()
+
       true
     } catch {
-      case _: Exception => false
+      case e: Exception => {
+        logger.error(s"Error adding user $name", e)
+        false
+      }
     }
   }
 
@@ -49,6 +57,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         .getResultList
       
       if (!existing.isEmpty) {
+        logger.warn(s"User $name already exists")
         return false
       }
 
@@ -62,6 +71,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         .getResultList
       
       if (!existingOpenID.isEmpty) {
+        logger.warn(s"OpenID user ${userInfo.provider}_${userInfo.id} already exists")
         return false
       }
 
@@ -72,7 +82,10 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
       em.flush()
       true
     } catch {
-      case _: Exception => false
+      case e: Exception => {
+        logger.error(s"Error adding OpenID user ${userInfo.provider}_${userInfo.id}", e)
+        false
+      }
     }
   }
 
@@ -93,7 +106,10 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         None
       }
     } catch {
-      case _: Exception => None
+      case e: Exception => {
+        logger.error(s"Error authenticating user $name", e)
+        None
+      }
     }
   }
 
@@ -113,7 +129,10 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         Some(users.get(0).toUser)
       }
     } catch {
-      case _: Exception => None
+      case e: Exception => {
+        logger.error(s"Error authenticating OpenID user ${provider}_$providerId", e)
+        None
+      }
     }
   }
 
@@ -129,7 +148,10 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
         Some(users.get(0).toUser)
       }
     } catch {
-      case _: Exception => None
+      case e: Exception => {
+        logger.error(s"Error checking if user $name exists", e)
+        None
+      }
     }
   }
 
@@ -137,7 +159,10 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
     try {
       Option(em.find(classOf[UserEntity], id)).map(_.toUser)
     } catch {
-      case _: Exception => None
+      case e: Exception => {
+        logger.error(s"Error checking if user with ID $id exists", e)
+        None
+      }
     }
   }
 
