@@ -418,3 +418,8 @@
 ### Features
 
 * Add logging for OpenID authentication process in OpenIDController ([b729344](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b729344d1e79c631146dd988248d033d97e12d93))
+##  (2026-01-20)
+
+### Features
+
+* Add error logging for user info retrieval in OpenIDConnectService ([861f2f1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/861f2f1184e860fdd164481167f941c11accfedd))
