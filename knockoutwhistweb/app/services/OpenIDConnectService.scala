@@ -75,30 +75,15 @@ class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit 
 
   def getAuthorizationUrl(providerName: String, state: String, nonce: String): Option[String] = {
     providers.get(providerName).map { provider =>
-      val authRequest = if (provider.scopes.contains("openid")) {
-        // Use OpenID Connect AuthenticationRequest for OpenID providers
-        new AuthenticationRequest.Builder(
-          new ResponseType(ResponseType.Value.CODE),
-          new com.nimbusds.oauth2.sdk.Scope(provider.scopes.mkString(" ")),
-          new com.nimbusds.oauth2.sdk.id.ClientID(provider.clientId),
-          URI.create(provider.redirectUri)
-        )
-          .state(new com.nimbusds.oauth2.sdk.id.State(state))
-          .nonce(new Nonce(nonce))
-          .endpointURI(URI.create(provider.authorizationEndpoint))
-          .build()
-      } else {
-        // Use standard OAuth2 AuthorizationRequest for non-OpenID providers (like Discord)
-        new AuthorizationRequest.Builder(
-          new ResponseType(ResponseType.Value.CODE),
-          new com.nimbusds.oauth2.sdk.id.ClientID(provider.clientId)
-        )
-          .scope(new com.nimbusds.oauth2.sdk.Scope(provider.scopes.mkString(" ")))
-          .state(new com.nimbusds.oauth2.sdk.id.State(state))
-          .redirectionURI(URI.create(provider.redirectUri))
-          .endpointURI(URI.create(provider.authorizationEndpoint))
-          .build()
-      }
+      val authRequest = new AuthorizationRequest.Builder(
+        new ResponseType(ResponseType.Value.CODE),
+        new com.nimbusds.oauth2.sdk.id.ClientID(provider.clientId)
+      )
+        .scope(new com.nimbusds.oauth2.sdk.Scope(provider.scopes.mkString(" ")))
+        .state(new com.nimbusds.oauth2.sdk.id.State(state))
+        .redirectionURI(URI.create(provider.redirectUri))
+        .endpointURI(URI.create(provider.authorizationEndpoint))
+        .build()
 
       authRequest.toURI.toString
     }
