@@ -2,7 +2,7 @@ package controllers
 
 import logic.user.{SessionManager, UserManager}
 import model.users.User
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import play.api.libs.json.Json
 import play.api.mvc.*
 import play.api.mvc.Cookie.SameSite.Lax
@@ -19,6 +19,8 @@ class OpenIDController @Inject()(
                                   val userManager: UserManager,
                                   val config: Configuration
                                 )(implicit ec: ExecutionContext) extends BaseController {
+
+  private val logger = Logger(this.getClass)
 
   def loginWithProvider(provider: String): Action[AnyContent] = Action.async { implicit request =>
     val state = openIDService.generateState()
@@ -47,8 +49,11 @@ class OpenIDController @Inject()(
     val code = request.getQueryString("code")
     val error = request.getQueryString("error")
 
+    logger.info(s"Received callback from $provider with state $sessionState, nonce $sessionNonce, provider $sessionProvider, returned state $returnedState, code $code, error $error")
+
     error match {
       case Some(err) =>
+        logger.error(s"Authentication failed: $err")
         Future.successful(Redirect("/login").flashing("error" -> s"Authentication failed: $err"))
       case None =>
         (for {
@@ -63,6 +68,7 @@ class OpenIDController @Inject()(
                   // Check if user already exists
                   userManager.authenticateOpenID(provider, userInfo.id) match {
                     case Some(user) =>
+                      logger.info(s"User ${userInfo.name} (${userInfo.id}) already exists, logging them in")
                       // User already exists, log them in
                       val sessionToken = sessionManager.createSession(user)
                       Future.successful(Redirect(config.getOptional[String]("openid.mainRoute").getOrElse("/"))
@@ -75,6 +81,7 @@ class OpenIDController @Inject()(
                         ))
                         .removingFromSession("oauth_state", "oauth_nonce", "oauth_provider", "oauth_access_token"))
                     case None =>
+                      logger.info(s"User ${userInfo.name} (${userInfo.id}) not found, creating new user")
                       // New user, redirect to username selection
                       Future.successful(Redirect(config.get[String]("openid.selectUserRoute"))
                         .withSession(
@@ -84,12 +91,15 @@ class OpenIDController @Inject()(
                         ))
                   }
                 case None =>
+                  logger.error("Failed to retrieve user information")
                   Future.successful(Redirect("/login").flashing("error" -> "Failed to retrieve user information"))
               }
             case None =>
+              logger.error("Failed to exchange authorization code")
               Future.successful(Redirect("/login").flashing("error" -> "Failed to exchange authorization code"))
           }
         }).getOrElse {
+          logger.error("Invalid state parameter")
           Future.successful(Redirect("/login").flashing("error" -> "Invalid state parameter"))
         }
     }
