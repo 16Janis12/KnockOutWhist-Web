@@ -18,7 +18,9 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
   private val logger = Logger(getClass.getName)
 
   override def addUser(name: String, password: String): Boolean = {
+    val tx = em.getTransaction
     try {
+      tx.begin()
       // Check if user already exists
       val existing = em.createQuery("SELECT u FROM UserEntity u WHERE u.username = :username", classOf[UserEntity])
         .setParameter("username", name)
@@ -26,6 +28,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
       
       if (!existing.isEmpty) {
         logger.warn(s"User $name already exists")
+        tx.rollback()
         return false
       }
 
@@ -39,10 +42,12 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
 
       em.persist(userEntity)
       em.flush()
+      tx.commit()
 
       true
     } catch {
       case e: Exception => {
+        if (tx.isActive) tx.rollback()
         logger.error(s"Error adding user $name", e)
         false
       }
@@ -50,7 +55,9 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
   }
 
   override def addOpenIDUser(name: String, userInfo: OpenIDUserInfo): Boolean = {
+    val tx = em.getTransaction
     try {
+      tx.begin()
       // Check if user already exists
       val existing = em.createQuery("SELECT u FROM UserEntity u WHERE u.username = :username", classOf[UserEntity])
         .setParameter("username", name)
@@ -58,6 +65,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
       
       if (!existing.isEmpty) {
         logger.warn(s"User $name already exists")
+        tx.rollback()
         return false
       }
 
@@ -72,6 +80,7 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
       
       if (!existingOpenID.isEmpty) {
         logger.warn(s"OpenID user ${userInfo.provider}_${userInfo.id} already exists")
+        tx.rollback()
         return false
       }
 
@@ -80,9 +89,11 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
 
       em.persist(userEntity)
       em.flush()
+      tx.commit()
       true
     } catch {
       case e: Exception => {
+        if (tx.isActive) tx.rollback()
         logger.error(s"Error adding OpenID user ${userInfo.provider}_${userInfo.id}", e)
         false
       }
@@ -167,20 +178,27 @@ class HibernateUserManager @Inject()(em: EntityManager, config: Config) extends 
   }
 
   override def removeUser(name: String): Boolean = {
+    val tx = em.getTransaction
     try {
+      tx.begin()
       val users = em.createQuery("SELECT u FROM UserEntity u WHERE u.username = :username", classOf[UserEntity])
         .setParameter("username", name)
         .getResultList
       
       if (users.isEmpty) {
+        tx.rollback()
         false
       } else {
         em.remove(users.get(0))
         em.flush()
+        tx.commit()
         true
       }
     } catch {
-      case _: Exception => false
+      case _: Exception => {
+        if (tx.isActive) tx.rollback()
+        false
+      }
     }
   }
 }
