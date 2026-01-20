@@ -52,6 +52,14 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
     libraryDependencies += "com.github.ben-manes.caffeine" % "caffeine" % "3.2.3",
     libraryDependencies += "tools.jackson.module" %% "jackson-module-scala" % "3.0.2",
     libraryDependencies += "de.janis" % "knockoutwhist-data" % "1.0-SNAPSHOT",
+    libraryDependencies += "org.hibernate.orm" % "hibernate-core" % "6.4.4.Final",
+    libraryDependencies += "jakarta.persistence" % "jakarta.persistence-api" % "3.1.0",
+    libraryDependencies += "org.postgresql" % "postgresql" % "42.7.4",
+    libraryDependencies += "org.playframework" %% "play-jdbc" % "3.0.6",
+    libraryDependencies += "org.playframework" %% "play-java-jpa" % "3.0.6",
+    libraryDependencies += "com.nimbusds" % "oauth2-oidc-sdk" % "11.31.1",
+    libraryDependencies += "org.playframework" %% "play-ws" % "3.0.6",
+    libraryDependencies += ws,
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
   )
 

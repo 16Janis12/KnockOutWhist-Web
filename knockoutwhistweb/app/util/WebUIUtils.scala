@@ -8,9 +8,6 @@ import play.twirl.api.Html
 import scalafx.scene.image.Image
 
 object WebUIUtils {
-  def cardtoImage(card: Card): Html = {
-    views.html.render.card.apply(cardToPath(card))(card.toString)
-  }
   
   def cardToPath(card: Card): String = {
     f"images/cards/${cardtoString(card)}.png"

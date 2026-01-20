@@ -36,16 +36,12 @@ object WebsocketEventMapper {
   
   // Register all custom mappers here
   registerCustomMapper(ReceivedHandEventMapper)
-  //registerCustomMapper(GameStateEventMapper)
   registerCustomMapper(CardPlayedEventMapper)
   registerCustomMapper(NewRoundEventMapper)
   registerCustomMapper(NewTrickEventMapper)
   registerCustomMapper(TrickEndEventMapper)
   registerCustomMapper(RequestCardEventMapper)
   registerCustomMapper(LobbyUpdateEventMapper)
-  registerCustomMapper(LeftEventMapper)
-  registerCustomMapper(KickEventMapper)
-  registerCustomMapper(SessionClosedMapper)
   registerCustomMapper(TurnEventMapper)
 
   def toJson(obj: SimpleEvent, session: UserSession): JsValue = {
@@ -54,7 +50,6 @@ object WebsocketEventMapper {
     }else {
       None
     }
-    //println(s"This is getting sent to client: EVENT: ${obj.id}, STATE: ${session.gameLobby.getLogic.getCurrentState.toString}, STATEDATA: ${stateToJson(session)}, DATA: ${data}")
     Json.obj(
       "id" -> ("request-" + java.util.UUID.randomUUID().toString),
       "event" -> obj.id,

@@ -19,15 +19,6 @@ class MainMenuController @Inject()(
                                     val authAction: AuthAction
                                   ) extends BaseController {
 
-  // Pass the request-handling function directly to authAction (no nested Action)
-  def mainMenu(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Ok(views.html.main("Knockout Whist - Create Game")(views.html.mainmenu.creategame(Some(request.user))))
-  }
-
-  def index(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Redirect(routes.MainMenuController.mainMenu())
-  }
-
   def createGame(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val jsonBody = request.body.asJson
     if (jsonBody.isDefined) {
@@ -61,9 +52,7 @@ class MainMenuController @Inject()(
       case Some(g) =>
         g.addUser(request.user)
         Ok(Json.obj(
-          "status" -> "success",
-          "redirectUrl" -> routes.IngameController.game(g.id).url,
-          "content" -> IngameController.returnInnerHTML(g, g.logic.getCurrentState, request.user).toString
+          "status" -> "success"
         ))
       case None =>
         NotFound(Json.obj(
@@ -72,31 +61,4 @@ class MainMenuController @Inject()(
         ))
     }
   }
-
-  def rules(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    Ok(views.html.main("Knockout Whist - Rules")(views.html.mainmenu.rules(Some(request.user))))
-  }
-
-  def navSPA(location: String): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
-    location match {
-      case "0" => // Main Menu
-        Ok(Json.obj(
-          "status" -> "success",
-          "redirectUrl" -> routes.MainMenuController.mainMenu().url,
-          "content" -> views.html.mainmenu.creategame(Some(request.user)).toString
-        ))
-      case "1" => // Rules
-        Ok(Json.obj(
-          "status" -> "success",
-          "redirectUrl" -> routes.MainMenuController.rules().url,
-          "content" -> views.html.mainmenu.rules(Some(request.user)).toString
-        ))
-      case _ =>
-        BadRequest(Json.obj(
-          "status" -> "failure",
-          "errorMessage" -> "Invalid form submission"
-        ))
-    }
-  }
-
 }

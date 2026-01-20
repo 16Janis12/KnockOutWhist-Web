@@ -1,29 +1,18 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
-# ~~~~
-
-# For the javascript routing
-GET         /assets/js/routes        controllers.JavaScriptRoutingController.javascriptRoutes()
-# Primary routes
-GET         /                        controllers.MainMenuController.index()
-GET         /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
-
-# Main menu routes
-GET         /mainmenu                controllers.MainMenuController.mainMenu()
-GET         /rules                   controllers.MainMenuController.rules()
-GET         /navSPA/:pType           controllers.MainMenuController.navSPA(pType)
-
+# Create game rounds
 POST        /createGame              controllers.MainMenuController.createGame()
 POST        /joinGame/:gameId        controllers.MainMenuController.joinGame(gameId: String)
 
 # User authentication routes
 POST        /login                   controllers.UserController.login_Post()
+POST        /register                controllers.UserController.register()
 POST        /logout                  controllers.UserController.logoutPost()
 GET         /userInfo                controllers.UserController.getUserInfo()
 
-# In-game routes
-GET         /game/:id                controllers.IngameController.game(id: String)
+# OpenID Connect routes
+GET         /auth/:provider          controllers.OpenIDController.loginWithProvider(provider: String)
+GET         /auth/:provider/callback controllers.OpenIDController.callback(provider: String)
+GET         /select-username         controllers.OpenIDController.selectUsername()
+POST        /submit-username         controllers.OpenIDController.submitUsername()
 
 # Websocket
 GET         /websocket               controllers.WebsocketController.socket()

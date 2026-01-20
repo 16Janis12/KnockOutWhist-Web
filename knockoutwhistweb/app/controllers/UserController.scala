@@ -66,6 +66,47 @@ class UserController @Inject()(
     ))
   }
 
+  def register(): Action[AnyContent] = {
+    Action { implicit request =>
+      val jsonBody = request.body.asJson
+      val username: Option[String] = jsonBody.flatMap { jsValue =>
+        (jsValue \ "username").asOpt[String]
+      }
+      val password: Option[String] = jsonBody.flatMap { jsValue =>
+        (jsValue \ "password").asOpt[String]
+      }
+      
+      if (username.isDefined && password.isDefined) {
+        // Validate input
+        if (username.get.trim.isEmpty || password.get.length < 6) {
+          BadRequest(Json.obj(
+            "error" -> "Invalid input",
+            "message" -> "Username must not be empty and password must be at least 6 characters"
+          ))
+        } else {
+          // Try to register user
+          val registrationSuccess = userManager.addUser(username.get.trim, password.get)
+          if (registrationSuccess) {
+            Created(Json.obj(
+              "message" -> "User registered successfully",
+              "username" -> username.get.trim
+            ))
+          } else {
+            Conflict(Json.obj(
+              "error" -> "User already exists",
+              "message" -> "Username is already taken"
+            ))
+          }
+        }
+      } else {
+        BadRequest(Json.obj(
+          "error" -> "Invalid request",
+          "message" -> "Username and password are required"
+        ))
+      }
+    }
+  }
+
   def logoutPost(): Action[AnyContent] = authAction { implicit request: AuthenticatedRequest[AnyContent] =>
     val sessionCookie = request.cookies.get("accessToken")
     if (sessionCookie.isDefined) {
