@@ -373,3 +373,8 @@
 ### Features
 
 * Add HikariCP specific configuration to db.conf ([4aa8709](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4aa8709eb593b03254efc616b6b04c23b23ab6ab))
+##  (2026-01-20)
+
+### Features
+
+* Enhance EntityManagerProvider to use Play configuration for database settings ([476db28](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/476db288216ed2c1013fe3ddb9b82472254e352b))
