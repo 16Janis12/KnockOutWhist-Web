@@ -60,7 +60,9 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
     libraryDependencies += "com.nimbusds" % "oauth2-oidc-sdk" % "11.31.1",
     libraryDependencies += "org.playframework" %% "play-ws" % "3.0.6",
     libraryDependencies += ws,
-    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
+    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
+
+    PlayKeys.externalizeResourcesExcludes += baseDirectory.value / "conf" / "META-INF" / "persistence.xml"
   )
 
 lazy val root = (project in file("."))
