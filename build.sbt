@@ -59,6 +59,7 @@ lazy val knockoutwhistweb = project.in(file("knockoutwhistweb"))
     libraryDependencies += "org.playframework" %% "play-java-jpa" % "3.0.6",
     libraryDependencies += "com.nimbusds" % "oauth2-oidc-sdk" % "11.31.1",
     libraryDependencies += "org.playframework" %% "play-ws" % "3.0.6",
+    libraryDependencies += "org.hibernate.orm" % "hibernate-hikaricp" % "7.2.1.Final",
     libraryDependencies += ws,
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
 
