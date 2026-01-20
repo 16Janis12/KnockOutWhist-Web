@@ -358,3 +358,8 @@
 ### Features
 
 * Update connection provider in persistence.xml for HikariCP ([f4290b4](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f4290b44976fb6dcd4fc4b896614ba6062da73b1))
+##  (2026-01-20)
+
+### Features
+
+* Update Hibernate connection provider and database configuration ([71a549b](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/71a549b7f059e748f7691bb9a27e2861b61c6f6f))
