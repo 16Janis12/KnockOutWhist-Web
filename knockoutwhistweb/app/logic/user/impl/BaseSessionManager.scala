@@ -4,7 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.{JWT, JWTVerifier}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import com.typesafe.config.Config
-import logic.user.SessionManager
+import logic.user.{SessionManager, UserManager}
 import model.users.User
 import scalafx.util.Duration
 import services.JwtKeyProvider
@@ -16,7 +16,7 @@ import javax.inject.{Inject, Singleton}
 import scala.util.Try
 
 @Singleton
-class BaseSessionManager @Inject()(val keyProvider: JwtKeyProvider, val userManager: StubUserManager, val config: Config) extends SessionManager {
+class BaseSessionManager @Inject()(val keyProvider: JwtKeyProvider, val userManager: UserManager, val config: Config) extends SessionManager {
 
   private val algorithm = Algorithm.RSA512(keyProvider.publicKey, keyProvider.privateKey)
   private val verifier: JWTVerifier = JWT.require(algorithm)
