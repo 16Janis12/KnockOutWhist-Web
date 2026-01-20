@@ -408,3 +408,8 @@
 ### Features
 
 * Simplify authorization request creation in OpenIDConnectService and use environment variables for Keycloak configuration ([82a9706](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/82a9706deb97db193015e55a048830d496e76d83))
+##  (2026-01-20)
+
+### Features
+
+* Use environment variables for Keycloak client configuration in staging ([fccd94c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fccd94cc11db43f99eded13207cc93fb59d8703e))
