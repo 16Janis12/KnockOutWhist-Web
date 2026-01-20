@@ -423,3 +423,8 @@
 ### Features
 
 * Add error logging for user info retrieval in OpenIDConnectService ([861f2f1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/861f2f1184e860fdd164481167f941c11accfedd))
+##  (2026-01-20)
+
+### Features
+
+* Add idClaimName parameter to OpenIDConnectService for flexible ID claim mapping ([2f38855](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2f388554495d8bd44b4c533baa0f2fc27eea22c2))
