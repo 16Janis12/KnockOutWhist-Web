@@ -413,3 +413,8 @@
 ### Features
 
 * Use environment variables for Keycloak client configuration in staging ([fccd94c](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/fccd94cc11db43f99eded13207cc93fb59d8703e))
+##  (2026-01-20)
+
+### Features
+
+* Add logging for OpenID authentication process in OpenIDController ([b729344](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/b729344d1e79c631146dd988248d033d97e12d93))
