@@ -35,7 +35,8 @@ case class OpenIDProvider(
   authorizationEndpoint: String,
   tokenEndpoint: String,
   userInfoEndpoint: String,
-  scopes: Set[String] = Set("openid", "profile", "email")
+  scopes: Set[String] = Set("openid", "profile", "email"),
+  idClaimName: String = "id"
 )
 
 case class TokenResponse(
@@ -70,7 +71,8 @@ class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit 
       authorizationEndpoint = config.get[String]("openid.keycloak.authUrl") + "/protocol/openid-connect/auth",
       tokenEndpoint = config.get[String]("openid.keycloak.authUrl") + "/protocol/openid-connect/token",
       userInfoEndpoint = config.get[String]("openid.keycloak.authUrl") + "/protocol/openid-connect/userinfo",
-      scopes = Set("openid", "profile", "email")
+      scopes = Set("openid", "profile", "email"),
+      idClaimName = "sub"
     )
   )
 
@@ -136,7 +138,7 @@ class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit 
             if (response.status == 200) {
               val json = response.json
               Some(OpenIDUserInfo(
-                id = (json \ "id").as[String],
+                id = (json \ provider.idClaimName).as[String],
                 email = (json \ "email").asOpt[String],
                 name = (json \ "name").asOpt[String].orElse((json \ "login").asOpt[String]),
                 picture = (json \ "picture").asOpt[String].orElse((json \ "avatar_url").asOpt[String]),
