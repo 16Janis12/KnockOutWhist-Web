@@ -403,3 +403,8 @@
 ### Features
 
 * Add mainRoute configuration for OpenID in application and environment files ([4f52c1a](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4f52c1a0f30cf0b917452149a52b53b94d82a7c9))
+##  (2026-01-20)
+
+### Features
+
+* Simplify authorization request creation in OpenIDConnectService and use environment variables for Keycloak configuration ([82a9706](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/82a9706deb97db193015e55a048830d496e76d83))
