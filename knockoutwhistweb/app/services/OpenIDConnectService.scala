@@ -2,7 +2,7 @@ package services
 
 import com.typesafe.config.Config
 import play.api.libs.ws.WSClient
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import play.api.libs.json.*
 
 import java.net.URI
@@ -11,7 +11,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import com.nimbusds.oauth2.sdk.*
 import com.nimbusds.oauth2.sdk.id.*
 import com.nimbusds.openid.connect.sdk.*
-
 import play.api.libs.ws.DefaultBodyWritables.*
 
 case class OpenIDUserInfo(
@@ -49,6 +48,8 @@ case class TokenResponse(
 
 @Singleton
 class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit ec: ExecutionContext) {
+
+  private val logger = Logger(this.getClass)
 
   private val providers = Map(
     "discord" -> OpenIDProvider(
@@ -143,10 +144,15 @@ class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit 
                 providerName = provider.name
               ))
             } else {
+              logger.error(s"Failed to retrieve user info from ${provider.userInfoEndpoint}, status code ${response.status}")
               None
             }
           }
-          .recover { case _ => None }
+          .recover { case e => {
+            logger.error(s"Failed to retrieve user info from ${provider.userInfoEndpoint}", e)
+            None
+          }
+          }
       case None => Future.successful(None)
     }
   }
