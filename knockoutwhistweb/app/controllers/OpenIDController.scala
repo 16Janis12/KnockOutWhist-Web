@@ -58,17 +58,33 @@ class OpenIDController @Inject()(
         } yield {
           openIDService.exchangeCodeForTokens(provider, authCode, sessionState.get).flatMap {
             case Some(tokenResponse) =>
-              openIDService.getUserInfo(provider, tokenResponse.accessToken).map {
+              openIDService.getUserInfo(provider, tokenResponse.accessToken).flatMap {
                 case Some(userInfo) =>
-                  // Store user info in session for username selection
-                  Redirect(config.get[String]("openid.selectUserRoute"))
-                    .withSession(
-                      "oauth_user_info" -> Json.toJson(userInfo).toString(),
-                      "oauth_provider" -> provider,
-                      "oauth_access_token" -> tokenResponse.accessToken
-                    )
+                  // Check if user already exists
+                  userManager.authenticateOpenID(provider, userInfo.id) match {
+                    case Some(user) =>
+                      // User already exists, log them in
+                      val sessionToken = sessionManager.createSession(user)
+                      Future.successful(Redirect(config.getOptional[String]("openid.mainRoute").getOrElse("/"))
+                        .withCookies(Cookie(
+                          name = "accessToken",
+                          value = sessionToken,
+                          httpOnly = true,
+                          secure = false,
+                          sameSite = Some(Lax)
+                        ))
+                        .removingFromSession("oauth_state", "oauth_nonce", "oauth_provider", "oauth_access_token"))
+                    case None =>
+                      // New user, redirect to username selection
+                      Future.successful(Redirect(config.get[String]("openid.selectUserRoute"))
+                        .withSession(
+                          "oauth_user_info" -> Json.toJson(userInfo).toString(),
+                          "oauth_provider" -> provider,
+                          "oauth_access_token" -> tokenResponse.accessToken
+                        ))
+                  }
                 case None =>
-                  Redirect("/login").flashing("error" -> "Failed to retrieve user information")
+                  Future.successful(Redirect("/login").flashing("error" -> "Failed to retrieve user information"))
               }
             case None =>
               Future.successful(Redirect("/login").flashing("error" -> "Failed to exchange authorization code"))
