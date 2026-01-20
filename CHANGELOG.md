@@ -348,3 +348,8 @@
 ### Features
 
 * BAC-39 Authentication ([#114](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/issues/114)) ([f6d3a18](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/f6d3a1845205318f43eb443601fd257613b7defb))
+##  (2026-01-20)
+
+### Features
+
+* Update persistence.xml and build.sbt for resource management ([a7292e3](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/a7292e3b5df4788f2f8bea5a2ec7b209b7357608))
