@@ -378,3 +378,8 @@
 ### Features
 
 * Enhance EntityManagerProvider to use Play configuration for database settings ([476db28](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/476db288216ed2c1013fe3ddb9b82472254e352b))
+##  (2026-01-20)
+
+### Features
+
+* Disable default JPA and Hibernate modules and enhance EntityManagerProvider for HikariCP integration ([9fa1e5e](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9fa1e5e07122aebd0391d47c3513013243a72a0f))
