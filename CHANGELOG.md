@@ -388,3 +388,8 @@
 ### Features
 
 * Add logging for user management operations in HibernateUserManager ([9ca1813](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/9ca1813f06539cffeb573d0e00571e4f2d5144f1))
+##  (2026-01-20)
+
+### Features
+
+* Integrate UserManager and HibernateUserManager in session management ([e32f4eb](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/e32f4eb8fff9daec46f20284e28e94a59231d033))
