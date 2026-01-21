@@ -61,6 +61,7 @@ class OpenIDController @Inject()(
           _ <- Option(sessionProvider.contains(provider))
           authCode <- code
         } yield {
+          logger.warn(s"Authentication successful for $provider")
           openIDService.exchangeCodeForTokens(provider, authCode, sessionState.get).flatMap {
             case Some(tokenResponse) =>
               openIDService.getUserInfo(provider, tokenResponse.accessToken).flatMap {
@@ -68,7 +69,7 @@ class OpenIDController @Inject()(
                   // Check if user already exists
                   userManager.authenticateOpenID(provider, userInfo.id) match {
                     case Some(user) =>
-                      logger.info(s"User ${userInfo.name} (${userInfo.id}) already exists, logging them in")
+                      logger.warn(s"User ${userInfo.name} (${userInfo.id}) already exists, logging them in")
                       // User already exists, log them in
                       val sessionToken = sessionManager.createSession(user)
                       Future.successful(Redirect(config.getOptional[String]("openid.mainRoute").getOrElse("/"))
@@ -81,7 +82,7 @@ class OpenIDController @Inject()(
                         ))
                         .removingFromSession("oauth_state", "oauth_nonce", "oauth_provider", "oauth_access_token"))
                     case None =>
-                      logger.info(s"User ${userInfo.name} (${userInfo.id}) not found, creating new user")
+                      logger.warn(s"User ${userInfo.name} (${userInfo.id}) not found, creating new user")
                       // New user, redirect to username selection
                       Future.successful(Redirect(config.get[String]("openid.selectUserRoute"))
                         .withSession(
