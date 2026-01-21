@@ -448,3 +448,8 @@
 ### Features
 
 * Update ID mapping in OpenIDUserInfo to use hashed value and remove name field ([daa072f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/daa072f2bf260ed62402096b41ce85aa071efaf5))
+##  (2026-01-21)
+
+### Features
+
+* Implement OAuth session management with Redis caching for OpenID user data ([0430c7f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0430c7f4deb37661c697406a714e2693bf0c7307))
