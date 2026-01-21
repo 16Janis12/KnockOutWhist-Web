@@ -1,13 +1,15 @@
 package controllers
 
+import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import logic.user.{SessionManager, UserManager}
 import model.users.User
 import play.api.{Configuration, Logger}
 import play.api.libs.json.Json
 import play.api.mvc.*
 import play.api.mvc.Cookie.SameSite.Lax
-import services.{OpenIDConnectService, OpenIDUserInfo}
+import services.{OpenIDConnectService, OpenIDUserInfo, OAuthCacheService}
 
+import java.util.concurrent.TimeUnit
 import javax.inject.*
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -17,11 +19,12 @@ class OpenIDController @Inject()(
                                   val openIDService: OpenIDConnectService,
                                   val sessionManager: SessionManager,
                                   val userManager: UserManager,
-                                  val config: Configuration
+                                  val config: Configuration,
+                                  val oauthCache: OAuthCacheService
                                 )(implicit ec: ExecutionContext) extends BaseController {
 
   private val logger = Logger(this.getClass)
-
+  
   def loginWithProvider(provider: String): Action[AnyContent] = Action.async { implicit request =>
     val state = openIDService.generateState()
     val nonce = openIDService.generateNonce()
@@ -83,13 +86,11 @@ class OpenIDController @Inject()(
                         .removingFromSession("oauth_state", "oauth_nonce", "oauth_provider", "oauth_access_token"))
                     case None =>
                       logger.warn(s"User ${userInfo.name} (${userInfo.id}) not found, creating new user")
-                      // New user, redirect to username selection
+                      // Store OAuth data in cache and get session ID
+                      val oauthSessionId = oauthCache.storeOAuthData(userInfo, tokenResponse.accessToken, provider)
+                      // New user, redirect to username selection with only session ID
                       Future.successful(Redirect(config.get[String]("openid.selectUserRoute"))
-                        .withSession(
-                          "oauth_user_info" -> Json.toJson(userInfo).toString(),
-                          "oauth_provider" -> provider,
-                          "oauth_access_token" -> tokenResponse.accessToken
-                        ))
+                        .withSession("oauth_session_id" -> oauthSessionId))
                   }
                 case None =>
                   logger.error("Failed to retrieve user information")
@@ -107,18 +108,24 @@ class OpenIDController @Inject()(
   }
 
   def selectUsername(): Action[AnyContent] = Action.async { implicit request =>
-    request.session.get("oauth_user_info") match {
-      case Some(userInfoJson) =>
-        val userInfo = Json.parse(userInfoJson).as[OpenIDUserInfo]
-        Future.successful(Ok(Json.obj(
-          "id" -> userInfo.id,
-          "email" -> userInfo.email,
-          "name" -> userInfo.name,
-          "picture" -> userInfo.picture,
-          "provider" -> userInfo.provider,
-          "providerName" -> userInfo.providerName
-        )))
+    request.session.get("oauth_session_id") match {
+      case Some(sessionId) =>
+        oauthCache.getOAuthData(sessionId) match {
+          case Some((userInfo, _, _)) =>
+            Future.successful(Ok(Json.obj(
+              "id" -> userInfo.id,
+              "email" -> userInfo.email,
+              "name" -> userInfo.name,
+              "picture" -> userInfo.picture,
+              "provider" -> userInfo.provider,
+              "providerName" -> userInfo.providerName
+            )))
+          case None =>
+            logger.error(s"OAuth session data not found for session ID: $sessionId")
+            Future.successful(Redirect("/login").flashing("error" -> "Session expired"))
+        }
       case None =>
+        logger.error("No OAuth session ID found")
         Future.successful(Redirect("/login").flashing("error" -> "No authentication information found"))
     }
   }
@@ -126,48 +133,53 @@ class OpenIDController @Inject()(
   def submitUsername(): Action[AnyContent] = Action.async { implicit request =>
     val username = request.body.asJson.flatMap(json => (json \ "username").asOpt[String])
       .orElse(request.body.asFormUrlEncoded.flatMap(_.get("username").flatMap(_.headOption)))
-    val userInfoJson = request.session.get("oauth_user_info")
-    val provider = request.session.get("oauth_provider").getOrElse("unknown")
+    val sessionId = request.session.get("oauth_session_id")
     
-    (username, userInfoJson) match {
-      case (Some(uname), Some(userInfoJson)) =>
-        val userInfo = Json.parse(userInfoJson).as[OpenIDUserInfo]
-        
-        // Check if username already exists
-        val trimmedUsername = uname.trim
-        userManager.userExists(trimmedUsername) match {
-          case Some(_) =>
-            Future.successful(Conflict(Json.obj("error" -> "Username already taken")))
-          case None =>
-            // Create new user with OpenID info (no password needed)
-            val success = userManager.addOpenIDUser(trimmedUsername, userInfo)
-            if (success) {
-              // Get the created user and create session
-              userManager.userExists(trimmedUsername) match {
-                case Some(user) =>
-                  val sessionToken = sessionManager.createSession(user)
-                  Future.successful(Ok(Json.obj(
-                    "message" -> "User created successfully",
-                    "user" -> Json.obj(
-                      "id" -> user.id,
-                      "username" -> user.name
-                    )
-                  )).withCookies(Cookie(
-                    name = "accessToken",
-                    value = sessionToken,
-                    httpOnly = true,
-                    secure = false,
-                    sameSite = Some(Lax)
-                  )).removingFromSession("oauth_user_info", "oauth_provider", "oauth_access_token"))
-                case None =>
-                  Future.successful(InternalServerError(Json.obj("error" -> "Failed to create user session")))
-              }
-            } else {
-              Future.successful(InternalServerError(Json.obj("error" -> "Failed to create user")))
+    (username, sessionId) match {
+      case (Some(uname), Some(sid)) =>
+        oauthCache.getOAuthData(sid) match {
+          case Some((userInfo, accessToken, provider)) =>
+            // Check if username already exists
+            val trimmedUsername = uname.trim
+            userManager.userExists(trimmedUsername) match {
+              case Some(_) =>
+                Future.successful(Conflict(Json.obj("error" -> "Username already taken")))
+              case None =>
+                // Create new user with OpenID info (no password needed)
+                val success = userManager.addOpenIDUser(trimmedUsername, userInfo)
+                if (success) {
+                  // Get created user and create session
+                  userManager.userExists(trimmedUsername) match {
+                    case Some(user) =>
+                      val sessionToken = sessionManager.createSession(user)
+                      // Clean up cache after successful user creation
+                      oauthCache.removeOAuthData(sid)
+                      Future.successful(Ok(Json.obj(
+                        "message" -> "User created successfully",
+                        "user" -> Json.obj(
+                          "id" -> user.id,
+                          "username" -> user.name
+                        )
+                      )).withCookies(Cookie(
+                        name = "accessToken",
+                        value = sessionToken,
+                        httpOnly = true,
+                        secure = false,
+                        sameSite = Some(Lax)
+                      )).removingFromSession("oauth_session_id"))
+                    case None =>
+                      Future.successful(InternalServerError(Json.obj("error" -> "Failed to create user session")))
+                  }
+                } else {
+                  Future.successful(InternalServerError(Json.obj("error" -> "Failed to create user")))
+                }
             }
+          case None =>
+            logger.error(s"OAuth session data not found for session ID: $sid")
+            Future.successful(Redirect("/login").flashing("error" -> "Session expired"))
         }
       case _ =>
-        Future.successful(BadRequest(Json.obj("error" -> "Username is required")))
+        Future.successful(BadRequest(Json.obj("error" -> "Username and valid session required")))
     }
   }
 }

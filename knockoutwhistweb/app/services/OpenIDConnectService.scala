@@ -138,9 +138,9 @@ class OpenIDConnectService@Inject(ws: WSClient, config: Configuration)(implicit 
             if (response.status == 200) {
               val json = response.json
               Some(OpenIDUserInfo(
-                id = (json \ provider.idClaimName).as[String].hashCode.toString,
+                id = (json \ provider.idClaimName).as[String],
                 email = (json \ "email").asOpt[String],
-                name = None,
+                name = (json \ "name").asOpt[String].orElse((json \ "login").asOpt[String]),
                 picture = (json \ "picture").asOpt[String].orElse((json \ "avatar_url").asOpt[String]),
                 provider = providerName,
                 providerName = provider.name
