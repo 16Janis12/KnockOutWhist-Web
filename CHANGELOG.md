@@ -443,3 +443,8 @@
 ### Features
 
 * Update ID mapping in OpenIDUserInfo to use hashed value and remove name field ([4b74de1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4b74de12610120831fc1529f0409db66aafd4d03))
+##  (2026-01-21)
+
+### Features
+
+* Update ID mapping in OpenIDUserInfo to use hashed value and remove name field ([daa072f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/daa072f2bf260ed62402096b41ce85aa071efaf5))
