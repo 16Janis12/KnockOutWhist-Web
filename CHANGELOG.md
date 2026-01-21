@@ -428,3 +428,8 @@
 ### Features
 
 * Add idClaimName parameter to OpenIDConnectService for flexible ID claim mapping ([2f38855](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/2f388554495d8bd44b4c533baa0f2fc27eea22c2))
+##  (2026-01-21)
+
+### Features
+
+* Change log level to warn for OpenID callback in OpenIDController ([23cdbe9](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/23cdbe9bd127bc26405fd216372bbb2d7e718a77))
