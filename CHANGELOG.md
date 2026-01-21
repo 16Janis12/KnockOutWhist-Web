@@ -433,3 +433,8 @@
 ### Features
 
 * Change log level to warn for OpenID callback in OpenIDController ([23cdbe9](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/23cdbe9bd127bc26405fd216372bbb2d7e718a77))
+##  (2026-01-21)
+
+### Features
+
+* Change log level to warn for OpenID callback in OpenIDController ([4a6598f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4a6598f102d8934c7502944a0addd400dd0cbcac))
