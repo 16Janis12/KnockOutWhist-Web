@@ -49,7 +49,7 @@ class OpenIDController @Inject()(
     val code = request.getQueryString("code")
     val error = request.getQueryString("error")
 
-    logger.info(s"Received callback from $provider with state $sessionState, nonce $sessionNonce, provider $sessionProvider, returned state $returnedState, code $code, error $error")
+    logger.warn(s"Received callback from $provider with state $sessionState, nonce $sessionNonce, provider $sessionProvider, returned state $returnedState, code $code, error $error")
 
     error match {
       case Some(err) =>
