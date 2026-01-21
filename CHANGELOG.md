@@ -453,3 +453,8 @@
 ### Features
 
 * Implement OAuth session management with Redis caching for OpenID user data ([0430c7f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/0430c7f4deb37661c697406a714e2693bf0c7307))
+##  (2026-01-21)
+
+### Features
+
+* Update CORS allowed origins to use production URL ([66b5594](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/66b55945eb8f095c08a8f859955d31f7fc32ce0e))
