@@ -438,3 +438,8 @@
 ### Features
 
 * Change log level to warn for OpenID callback in OpenIDController ([4a6598f](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4a6598f102d8934c7502944a0addd400dd0cbcac))
+##  (2026-01-21)
+
+### Features
+
+* Update ID mapping in OpenIDUserInfo to use hashed value and remove name field ([4b74de1](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/4b74de12610120831fc1529f0409db66aafd4d03))
