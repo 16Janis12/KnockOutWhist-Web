@@ -458,3 +458,4 @@
 ### Features
 
 * Update CORS allowed origins to use production URL ([66b5594](https://git.janis-eccarius.de/KnockOutWhist/KnockOutWhist-Web/commit/66b55945eb8f095c08a8f859955d31f7fc32ce0e))
+##  (2026-01-22)
